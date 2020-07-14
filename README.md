@@ -1,2 +1,2 @@
-# ojs-erc-plugin
-A plugin to publish Executable Research Compendia on OJS
+# geoOJS
+work in progress - A plugin for integrating geospatial data in OJS. 
