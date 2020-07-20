@@ -5,7 +5,7 @@ import('lib.pkp.classes.plugins.GenericPlugin');
  * Each plugin must extend one of the plugin category classes that exist in OJS and OMP. 
  * In our case its the genericPlugin class. 
  */
-class TutorialExamplePlugin extends GenericPlugin
+class geoOJSPlugin extends GenericPlugin
 {
 	public function register($category, $path, $mainContextId = NULL)
 	{
@@ -20,20 +20,34 @@ class TutorialExamplePlugin extends GenericPlugin
 			can be changed. 
 			Further information here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/categories#generic 
 			*/
+			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendTemplate'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'doSomething'));
+			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'map'));
+
+			
+			$request = Application::get()->getRequest();
+			$templateMgr = TemplateManager::getManager($request);
+			
+			$templateMgr->assign("leafletCSS", 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css');
+			$templateMgr->assign("leafletJS", 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js');
+
+			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
+			$templateMgr->assign("tmplRes", $this->getTemplateResource());
+
+			/* TODO not working (https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts)
+			used instead solution above (source: https://github.com/RBoelter/enhancedMetadata)
+			$request = Application::get()->getRequest();
+      		$url = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js';
+      		$templateMgr = TemplateManager::getManager($request);
+				$templateMgr->addJavaScript('geoOJSScript', $url);*/
 		}
 		return $success;
 	}
 
-	/**
-	 * 
-	 * 
-	 * $output for writing sth. on the page 
-	 * 
-	 */
 
-	public function doSomething($hookName, $args)
+	public function extendTemplate($hookName, $args)
 	{
+		
 		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
 		$issue = &$args[1]; // wird auch genannt: smarty 
 		$article = &$args[2]; // wird auch genannt: output
@@ -50,19 +64,30 @@ class TutorialExamplePlugin extends GenericPlugin
 		*/
 		$templateMgr = TemplateManager::getManager($request); 
 		$templateMgr->display($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
+	
+		return false;
+	}
+
+	public function doSomething($hookName, $args)
+	{
+		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
+		$issue = &$args[1]; // wird auch genannt: smarty 
+		$article = &$args[2]; // wird auch genannt: output
 		
-
-
 		// to get the Id of the actual submission
 		$submissionId = $request->getUserVar('submissionId');
 
 		$article .= $submissionId;
 
-		$article .= "<p> Hello again ich bins Moin </p> <p> Tschau </p>";
-		
+		$article .= "<p> Hello again ich bins Moin </p> <p> Tschaui </p>";
 
+	
 		return false;
 	}
+
+	
+
+
 
 
 
