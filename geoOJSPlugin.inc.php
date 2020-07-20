@@ -28,11 +28,11 @@ class geoOJSPlugin extends GenericPlugin
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
 			
-			$templateMgr->assign("leafletCSS", 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css');
-			$templateMgr->assign("leafletJS", 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js');
+			// loading the leaflet scripts - was not working with link, thats why they got stored local 
+			$templateMgr->assign("leafletCSS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.css');
+			$templateMgr->assign("leafletJS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.js');
 
 			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
-			$templateMgr->assign("tmplRes", $this->getTemplateResource());
 
 			/* TODO not working (https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts)
 			used instead solution above (source: https://github.com/RBoelter/enhancedMetadata)
