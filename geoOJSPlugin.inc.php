@@ -30,43 +30,59 @@ class geoOJSPlugin extends GenericPlugin
 			$templateMgr = TemplateManager::getManager($request);
 			
 			/*
+			To respect the enable_cdn configuration setting. When this is off, 
+			plugins should not load any scripts or styles from a third-party website.
+			*/ 
+			if (Config::getVar('general', 'enable_cdn')) {
+				$urlLeafletCSS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css';
+				$urlLeafletJS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js'; 
+				$urlLeafletDrawCSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
+				$urlLeafletDrawJS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js';
+			  } else {
+				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.css';
+				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.js'; 
+				$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.css';
+				$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.js';
+			  }
+			
+			/*
+			Here further scripts like JS and CSS are included, 
+			these are included by the following lines and need not be referenced (e.g. in .tbl files).
+			Further information can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts
+			*/ 
+			/*
 			loading the leaflet scripts - was not working with link, thats why they got stored local, if it should work, 
 			the link can be inserted here  and the corresponding folder structure which is no longer necessary can be deleted
 			*/
-			$templateMgr->assign("leafletCSS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.css');
-			$templateMgr->assign("leafletJS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.js');
-
+			$templateMgr->addStyleSheet('leafletCSS', $urlLeafletCSS, array('contexts' => array('frontend', 'backend')));
+			$templateMgr->addJavaScript('leafletJS', $urlLeafletJS, array('contexts' => array('frontend', 'backend')));
+			
 			/* 
 			loading the leaflet draw scripts - was not working with link, thats why they got stored local, if it should work, 
 			the link can be inserted here  and the corresponding folder structure which is no longer necessary can be deleted
 			source: https://www.jsdelivr.com/package/npm/leaflet-draw?path=dist
 			*/
-			$templateMgr->assign("leafletDrawCSS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.css');
-			$templateMgr->assign("leafletDrawJS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.js');
+			$templateMgr->addStyleSheet("leafletDrawCSS", $urlLeafletDrawCSS, array('contexts' => array('frontend', 'backend')));
+			$templateMgr->addJavaScript("leafletDrawJS", $urlLeafletDrawJS, array('contexts' => array('frontend', 'backend')));
+
+			/*
+			$templateMgr->addJavaScript("jqueryJS", 'https://cdn.jsdelivr.net/jquery/latest/jquery.min.js');
+			$templateMgr->addJavaScript("momentJS", 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
+			$templateMgr->addJavaScript("daterangepickerJS", 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
+			$templateMgr->addJavaScript("daterangepickerCSS", 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css');
+*/
 
 			// main js script for loading leaflet
 			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
 
-			/* @todo not working (https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts)
-			used instead solution above (source: https://github.com/RBoelter/enhancedMetadata)
-			$request = Application::get()->getRequest();
-      		$url = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js';
-      		$templateMgr = TemplateManager::getManager($request);
-				$templateMgr->addJavaScript('geoOJSScript', $url);*/
-
-			/* @todo if there is an external script loaded 
-			if (Config::getVar('general', 'enable_cdn')) {
-  			$url = 'https://example.com/remote-css.css';
-			} else {
-  			$url = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/css/local-css.css';
-			}
-			$templateMgr->addStyleSheet('tutorialExampleStyles', $url);
-			 */
 		}
 		return $success;
 	}
 
 
+	/**
+	 * function which extends the sumbmissionMetadataFormFields template 
+	 */
 	public function extendTemplate($hookName, $args)
 	{
 		
@@ -90,6 +106,9 @@ class geoOJSPlugin extends GenericPlugin
 		return false;
 	}
 
+	/**
+	 * function to write sth. into the page 
+	 */
 	public function doSomething($hookName, $args)
 	{
 		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
@@ -106,12 +125,6 @@ class geoOJSPlugin extends GenericPlugin
 	
 		return false;
 	}
-
-	
-
-
-
-
 
 	/**
 	 * Provide a name for this plugin (plugin gallery)
@@ -132,5 +145,6 @@ class geoOJSPlugin extends GenericPlugin
 	 */
 	public function getDescription()
 	{
-		return __('plugins.generic.geoOJS.description');	}
+		return __('plugins.generic.geoOJS.description');	
+	}
 }

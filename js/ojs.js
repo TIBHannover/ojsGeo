@@ -67,9 +67,9 @@ map.on('draw:created', function (e) {
     }
 
     console.log(layer._latlngs); // coordinates of the layer 
-    console.log(layers._leaflet_id);
+    console.log(layer._leaflet_id); // id of layer 
     drawnItems.addLayer(layer);
-    console.log(drawnItems); // TODO store FeatureClaas with all layers 
+    console.log(drawnItems); // TODO store FeatureClass with all layers in DB 
 });
 
 map.on('draw:edited', function (e) {
@@ -79,7 +79,7 @@ map.on('draw:edited', function (e) {
         countOfEditedLayers++;
     });
     
-    console.log(drawnItems); // TODO store FeatureClaas with all layers and overrite old storage 
+    console.log(drawnItems); // TODO store FeatureClaas with all layers and overrite old storage in DB 
 });
 
 

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
 <locale name="en_US" full_name="English">
-    <message key="plugins.generic.geoOJS.location.title">reference period</message>
+    <message key="plugins.generic.geoOJS.geospatialmetadata">Geospatial Metadata</message>
+    <message key="plugins.generic.geoOJS.geospatialmetadata.description">Here the article can be specified in terms of its spatial and temporal properties</message>
+
+    <message key="plugins.generic.geoOJS.location.title">Investigation Area</message>
+    <message key="plugins.generic.geoOJS.period.title">Investigation Period</message>
     <message key="plugins.generic.geoOJS.name">geoOJS</message>
     <message key="plugins.generic.geoOJS.description">Plug-in which enables the storage of geospatial metadata.</message>
 
