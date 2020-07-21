@@ -4,6 +4,7 @@ import('lib.pkp.classes.plugins.GenericPlugin');
 /**
  * Each plugin must extend one of the plugin category classes that exist in OJS and OMP. 
  * In our case its the genericPlugin class. 
+ * 
  */
 class geoOJSPlugin extends GenericPlugin
 {
@@ -28,18 +29,39 @@ class geoOJSPlugin extends GenericPlugin
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
 			
-			// loading the leaflet scripts - was not working with link, thats why they got stored local 
+			/*
+			loading the leaflet scripts - was not working with link, thats why they got stored local, if it should work, 
+			the link can be inserted here  and the corresponding folder structure which is no longer necessary can be deleted
+			*/
 			$templateMgr->assign("leafletCSS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.css');
 			$templateMgr->assign("leafletJS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.js');
 
+			/* 
+			loading the leaflet draw scripts - was not working with link, thats why they got stored local, if it should work, 
+			the link can be inserted here  and the corresponding folder structure which is no longer necessary can be deleted
+			source: https://www.jsdelivr.com/package/npm/leaflet-draw?path=dist
+			*/
+			$templateMgr->assign("leafletDrawCSS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.css');
+			$templateMgr->assign("leafletDrawJS", $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.js');
+
+			// main js script for loading leaflet
 			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
 
-			/* TODO not working (https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts)
+			/* @todo not working (https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts)
 			used instead solution above (source: https://github.com/RBoelter/enhancedMetadata)
 			$request = Application::get()->getRequest();
       		$url = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js';
       		$templateMgr = TemplateManager::getManager($request);
 				$templateMgr->addJavaScript('geoOJSScript', $url);*/
+
+			/* @todo if there is an external script loaded 
+			if (Config::getVar('general', 'enable_cdn')) {
+  			$url = 'https://example.com/remote-css.css';
+			} else {
+  			$url = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/css/local-css.css';
+			}
+			$templateMgr->addStyleSheet('tutorialExampleStyles', $url);
+			 */
 		}
 		return $success;
 	}

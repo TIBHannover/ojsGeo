@@ -1,18 +1,10 @@
+{*the main template is here extended*}
 
-{* Das eigentliche Template wird um das was hier geschrieben wird erweitert *}
-
-{*
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-        crossorigin="" />
-
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-        crossorigin=""></script>*}
-
+{*loading needed scripts from geoOJSPlugin.inc.php*}
 <link rel="stylesheet" type="text/css" href="{$leafletCSS}">
 <script src="{$leafletJS}" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="{$leafletDrawCSS}">
+<script src="{$leafletDrawJS}" type="text/javascript" defer></script>
 
 <div style="clear:both;">
     {fbvFormSection title="plugins.generic.geoOJS.location.title" for="location" inline=true}
@@ -21,4 +13,6 @@
 </div>
 
 <div id="mapdiv" style="width: 600px; height: 400px; float: left;"></div>
+
+{*main js script, needs to be loaded last*}
 <script src="{$geoOJSScript}" type="text/javascript" defer></script>
