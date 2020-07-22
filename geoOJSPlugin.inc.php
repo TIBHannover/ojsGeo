@@ -38,19 +38,21 @@ class geoOJSPlugin extends GenericPlugin
 				$urlLeafletJS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js'; 
 				$urlLeafletDrawCSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
 				$urlLeafletDrawJS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js';
-				// $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js'; // not needed is also working without
+				// $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js';
+				// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
 				$urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js'; 
 				$urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js'; 
 				$urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css';
 			  } else {
-				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.css';
-				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.js'; 
-				$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.css';
-				$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.js';
-				// $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js'; enable_cdn Off option // not needed is also working without
-				// $urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js'; TODO enable_cdn Off option
-				// $urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js'; TODO enable_cdn Off option
-				// $urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css'; TODO enable_cdn Off option
+				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.css';
+				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.js'; 
+				$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.css';
+				$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.js';
+				// $urlJqueryJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/jquery.min.js';
+				// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
+				$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/moment.min.js';
+				$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.min.js';
+				$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.css';
 			  }
 			
 			/*
@@ -77,7 +79,8 @@ class geoOJSPlugin extends GenericPlugin
 			loading the daterangepicker scripts 
 			source: https://www.daterangepicker.com/#example2 
 			*/
-			//$templateMgr->addJavaScript("jqueryJS", $urlJqueryJS, array('contexts' => array('frontend', 'backend'))); // not needed is also working without
+			//$templateMgr->addJavaScript("jqueryJS", $urlJqueryJS, array('contexts' => array('frontend', 'backend')));
+			// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
 			$templateMgr->addJavaScript("momentJS", $urlMomentJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("daterangepickerJS", $urlDaterangepickerJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("daterangepickerCSS", $urlDaterangepickerCSS, array('contexts' => array('frontend', 'backend')));

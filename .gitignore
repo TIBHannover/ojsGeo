@@ -1,0 +1,22 @@
+# ingore files which are needed if in config.inc.php enable_cdn is set to "Off" 
+
+enable_cdn_Off/daterangepicker/daterangepicker.css
+enable_cdn_Off/daterangepicker/daterangepicker.min.js
+enable_cdn_Off/daterangepicker/jquery.min.js
+enable_cdn_Off/daterangepicker/moment.min.js
+
+enable_cdn_Off/leaflet/images
+enable_cdn_Off/leaflet/leaflet.css
+enable_cdn_Off/leaflet/leaflet.js
+enable_cdn_Off/leaflet/leaflet-src.js
+enable_cdn_Off/leaflet/leaflet-src.esm.js
+enable_cdn_Off/leaflet/leaflet-src.esm.js.map
+enable_cdn_Off/leaflet/leaflet-src.js.map
+enable_cdn_Off/leaflet/leaflet.js.map
+
+enable_cdn_Off/leaflet-draw/images
+enable_cdn_Off/leaflet-draw/leaflet.draw.css
+enable_cdn_Off/leaflet-draw/leaflet.draw.js
+enable_cdn_Off/leaflet-draw/leaflet.draw-src.css
+enable_cdn_Off/leaflet-draw/leaflet.draw-src.js
+enable_cdn_Off/leaflet-draw/leaflet.draw-src.map
