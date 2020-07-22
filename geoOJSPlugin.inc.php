@@ -38,11 +38,19 @@ class geoOJSPlugin extends GenericPlugin
 				$urlLeafletJS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js'; 
 				$urlLeafletDrawCSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
 				$urlLeafletDrawJS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js';
+				// $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js'; // not needed is also working without
+				$urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js'; 
+				$urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js'; 
+				$urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css';
 			  } else {
 				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.css';
 				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet/leaflet.js'; 
 				$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.css';
 				$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/leaflet-draw/leaflet.draw.js';
+				// $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js'; enable_cdn Off option // not needed is also working without
+				// $urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js'; TODO enable_cdn Off option
+				// $urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js'; TODO enable_cdn Off option
+				// $urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css'; TODO enable_cdn Off option
 			  }
 			
 			/*
@@ -51,26 +59,29 @@ class geoOJSPlugin extends GenericPlugin
 			Further information can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts
 			*/ 
 			/*
-			loading the leaflet scripts - was not working with link, thats why they got stored local, if it should work, 
-			the link can be inserted here  and the corresponding folder structure which is no longer necessary can be deleted
+			loading the leaflet scripts
+			source: https://leafletjs.com/examples/quick-start/
 			*/
 			$templateMgr->addStyleSheet('leafletCSS', $urlLeafletCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript('leafletJS', $urlLeafletJS, array('contexts' => array('frontend', 'backend')));
 			
 			/* 
-			loading the leaflet draw scripts - was not working with link, thats why they got stored local, if it should work, 
-			the link can be inserted here  and the corresponding folder structure which is no longer necessary can be deleted
+			loading the leaflet draw scripts 
 			source: https://www.jsdelivr.com/package/npm/leaflet-draw?path=dist
 			*/
 			$templateMgr->addStyleSheet("leafletDrawCSS", $urlLeafletDrawCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("leafletDrawJS", $urlLeafletDrawJS, array('contexts' => array('frontend', 'backend')));
 
+			
 			/*
-			$templateMgr->addJavaScript("jqueryJS", 'https://cdn.jsdelivr.net/jquery/latest/jquery.min.js');
-			$templateMgr->addJavaScript("momentJS", 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
-			$templateMgr->addJavaScript("daterangepickerJS", 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
-			$templateMgr->addJavaScript("daterangepickerCSS", 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css');
-*/
+			loading the daterangepicker scripts 
+			source: https://www.daterangepicker.com/#example2 
+			*/
+			//$templateMgr->addJavaScript("jqueryJS", $urlJqueryJS, array('contexts' => array('frontend', 'backend'))); // not needed is also working without
+			$templateMgr->addJavaScript("momentJS", $urlMomentJS, array('contexts' => array('frontend', 'backend')));
+			$templateMgr->addJavaScript("daterangepickerJS", $urlDaterangepickerJS, array('contexts' => array('frontend', 'backend')));
+			$templateMgr->addStyleSheet("daterangepickerCSS", $urlDaterangepickerCSS, array('contexts' => array('frontend', 'backend')));
+
 
 			// main js script for loading leaflet
 			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
@@ -120,7 +131,7 @@ class geoOJSPlugin extends GenericPlugin
 
 		$article .= $submissionId;
 
-		$article .= "<p> Hello again ich bins Moin </p> <p> Tschaui </p>";
+		$article .= "<p> Hier könnte Ihre Werbung stehen </p> <p> Nö </p>";
 
 	
 		return false;
