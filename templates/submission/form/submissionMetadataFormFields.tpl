@@ -5,14 +5,18 @@
     <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.description"}</p>
 
     {*temporal*}
-    {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata" for="period" inline=true}
-    <input type="text" name="datetimes" />
+    {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.temporal" for="period" inline=true}
+	<p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description"}</p>
+    <input type="text" name="datetimes" style="width: 600px;"/>
     {/fbvFormSection}
+    {/fbvFormArea}
 
     {*{fbvElement type="text" multilingual=false name="period" id="period" value=$coverage maxlength="255" readonly=$readOnly required=false}*}
+    {fbvFormArea}
 
     {*spatial*}
-    {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata" for="period" inline=true}
+    {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.spatial" for="period" inline=true}
+	<p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description"}</p>
     <div id="mapdiv" style="width: 600px; height: 400px; float: left;  z-index: 0;"></div>
     {/fbvFormSection}
     {/fbvFormArea}
