@@ -120,15 +120,6 @@ class geoOJSPlugin extends GenericPlugin
 		$smarty = &$params[1];
 		$output = &$params[2];
 
-		$request = $this->getRequest();
-		$context = $request->getContext();
-		$supportedSubmissionLocales = $context->getSupportedSubmissionLocales();
-		$localeNames = AppLocale::getAllLocales();
-		$locales = array_map(function ($localeKey) use ($localeNames) {
-			return ['key' => $localeKey, 'label' => $localeNames[$localeKey]];
-		}, $supportedSubmissionLocales);
-
-
 		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
 		//$issue = &$args[1]; // wird auch genannt: smarty 
 		//$article = &$args[2]; // wird auch genannt: output
@@ -191,8 +182,8 @@ class geoOJSPlugin extends GenericPlugin
 		$newPublication = $args[0];
 		$params = $args[2];
 
-		$exampleTimestamp = '2020-08-19 05:00 PM to 2020-09-29 01:18 AM';
-		$exampleBoundingBox = 'lat: 51.95622058741223, lng: 7.555503845214818';
+		$exampleTimestamp = '2020-08-19 05:00 PM to 2020-09-29 01:19 AM';
+		$exampleBoundingBox = 'lat: 51.95622058741223, lng: 7.555503845214819';
 		
 		$newPublication->setData('geoOJS::timestamp', $exampleTimestamp, null);
 		$newPublication->setData('geoOJS::boundingBox', $exampleBoundingBox, null);
