@@ -1,6 +1,7 @@
 <?php
 // import of genericPlugin
 import('lib.pkp.classes.plugins.GenericPlugin');
+
 /**
  * Each plugin must extend one of the plugin category classes that exist in OJS and OMP. 
  * In our case its the genericPlugin class. 
@@ -21,31 +22,48 @@ class geoOJSPlugin extends GenericPlugin
 			can be changed. 
 			Further information here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/categories#generic 
 			*/
+
+			// Hook for changing the frontent and adding a new form 
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendTemplate'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'doSomething'));
-			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'map'));
+			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'addGeospatialProperties'));
+			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'storeGeospatialProperties'));
 
-			
+			// Hook for creating and setting a new field in the database 
+			HookRegistry::register('Schema::get::publication', array($this, 'addToSchema'));
+			HookRegistry::register('Publication::edit', array($this, 'editPublication'));
+
+
+
+
+
+
+
+
+
+
+
+
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
-			
+
 			/*
 			To respect the enable_cdn configuration setting. When this is off, 
 			plugins should not load any scripts or styles from a third-party website.
-			*/ 
+			*/
 			if (Config::getVar('general', 'enable_cdn')) {
 				$urlLeafletCSS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css';
-				$urlLeafletJS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js'; 
+				$urlLeafletJS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js';
 				$urlLeafletDrawCSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
 				$urlLeafletDrawJS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js';
 				// $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js';
 				// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
-				$urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js'; 
-				$urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js'; 
+				$urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js';
+				$urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js';
 				$urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css';
-			  } else {
+			} else {
 				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.css';
-				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.js'; 
+				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.js';
 				$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.css';
 				$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.js';
 				// $urlJqueryJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/jquery.min.js';
@@ -53,20 +71,20 @@ class geoOJSPlugin extends GenericPlugin
 				$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/moment.min.js';
 				$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.min.js';
 				$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.css';
-			  }
-			
+			}
+
 			/*
 			Here further scripts like JS and CSS are included, 
 			these are included by the following lines and need not be referenced (e.g. in .tbl files).
 			Further information can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts
-			*/ 
+			*/
 			/*
 			loading the leaflet scripts
 			source: https://leafletjs.com/examples/quick-start/
 			*/
 			$templateMgr->addStyleSheet('leafletCSS', $urlLeafletCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript('leafletJS', $urlLeafletJS, array('contexts' => array('frontend', 'backend')));
-			
+
 			/* 
 			loading the leaflet draw scripts 
 			source: https://www.jsdelivr.com/package/npm/leaflet-draw?path=dist
@@ -74,7 +92,7 @@ class geoOJSPlugin extends GenericPlugin
 			$templateMgr->addStyleSheet("leafletDrawCSS", $urlLeafletDrawCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("leafletDrawJS", $urlLeafletDrawJS, array('contexts' => array('frontend', 'backend')));
 
-			
+
 			/*
 			loading the daterangepicker scripts 
 			source: https://www.daterangepicker.com/#example2 
@@ -88,22 +106,33 @@ class geoOJSPlugin extends GenericPlugin
 
 			// main js script for loading leaflet
 			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
-
 		}
 		return $success;
 	}
 
 
 	/**
-	 * function which extends the sumbmissionMetadataFormFields template 
+	 * Function which extends the sumbmissionMetadataFormFields template.
+	 * @param hook Templates::Submission::SubmissionMetadataForm::AdditionalMetadata
 	 */
-	public function extendTemplate($hookName, $args)
+	public function extendTemplate($hookName, $params)
 	{
-		
+		$smarty = &$params[1];
+		$output = &$params[2];
+
+		$request = $this->getRequest();
+		$context = $request->getContext();
+		$supportedSubmissionLocales = $context->getSupportedSubmissionLocales();
+		$localeNames = AppLocale::getAllLocales();
+		$locales = array_map(function ($localeKey) use ($localeNames) {
+			return ['key' => $localeKey, 'label' => $localeNames[$localeKey]];
+		}, $supportedSubmissionLocales);
+
+
 		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
-		$issue = &$args[1]; // wird auch genannt: smarty 
-		$article = &$args[2]; // wird auch genannt: output
-		
+		//$issue = &$args[1]; // wird auch genannt: smarty 
+		//$article = &$args[2]; // wird auch genannt: output
+
 		/*
 		This way templates are loaded. 
 		Its important that the corresponding hook is activated. 
@@ -114,11 +143,77 @@ class geoOJSPlugin extends GenericPlugin
 		Further details can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/templates
 		Where are templates located: https://docs.pkp.sfu.ca/pkp-theming-guide/en/html-smarty
 		*/
-		$templateMgr = TemplateManager::getManager($request); 
-		$templateMgr->display($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
-	
+		error_log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+		echo "Helsslo";
+
+		$output .= $smarty->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
+
 		return false;
 	}
+
+	/**
+	 * Function which extends the schema of the publication_settings table in the database. 
+	 * @param hook Schema::get::publication
+	 */
+	public function addToSchema($hookName, $args)
+	{
+		// possible types: integer, string, text, 
+		$schema = $args[0];
+		$timestamp = '{
+			"type": "string",
+			"multilingual": true,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		}';
+		$timestampDecoded = json_decode($timestamp);
+		$schema->properties->{'geoOJS::timestamp'} = $timestampDecoded;
+
+		$boundingBox = '{
+			"type": "string",
+			"multilingual": true,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		}';
+		$boundingBoxDecoded = json_decode($boundingBox);
+		$schema->properties->{'geoOJS::boundingBox'} = $boundingBoxDecoded;
+	}
+
+	/**
+	 * Function which fills the new fields (created by the function addToSchema) in the schema 
+	 * @param hook Publication::edit
+	 */
+	function editPublication(string $hookname, array $args)
+	{
+		$newPublication = $args[0];
+		$params = $args[2];
+
+		$exampleTimestamp = '2020-08-19 05:00 PM to 2020-09-29 01:18 AM';
+		$exampleBoundingBox = 'lat: 51.95622058741223, lng: 7.555503845214818';
+		
+		$newPublication->setData('geoOJS::timestamp', $exampleTimestamp, null);
+		$newPublication->setData('geoOJS::boundingBox', $exampleBoundingBox, null);
+		/*
+		The following lines are probably needed if you want to store text in a certain language to set the local key,
+		further information can be found here:
+		https://github.com/Vitaliy-1/JATSParserPlugin/blob/21425c486f0f157cd8dc6b829322cd32159dd408/JatsParserPlugin.inc.php#L619 
+		$yourdata3 = 'Guuuten Tag';
+		$localePare = $params['title'];
+		foreach ($localePare as $localeKey => $fileId) {
+			continue;
+		}
+		$newPublication->setData('Textfeld', $yourdata3, $localeKey);
+
+		$yourdata = 100;
+		$yourdata2 = '00:00:00';
+		*/ 
+	}
+
+
+
 
 	/**
 	 * function to write sth. into the page 
@@ -128,15 +223,16 @@ class geoOJSPlugin extends GenericPlugin
 		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
 		$issue = &$args[1]; // wird auch genannt: smarty 
 		$article = &$args[2]; // wird auch genannt: output
-		
+
 		// to get the Id of the actual submission
 		$submissionId = $request->getUserVar('submissionId');
+		// $currentUser = $request->getUser();
 
+		// $article .= $currentUser;
 		$article .= $submissionId;
 
 		$article .= "<p> Hier könnte Ihre Werbung stehen </p> <p> Nö </p>";
 
-	
 		return false;
 	}
 
@@ -159,6 +255,6 @@ class geoOJSPlugin extends GenericPlugin
 	 */
 	public function getDescription()
 	{
-		return __('plugins.generic.geoOJS.description');	
+		return __('plugins.generic.geoOJS.description');
 	}
 }
