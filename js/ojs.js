@@ -53,6 +53,46 @@ var drawControl = new L.Control.Draw({
 });
 map.addControl(drawControl);
 
+
+function createGeoJSON(geojsonCoordinates) {
+
+    for (var i = 0; i < geojsonCoordinates.length; i++) {
+        
+        var geojsonFeature = {
+            "type": "Feature",
+            "geometry": {
+                "type": geojsonCoordinates[i][0],
+                "coordinates": geojsonCoordinates
+            },
+            "properties": null
+        }
+        
+
+
+    }
+
+
+
+
+
+    var geojson = {
+        "type": "FeatureCollection",
+        "features": [geojsonFeature]
+    };
+
+   
+
+
+
+
+
+
+
+
+    return geojson;
+}
+
+
 /**
  * function to create the layer and store it in db 
  */
@@ -67,34 +107,48 @@ map.on('draw:created', function (e) {
     drawnItems.addLayer(layer);
 
     var leafletLayers = drawnItems._layers;
-    var pureLayers = [];
+    var pureLayers = []; //one array with all layers ["type", coordinates]
     /*
     The different Items are stored in one array. In each array there is one leaflet item. 
     key: the name of the object key
     index: the ordinal position of the key within the object
-    By "instanceof" is recognized which type of layer it is and correspondingly the type is added.
+    By "instanceof" is recognized which type of layer it is and correspondingly the type is added. 
+    For each layer the type and the corresponding coordinates are stored. 
     By the function 
                         Object.keys(obj).forEach(function(key,index) {
                         key: the name of the object key
                         index: the ordinal position of the key within the object });
     you can interate over an object. 
     */
-    Object.keys(leafletLayers).forEach(function (key, index) {
+    Object.keys(leafletLayers).forEach(function (key) {
 
+        // marker 
         if (leafletLayers[key] instanceof L.Marker) {
-            pureLayers.push(['Point', leafletLayers[key]._latlng]);
+            pureLayers.push(['Point', [leafletLayers[key]._latlng.lat, leafletLayers[key]._latlng.lng]]);
         }
 
+        // polygon + rectangle (rectangle is a subclass of polygon but the name is the same in geoJSON)
         if (leafletLayers[key] instanceof L.Polygon) {
-            pureLayers.push(['Polygon', leafletLayers[key]._latlngs[0]]);
+            var coordinates = []; 
+
+            Object.keys(leafletLayers[key]._latlngs[0]).forEach(function (key2) {
+                coordinates.push([leafletLayers[key]._latlngs[0][key2].lat, leafletLayers[key]._latlngs[0][key2].lng]);
+            });
+
+            pureLayers.push(['Polygon', coordinates]);
         }
 
+        // polyline (polyline is a subclass of polygon but the name is the different in geoJSON)
         if ((leafletLayers[key] instanceof L.Polyline) && !(leafletLayers[key] instanceof L.Polygon)) {
-            pureLayers.push(['LineString', leafletLayers[key]._latlngs]);
+            var coordinates = []; 
+
+            Object.keys(leafletLayers[key]._latlngs).forEach(function (key3) {
+                coordinates.push([leafletLayers[key]._latlngs[key3].lat, leafletLayers[key]._latlngs[key3].lng]);
+            });
+
+            pureLayers.push(['LineString', coordinates]);
         }
     });
-
-    console.log(pureLayers);
     document.getElementById("spatialProperties").value = JSON.stringify(pureLayers);
 });
 
@@ -102,36 +156,50 @@ map.on('draw:created', function (e) {
  * function to edit the layer and store it in db 
  */
 map.on('draw:edited', function (e) {
-    
+
     var leafletLayers = drawnItems._layers;
-    var pureLayers = [];
+    var pureLayers = []; //one array with all layers ["type", coordinates]
     /*
     The different Items are stored in one array. In each array there is one leaflet item. 
     key: the name of the object key
-    index: the ordinal position of the key within the object 
+    index: the ordinal position of the key within the object
     By "instanceof" is recognized which type of layer it is and correspondingly the type is added. 
+    For each layer the type and the corresponding coordinates are stored. 
     By the function 
                         Object.keys(obj).forEach(function(key,index) {
                         key: the name of the object key
                         index: the ordinal position of the key within the object });
     you can interate over an object. 
     */
-    Object.keys(leafletLayers).forEach(function (key, index) {
+    Object.keys(leafletLayers).forEach(function (key) {
 
+        // marker 
         if (leafletLayers[key] instanceof L.Marker) {
-            pureLayers.push(['Point', leafletLayers[key]._latlng]);
+            pureLayers.push(['Point', [leafletLayers[key]._latlng.lat, leafletLayers[key]._latlng.lng]]);
         }
 
+        // polygon + rectangle (rectangle is a subclass of polygon but the name is the same in geoJSON)
         if (leafletLayers[key] instanceof L.Polygon) {
-            pureLayers.push(['Polygon', leafletLayers[key]._latlngs[0]]);
+            var coordinates = []; 
+
+            Object.keys(leafletLayers[key]._latlngs[0]).forEach(function (key2) {
+                coordinates.push([leafletLayers[key]._latlngs[0][key2].lat, leafletLayers[key]._latlngs[0][key2].lng]);
+            });
+
+            pureLayers.push(['Polygon', coordinates]);
         }
 
+        // polyline (polyline is a subclass of polygon but the name is the different in geoJSON)
         if ((leafletLayers[key] instanceof L.Polyline) && !(leafletLayers[key] instanceof L.Polygon)) {
-            pureLayers.push(['LineString', leafletLayers[key]._latlngs]);
+            var coordinates = []; 
+
+            Object.keys(leafletLayers[key]._latlngs).forEach(function (key3) {
+                coordinates.push([leafletLayers[key]._latlngs[key3].lat, leafletLayers[key]._latlngs[key3].lng]);
+            });
+
+            pureLayers.push(['LineString', coordinates]);
         }
     });
-
-    console.log(pureLayers);
     document.getElementById("spatialProperties").value = JSON.stringify(pureLayers);
 });
 
@@ -139,31 +207,50 @@ map.on('draw:edited', function (e) {
  * function to delete a layer and update the db correspondingly 
  */
 map.on('draw:deleted', function (e) {
-    
+
     var leafletLayers = drawnItems._layers;
-    var pureLayers = [];
+    var pureLayers = []; //one array with all layers ["type", coordinates]
     /*
     The different Items are stored in one array. In each array there is one leaflet item. 
     key: the name of the object key
-    index: the ordinal position of the key within the object 
+    index: the ordinal position of the key within the object
     By "instanceof" is recognized which type of layer it is and correspondingly the type is added. 
+    For each layer the type and the corresponding coordinates are stored. 
+    By the function 
+                        Object.keys(obj).forEach(function(key,index) {
+                        key: the name of the object key
+                        index: the ordinal position of the key within the object });
+    you can interate over an object. 
     */
-    Object.keys(leafletLayers).forEach(function (key, index) {
+    Object.keys(leafletLayers).forEach(function (key) {
 
+        // marker 
         if (leafletLayers[key] instanceof L.Marker) {
-            pureLayers.push(['Point', leafletLayers[key]._latlng]);
+            pureLayers.push(['Point', [leafletLayers[key]._latlng.lat, leafletLayers[key]._latlng.lng]]);
         }
 
+        // polygon + rectangle (rectangle is a subclass of polygon but the name is the same in geoJSON)
         if (leafletLayers[key] instanceof L.Polygon) {
-            pureLayers.push(['Polygon', leafletLayers[key]._latlngs[0]]);
+            var coordinates = []; 
+
+            Object.keys(leafletLayers[key]._latlngs[0]).forEach(function (key2) {
+                coordinates.push([leafletLayers[key]._latlngs[0][key2].lat, leafletLayers[key]._latlngs[0][key2].lng]);
+            });
+
+            pureLayers.push(['Polygon', coordinates]);
         }
 
+        // polyline (polyline is a subclass of polygon but the name is the different in geoJSON)
         if ((leafletLayers[key] instanceof L.Polyline) && !(leafletLayers[key] instanceof L.Polygon)) {
-            pureLayers.push(['LineString', leafletLayers[key]._latlngs]);
+            var coordinates = []; 
+
+            Object.keys(leafletLayers[key]._latlngs).forEach(function (key3) {
+                coordinates.push([leafletLayers[key]._latlngs[key3].lat, leafletLayers[key]._latlngs[key3].lng]);
+            });
+
+            pureLayers.push(['LineString', coordinates]);
         }
     });
-
-    console.log(pureLayers);
     document.getElementById("spatialProperties").value = JSON.stringify(pureLayers);
 });
 

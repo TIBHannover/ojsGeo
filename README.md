@@ -1,5 +1,5 @@
 <img src="logo.png" alt="Alt-Text" title="" />
-
+<!---created here: https://www.freelogodesign.org/preview?lang=de&name=geoOJS%20OJS&logo=421f5b45-02da-4a66-90da-d213adc643b4--->
 work in progress - A plugin for integrating geospatial data in OJS. 
 
 If you want to use the setting "enable_cdn = Off" in the OJS config.inc.php you need to download the following files and create these folders in the plug-ins main path: 
