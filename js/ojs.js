@@ -72,7 +72,12 @@ map.on('draw:created', function (e) {
     The different Items are stored in one array. In each array there is one leaflet item. 
     key: the name of the object key
     index: the ordinal position of the key within the object
-    By "instanceof" is recognized which type of layer it is and correspondingly the type is added.  
+    By "instanceof" is recognized which type of layer it is and correspondingly the type is added.
+    By the function 
+                        Object.keys(obj).forEach(function(key,index) {
+                        key: the name of the object key
+                        index: the ordinal position of the key within the object });
+    you can interate over an object. 
     */
     Object.keys(leafletLayers).forEach(function (key, index) {
 
@@ -105,6 +110,11 @@ map.on('draw:edited', function (e) {
     key: the name of the object key
     index: the ordinal position of the key within the object 
     By "instanceof" is recognized which type of layer it is and correspondingly the type is added. 
+    By the function 
+                        Object.keys(obj).forEach(function(key,index) {
+                        key: the name of the object key
+                        index: the ordinal position of the key within the object });
+    you can interate over an object. 
     */
     Object.keys(leafletLayers).forEach(function (key, index) {
 
