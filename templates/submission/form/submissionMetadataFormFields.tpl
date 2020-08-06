@@ -6,28 +6,19 @@
 
     {*temporal*}
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.temporal" for="period" inline=true}
-	<p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description"}</p>
-    <input type="text" name="datetimes" style="width: 600px;"/>
+    <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description"}</p>
+    <input type="text" name="datetimes" style="width: 600px; z-index: 0;" />
     {/fbvFormSection}
     {/fbvFormArea}
 
-    {*{fbvElement type="text" multilingual=false name="period" id="period" value=$coverage maxlength="255" readonly=$readOnly required=false}*}
     {fbvFormArea}
-
     {*spatial*}
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.spatial" for="period" inline=true}
-	<p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description"}</p>
+    <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description"}</p>
     <div id="mapdiv" style="width: 600px; height: 400px; float: left;  z-index: 0;"></div>
+	<input type="text" id="spatialProperties" name="spatialProperties" size="30" style="visibility: hidden;">
     {/fbvFormSection}
     {/fbvFormArea}
-
-	{fbvFormArea id="openAIRE"}
-	{fbvFormSection label="plugins.generic.openAIRE.projectID" for="source" description="plugins.generic.openAIRE.projectID.description"}
-		{fbvElement type="text" name="projectID" id="projectID" value=$projectID maxlength="255" readonly=$readOnly}
-	{/fbvFormSection}
-	{/fbvFormArea}
-
-
 </div>
 
 

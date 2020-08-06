@@ -1,8 +1,5 @@
-const lat = 51.96;
-const lon = 7.59;
-const start_latlng = [lat, lon];
 
-var map = L.map("mapdiv", { drawControl: false }).setView(start_latlng, 13);
+var map = L.map('mapdiv').setView([51.96, 7.59], 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -67,23 +64,97 @@ map.on('draw:created', function (e) {
         // something specific concerning item 
     }
 
-    console.log(layer._latlngs); // coordinates of the layer 
-    console.log(layer._leaflet_id); // id of layer 
     drawnItems.addLayer(layer);
-    console.log(drawnItems); // TODO store FeatureClass with all layers in DB 
+
+    var leafletLayers = drawnItems._layers;
+    var pureLayers = [];
+    /*
+    The different Items are stored in one array. In each array there is one leaflet item. 
+    key: the name of the object key
+    index: the ordinal position of the key within the object
+    By "instanceof" is recognized which type of layer it is and correspondingly the type is added.  
+    */
+    Object.keys(leafletLayers).forEach(function (key, index) {
+
+        if (leafletLayers[key] instanceof L.Marker) {
+            pureLayers.push(['Point', leafletLayers[key]._latlng]);
+        }
+
+        if (leafletLayers[key] instanceof L.Polygon) {
+            pureLayers.push(['Polygon', leafletLayers[key]._latlngs[0]]);
+        }
+
+        if ((leafletLayers[key] instanceof L.Polyline) && !(leafletLayers[key] instanceof L.Polygon)) {
+            pureLayers.push(['LineString', leafletLayers[key]._latlngs]);
+        }
+    });
+
+    console.log(pureLayers);
+    document.getElementById("spatialProperties").value = JSON.stringify(pureLayers);
 });
 
 /**
  * function to edit the layer and store it in db 
  */
 map.on('draw:edited', function (e) {
-    var layers = e.layers;
-    var countOfEditedLayers = 0;
-    layers.eachLayer(function (layer) {
-        countOfEditedLayers++;
+    
+    var leafletLayers = drawnItems._layers;
+    var pureLayers = [];
+    /*
+    The different Items are stored in one array. In each array there is one leaflet item. 
+    key: the name of the object key
+    index: the ordinal position of the key within the object 
+    By "instanceof" is recognized which type of layer it is and correspondingly the type is added. 
+    */
+    Object.keys(leafletLayers).forEach(function (key, index) {
+
+        if (leafletLayers[key] instanceof L.Marker) {
+            pureLayers.push(['Point', leafletLayers[key]._latlng]);
+        }
+
+        if (leafletLayers[key] instanceof L.Polygon) {
+            pureLayers.push(['Polygon', leafletLayers[key]._latlngs[0]]);
+        }
+
+        if ((leafletLayers[key] instanceof L.Polyline) && !(leafletLayers[key] instanceof L.Polygon)) {
+            pureLayers.push(['LineString', leafletLayers[key]._latlngs]);
+        }
     });
 
-    console.log(drawnItems); // TODO store FeatureClaas with all layers and overrite old storage in DB 
+    console.log(pureLayers);
+    document.getElementById("spatialProperties").value = JSON.stringify(pureLayers);
+});
+
+/**
+ * function to delete a layer and update the db correspondingly 
+ */
+map.on('draw:deleted', function (e) {
+    
+    var leafletLayers = drawnItems._layers;
+    var pureLayers = [];
+    /*
+    The different Items are stored in one array. In each array there is one leaflet item. 
+    key: the name of the object key
+    index: the ordinal position of the key within the object 
+    By "instanceof" is recognized which type of layer it is and correspondingly the type is added. 
+    */
+    Object.keys(leafletLayers).forEach(function (key, index) {
+
+        if (leafletLayers[key] instanceof L.Marker) {
+            pureLayers.push(['Point', leafletLayers[key]._latlng]);
+        }
+
+        if (leafletLayers[key] instanceof L.Polygon) {
+            pureLayers.push(['Polygon', leafletLayers[key]._latlngs[0]]);
+        }
+
+        if ((leafletLayers[key] instanceof L.Polyline) && !(leafletLayers[key] instanceof L.Polygon)) {
+            pureLayers.push(['LineString', leafletLayers[key]._latlngs]);
+        }
+    });
+
+    console.log(pureLayers);
+    document.getElementById("spatialProperties").value = JSON.stringify(pureLayers);
 });
 
 /**
@@ -100,7 +171,8 @@ $(function () {
     }, function (start, end, label) {
         var start = start.format('YYYY-MM-DD hh:mm A');
         var end = end.format('YYYY-MM-DD hh:mm A');
-        console.log("A new date selection was made: " + start + ' to ' + end); // TODO store Date in DB and overrite old storage in DB 
+        console.log("A new date selection was made: " + start + ' to ' + end);
+
     });
 });
 

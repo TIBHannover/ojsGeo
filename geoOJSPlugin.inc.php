@@ -33,17 +33,6 @@ class geoOJSPlugin extends GenericPlugin
 			HookRegistry::register('Schema::get::publication', array($this, 'addToSchema'));
 			HookRegistry::register('Publication::edit', array($this, 'editPublication'));
 
-
-
-
-
-
-
-
-
-
-
-
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
 
@@ -120,6 +109,9 @@ class geoOJSPlugin extends GenericPlugin
 		$smarty = &$params[1];
 		$output = &$params[2];
 
+		// example: by the arrow is used to to access the attribute smarty of the variable smarty 
+		// $templateMgr = $smarty->smarty; 
+
 		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
 		//$issue = &$args[1]; // wird auch genannt: smarty 
 		//$article = &$args[2]; // wird auch genannt: output
@@ -134,8 +126,7 @@ class geoOJSPlugin extends GenericPlugin
 		Further details can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/templates
 		Where are templates located: https://docs.pkp.sfu.ca/pkp-theming-guide/en/html-smarty
 		*/
-		error_log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-		echo "Helsslo";
+		echo "TestTesTest";
 
 		$output .= $smarty->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
 
@@ -174,7 +165,9 @@ class geoOJSPlugin extends GenericPlugin
 	}
 
 	/**
-	 * Function which fills the new fields (created by the function addToSchema) in the schema 
+	 * Function which fills the new fields (created by the function addToSchema) in the schema. 
+	 * The data is collected using the "ojs.js", then passed as input to the "submissionMetadataFormFields.js" 
+	 * and requested from it in this php script by a POST-method. 
 	 * @param hook Publication::edit
 	 */
 	function editPublication(string $hookname, array $args)
@@ -182,11 +175,17 @@ class geoOJSPlugin extends GenericPlugin
 		$newPublication = $args[0];
 		$params = $args[2];
 
-		$exampleTimestamp = '2020-08-19 05:00 PM to 2020-09-29 01:19 AM';
-		$exampleBoundingBox = 'lat: 51.95622058741223, lng: 7.555503845214819';
-		
-		$newPublication->setData('geoOJS::timestamp', $exampleTimestamp, null);
-		$newPublication->setData('geoOJS::boundingBox', $exampleBoundingBox, null);
+		$datetimes = $_POST['datetimes'];
+		$spatialProperties = $_POST['spatialProperties'];
+
+		$exampleTimestamp = $datetimes;
+		$exampleBoundingBox = 'lat: 51.95622058741223, lng: 7.555503845214822';
+		$exampleCoverageElement = 'Münster'; 
+
+		$newPublication->setData('coverage', $exampleCoverageElement, null); // TODO store the real coverage element 
+		$newPublication->setData('geoOJS::timestamp', $datetimes, null);
+		$newPublication->setData('geoOJS::boundingBox', $spatialProperties, null);
+
 		/*
 		The following lines are probably needed if you want to store text in a certain language to set the local key,
 		further information can be found here:
@@ -202,9 +201,6 @@ class geoOJSPlugin extends GenericPlugin
 		$yourdata2 = '00:00:00';
 		*/ 
 	}
-
-
-
 
 	/**
 	 * function to write sth. into the page 

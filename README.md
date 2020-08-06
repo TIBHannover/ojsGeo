@@ -1,4 +1,5 @@
-# geoOJS
+<img src="logo.png" alt="Alt-Text" title="" />
+
 work in progress - A plugin for integrating geospatial data in OJS. 
 
 If you want to use the setting "enable_cdn = Off" in the OJS config.inc.php you need to download the following files and create these folders in the plug-ins main path: 
