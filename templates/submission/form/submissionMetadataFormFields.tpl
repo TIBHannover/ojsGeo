@@ -16,7 +16,7 @@
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.spatial" for="period" inline=true}
     <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description"}</p>
     <div id="mapdiv" style="width: 600px; height: 400px; float: left;  z-index: 0;"></div>
-	<input type="text" id="spatialProperties" name="spatialProperties" size="30" style="visibility: hidden;">
+	<input type="text" id="spatialProperties" name="spatialProperties" size="30" style="visibility: hidden;"> 
     {/fbvFormSection}
     {/fbvFormArea}
 </div>
