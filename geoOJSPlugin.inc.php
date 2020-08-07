@@ -179,7 +179,7 @@ class geoOJSPlugin extends GenericPlugin
 		$spatialProperties = $_POST['spatialProperties'];
 
 		$exampleTimestamp = $datetimes;
-		$spatialProperties = 'lat: 51.95622058741223, lng: 7.555503845214822';
+		$exampleSpatialProperties = 'lat: 51.95622058741223, lng: 7.555503845214822';
 		$exampleCoverageElement = 'Münster';
 
 		$newPublication->setData('coverage', $exampleCoverageElement, null); // TODO store the real coverage element 
