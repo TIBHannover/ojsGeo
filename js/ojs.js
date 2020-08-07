@@ -4,6 +4,23 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+// add a search to the map 
+//TODO this can be used as an suggested bounding box to the user 
+var geocoder = L.Control.geocoder({
+    defaultMarkGeocode: false
+})
+.on('markgeocode', function(e) {
+    var bbox = e.geocode.bbox;
+    var poly = L.polygon([
+         bbox.getSouthEast(),
+         bbox.getNorthEast(),
+         bbox.getNorthWest(),
+         bbox.getSouthWest()
+    ])/*.addTo(map);*/
+    map.fitBounds(poly.getBounds());
+})
+.addTo(map);
+
 // FeatureGroup is to store editable layers
 var drawnItems = new L.FeatureGroup();
 map.addLayer(drawnItems);
@@ -210,8 +227,6 @@ $(function () {
     }, function (start, end, label) {
         var start = start.format('YYYY-MM-DD hh:mm A');
         var end = end.format('YYYY-MM-DD hh:mm A');
-        console.log("A new date selection was made: " + start + ' to ' + end);
-
     });
 });
 

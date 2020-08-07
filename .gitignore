@@ -20,3 +20,5 @@ enable_cdn_Off/leaflet-draw/leaflet.draw.js
 enable_cdn_Off/leaflet-draw/leaflet.draw-src.css
 enable_cdn_Off/leaflet-draw/leaflet.draw-src.js
 enable_cdn_Off/leaflet-draw/leaflet.draw-src.map
+
+enable_cdn_Off/leaflet-control-geocoder

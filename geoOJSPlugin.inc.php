@@ -22,7 +22,7 @@ class geoOJSPlugin extends GenericPlugin
 			*/
 
 			// Hook for changing the frontent and adding a new form 
-			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendTemplate'));
+			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'doSomething'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'addGeospatialProperties'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'storeGeospatialProperties'));
@@ -48,16 +48,21 @@ class geoOJSPlugin extends GenericPlugin
 				$urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js';
 				$urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js';
 				$urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css';
+				$urlLeafletControlGeocodeJS ='https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js';
+				$urlLeafletControlGeocodeCSS = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css';
 			} else {
 				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.css';
 				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.js';
 				$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.css';
 				$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.js';
 				// $urlJqueryJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/jquery.min.js';
-				// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
+				// jquery - no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
 				$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/moment.min.js';
 				$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.min.js';
 				$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.css';
+				$urlLeafletControlGeocodeJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-control-geocoder/dist/Control.Geocoder.js';
+				$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-control-geocoder/dist/Control.Geocoder.css';
+
 			}
 
 			/*
@@ -90,6 +95,11 @@ class geoOJSPlugin extends GenericPlugin
 			$templateMgr->addJavaScript("daterangepickerJS", $urlDaterangepickerJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("daterangepickerCSS", $urlDaterangepickerCSS, array('contexts' => array('frontend', 'backend')));
 
+			/*
+			loading leaflet control geocoder (search)
+			*/
+			$templateMgr->addJavaScript("leafletControlGeocodeJS", $urlLeafletControlGeocodeJS, array('contexts' => array('frontend', 'backend')));
+			$templateMgr->addStyleSheet("leafletControlGeocodeCSS", $urlLeafletControlGeocodeCSS, array('contexts' => array('frontend', 'backend')));
 
 			// main js script for loading leaflet
 			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
@@ -102,7 +112,7 @@ class geoOJSPlugin extends GenericPlugin
 	 * Function which extends the sumbmissionMetadataFormFields template.
 	 * @param hook Templates::Submission::SubmissionMetadataForm::AdditionalMetadata
 	 */
-	public function extendTemplate($hookName, $params)
+	public function extendSubmissionMetadataFormTemplate($hookName, $params)
 	{
 		$smarty = &$params[1];
 		$output = &$params[2];
@@ -180,7 +190,7 @@ class geoOJSPlugin extends GenericPlugin
 
 		$exampleTimestamp = $datetimes;
 		$exampleSpatialProperties = 'lat: 51.95622058741223, lng: 7.555503845214822';
-		$exampleCoverageElement = 'Münster';
+		$exampleCoverageElement = 'TODO';
 
 		$newPublication->setData('coverage', $exampleCoverageElement, null); // TODO store the real coverage element 
 		$newPublication->setData('geoOJS::timestamp', $datetimes, null);

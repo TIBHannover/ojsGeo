@@ -14,3 +14,6 @@ Download all the files and folders of dist (https://www.jsdelivr.com/package/npm
 
 "enable_cdn_Off/leaflet-draw/":
 Download all the files and folders of dist (https://www.jsdelivr.com/package/npm/leaflet?path=dist) into this path
+
+"enable_cdn_Off/leaflet-control-geocoder/":
+Download all the files and folders (https://www.jsdelivr.com/package/npm/leaflet-control-geocoder) into this path 
