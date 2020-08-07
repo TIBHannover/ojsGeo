@@ -3,9 +3,7 @@
 import('lib.pkp.classes.plugins.GenericPlugin');
 
 /**
- * Each plugin must extend one of the plugin category classes that exist in OJS and OMP. 
- * In our case its the genericPlugin class. 
- * 
+ * geoOJSPlugin, a generic Plugin for enabling geospatial properties in OJS 
  */
 class geoOJSPlugin extends GenericPlugin
 {
@@ -126,7 +124,7 @@ class geoOJSPlugin extends GenericPlugin
 		Further details can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/templates
 		Where are templates located: https://docs.pkp.sfu.ca/pkp-theming-guide/en/html-smarty
 		*/
-		echo "TestTesTest";
+		// echo "TestTesTest"; // by echo a direct output is created on the page
 
 		$output .= $smarty->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
 
@@ -135,12 +133,14 @@ class geoOJSPlugin extends GenericPlugin
 
 	/**
 	 * Function which extends the schema of the publication_settings table in the database. 
+	 * There are two further rows in the table one for the spatial properties, and one for the timestamp 
 	 * @param hook Schema::get::publication
 	 */
 	public function addToSchema($hookName, $args)
 	{
-		// possible types: integer, string, text, 
+		// possible types: integer, string, text 
 		$schema = $args[0];
+
 		$timestamp = '{
 			"type": "string",
 			"multilingual": true,
@@ -152,7 +152,7 @@ class geoOJSPlugin extends GenericPlugin
 		$timestampDecoded = json_decode($timestamp);
 		$schema->properties->{'geoOJS::timestamp'} = $timestampDecoded;
 
-		$boundingBox = '{
+		$spatialProperties = '{
 			"type": "string",
 			"multilingual": true,
 			"apiSummary": true,
@@ -160,8 +160,8 @@ class geoOJSPlugin extends GenericPlugin
 				"nullable"
 			]
 		}';
-		$boundingBoxDecoded = json_decode($boundingBox);
-		$schema->properties->{'geoOJS::boundingBox'} = $boundingBoxDecoded;
+		$spatialPropertiesDecoded = json_decode($spatialProperties);
+		$schema->properties->{'geoOJS::spatialProperties'} = $spatialPropertiesDecoded;
 	}
 
 	/**
@@ -179,12 +179,12 @@ class geoOJSPlugin extends GenericPlugin
 		$spatialProperties = $_POST['spatialProperties'];
 
 		$exampleTimestamp = $datetimes;
-		$exampleBoundingBox = 'lat: 51.95622058741223, lng: 7.555503845214822';
-		$exampleCoverageElement = 'Münster'; 
+		$spatialProperties = 'lat: 51.95622058741223, lng: 7.555503845214822';
+		$exampleCoverageElement = 'Münster';
 
 		$newPublication->setData('coverage', $exampleCoverageElement, null); // TODO store the real coverage element 
 		$newPublication->setData('geoOJS::timestamp', $datetimes, null);
-		$newPublication->setData('geoOJS::boundingBox', $spatialProperties, null);
+		$newPublication->setData('geoOJS::spatialProperties', $spatialProperties, null);
 
 		/*
 		The following lines are probably needed if you want to store text in a certain language to set the local key,
@@ -199,17 +199,18 @@ class geoOJSPlugin extends GenericPlugin
 
 		$yourdata = 100;
 		$yourdata2 = '00:00:00';
-		*/ 
+		*/
 	}
 
 	/**
-	 * function to write sth. into the page 
+	 * function for simple outputs. 
 	 */
+	/*
 	public function doSomething($hookName, $args)
 	{
-		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
-		$issue = &$args[1]; // wird auch genannt: smarty 
-		$article = &$args[2]; // wird auch genannt: output
+		$request = Application::get()->getRequest(); // alternativly "&$args[0];" but then "$request->getUserVar('submissionId');" is not possible
+		$msarty = &$args[1];
+		$article = &$args[2];
 
 		// to get the Id of the actual submission
 		$submissionId = $request->getUserVar('submissionId');
@@ -217,11 +218,10 @@ class geoOJSPlugin extends GenericPlugin
 
 		// $article .= $currentUser;
 		$article .= $submissionId;
-
-		$article .= "<p> Hier könnte Ihre Werbung stehen </p> <p> Nö </p>";
+		$article .= "<p> Hier könnte Ihre Werbung stehen </p> <p> schlechte Werbung</p>";
 
 		return false;
-	}
+	}*/
 
 	/**
 	 * Provide a name for this plugin (plugin gallery)

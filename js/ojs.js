@@ -1,5 +1,4 @@
-
-var map = L.map('mapdiv').setView([51.96, 7.59], 13);
+var map = L.map('mapdiv').setView([51.96, 7.59], 13); 
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -226,7 +225,7 @@ map.on('draw:edited', function (e) {
 });
 
 /**
- * function to delete a/ the layer(s) and update the db correspondingly with the geoJSON
+ * function to delete the layer(s) and update the db correspondingly with the geoJSON
  */
 map.on('draw:deleted', function (e) {
 
