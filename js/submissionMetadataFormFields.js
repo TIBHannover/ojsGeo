@@ -78,7 +78,7 @@ function createGeojson(allLayers) {
     var geojsonFeatures = [];
 
     for (var i = 0; i < allLayers.length; i++) {
-        // there is a if-case because for Polygons in geojson there is a fürther "[...]" needed concerning the coordinates 
+        // there is a if-case because for Polygons in geojson there is a further "[...]" needed concerning the coordinates 
         if (allLayers[i][0] === 'Polygon') {
             var geojsonFeature = {
                 "type": "Feature",

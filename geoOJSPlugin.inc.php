@@ -157,7 +157,10 @@ class geoOJSPlugin extends GenericPlugin
 	}
 
 	/**
-	 * Function which extends ArticleMain Template. 
+	 * Function which extends ArticleMain Template by spatial- and temporal properties. 
+	 * Data is loaded from the database, passed as template variable to the 'article_details.tpl' 
+	 * and requested from there in the 'article_details.js' to display coordinates in a map and 
+	 * dates in a calendar. 
 	 * @param hook Templates::Article::Main
 	 */
 	public function extendArticleMainTemplate($hookName, $params)
@@ -168,13 +171,16 @@ class geoOJSPlugin extends GenericPlugin
 		$publication = $templateMgr->getTemplateVars('publication');
 		$submission = $templateMgr->getTemplateVars('article');
 		$submissionId = $submission->getId();
-		$coverage = $publication->getData('coverage');
-		$temporalproperties = $publication->getData('geoOJS::timestamp');
-		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
 
-		echo $coverage;
-		echo $temporalproperties;
-		echo $spatialProperties;
+		// get data from database 
+		$temporalProperties = $publication->getData('geoOJS::timestamp');
+		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
+		//$coverage = $publication->getData('coverage');
+
+		//assign data as variables to the template 
+		$templateMgr->assign('temporalProperties', $temporalProperties);
+		$templateMgr->assign('spatialProperties', $spatialProperties);
+		//$templateMgr->assign('coverage', $coverage);
 
 		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details.tpl'));
 

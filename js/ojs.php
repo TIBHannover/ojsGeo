@@ -1,22 +1,24 @@
 <?php
-
-
-echo json_encode(42);
-
 $my_php_var = 5; 
 $simple = 'demo text string';
-$php_string = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[7.516193389892579,51.94553466305084],[7.516193389892579,51.96447134091556],[7.56511688232422,51.96447134091556],[7.56511688232422,51.94553466305084],[7.516193389892579,51.94553466305084]]]},"properties":{"name":"TODO Administrative Unit"}}]}'; 
+echo '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[7.516193389892579,51.94553466305084],[7.516193389892579,51.96447134091556],[7.56511688232422,51.96447134091556],[7.56511688232422,51.94553466305084],[7.516193389892579,51.94553466305084]]]},"properties":{"name":"TODO Administrative Unit"}}]}'; 
 ?>
-<p>Hell</p> 
-<input type="text" id="spatialProperties" name="spatialProperties" size="30" >
 
 <script>
-    var my_variable_name = "<?php echo $php_string; ?>";
-    console.log(my_variable_name); 
+    function reqListener () {
+      console.log(this.responseText);
+    }
 
-    document.getElementById("spatialProperties").value = my_variable_name;
-
-
+    var oReq = new XMLHttpRequest(); // New request object
+    oReq.onload = function() {
+        // This is where you handle what to do with the response.
+        // The actual data is found on this.responseText
+        alert(this.responseText); // Will alert: 42
+    };
+    oReq.open("get", "get-data.php", true);
+    //                               ^ Don't block the rest of the execution.
+    //                                 Don't wait until the request finishes to
+    //                                 continue.
+    oReq.send();
 </script>
 
-<script src="ojs.js" type="text/javascript" defer></script>
