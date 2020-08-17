@@ -30,4 +30,4 @@
     }
 </style>
 {*main js script, needs to be loaded last*}
-<script src="{$geoOJSScript}" type="text/javascript" defer></script>
+<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>

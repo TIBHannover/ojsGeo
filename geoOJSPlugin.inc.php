@@ -1,5 +1,8 @@
 <?php
 // import of genericPlugin
+
+use phpDocumentor\Reflection\Types\Null_;
+
 import('lib.pkp.classes.plugins.GenericPlugin');
 
 /**
@@ -22,10 +25,21 @@ class geoOJSPlugin extends GenericPlugin
 			*/
 
 			// Hook for changing the frontent and adding a new form 
+			// Templates::Submission::SubmissionMetadataForm::AdditionalMetadata -> Template for Submission Step 3 
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'doSomething'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'addGeospatialProperties'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'storeGeospatialProperties'));
+
+			// Hook for changing the article page 
+			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
+			// ArticleHandler::view -> general Article view 
+			// Templates::Article::Main 
+			// Templates::Article::Details
+			// Templates::Article::Footer::PageFooter
+
+			// not working 
+			HookRegistry::register('Templates::Manager::Sections::SectionForm::AdditionalMetadata', array(&$this, 'extendReview'));
 
 			// Hook for creating and setting a new field in the database 
 			HookRegistry::register('Schema::get::publication', array($this, 'addToSchema'));
@@ -48,7 +62,7 @@ class geoOJSPlugin extends GenericPlugin
 				$urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js';
 				$urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js';
 				$urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css';
-				$urlLeafletControlGeocodeJS ='https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js';
+				$urlLeafletControlGeocodeJS = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js';
 				$urlLeafletControlGeocodeCSS = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css';
 			} else {
 				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.css';
@@ -62,7 +76,6 @@ class geoOJSPlugin extends GenericPlugin
 				$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.css';
 				$urlLeafletControlGeocodeJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-control-geocoder/dist/Control.Geocoder.js';
 				$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-control-geocoder/dist/Control.Geocoder.css';
-
 			}
 
 			/*
@@ -97,12 +110,14 @@ class geoOJSPlugin extends GenericPlugin
 
 			/*
 			loading leaflet control geocoder (search)
+			source: https://github.com/vladimirbuskin/leaflet-control-geocoder 
 			*/
 			$templateMgr->addJavaScript("leafletControlGeocodeJS", $urlLeafletControlGeocodeJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("leafletControlGeocodeCSS", $urlLeafletControlGeocodeCSS, array('contexts' => array('frontend', 'backend')));
 
 			// main js script for loading leaflet
-			$templateMgr->assign('geoOJSScript', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/ojs.js');
+			$templateMgr->assign('submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
+			$templateMgr->assign('article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
 		}
 		return $success;
 	}
@@ -142,6 +157,42 @@ class geoOJSPlugin extends GenericPlugin
 	}
 
 	/**
+	 * Function which extends ArticleMain Template. 
+	 * @param hook Templates::Article::Main
+	 */
+	public function extendArticleMainTemplate($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		$publication = $templateMgr->getTemplateVars('publication');
+		$submission = $templateMgr->getTemplateVars('article');
+		$submissionId = $submission->getId();
+		$coverage = $publication->getData('coverage');
+		$temporalproperties = $publication->getData('geoOJS::timestamp');
+		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
+
+		echo $coverage;
+		echo $temporalproperties;
+		echo $spatialProperties;
+
+		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details.tpl'));
+
+		return false;
+	}
+
+	// not working 
+	public function extendReview($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		echo '<p>Helloooooooooooo</p>';
+
+		return false;
+	}
+
+	/**
 	 * Function which extends the schema of the publication_settings table in the database. 
 	 * There are two further rows in the table one for the spatial properties, and one for the timestamp 
 	 * @param hook Schema::get::publication
@@ -153,7 +204,7 @@ class geoOJSPlugin extends GenericPlugin
 
 		$timestamp = '{
 			"type": "string",
-			"multilingual": true,
+			"multilingual": false,
 			"apiSummary": true,
 			"validation": [
 				"nullable"
@@ -164,7 +215,7 @@ class geoOJSPlugin extends GenericPlugin
 
 		$spatialProperties = '{
 			"type": "string",
-			"multilingual": true,
+			"multilingual": false,
 			"apiSummary": true,
 			"validation": [
 				"nullable"
@@ -188,13 +239,44 @@ class geoOJSPlugin extends GenericPlugin
 		$datetimes = $_POST['datetimes'];
 		$spatialProperties = $_POST['spatialProperties'];
 
-		$exampleTimestamp = $datetimes;
-		$exampleSpatialProperties = 'lat: 51.95622058741223, lng: 7.555503845214822';
+		/*
+		In php you can use json_decode and json_encode, similar to JSON.parse and JSON.stringify in js! 
+		$spatialPropertiesDecoded = json_decode($spatialProperties);
+		$spatialPropertiesEncoded = json_encode($spatialPropertiesDecoded);
+		*/
+
+		$exampleTimestamp = '2020-08-12 11:00 AM - 2020-08-13 07:00 PM';
+		$exampleSpatialProperties = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[7.516193389892579,51.94553466305084],[7.516193389892579,51.96447134091556],[7.56511688232422,51.96447134091556],[7.56511688232422,51.94553466305084],[7.516193389892579,51.94553466305084]]]},"properties":{"name":"TODO Administrative Unit"}}]}';
 		$exampleCoverageElement = 'TODO';
 
-		$newPublication->setData('coverage', $exampleCoverageElement, null); // TODO store the real coverage element 
-		$newPublication->setData('geoOJS::timestamp', $datetimes, null);
-		$newPublication->setData('geoOJS::spatialProperties', $spatialProperties, null);
+		/*
+		If the element to store in the database is an element which is different in different languages 
+		the property "multilingual" in the function addToSchema has to be true, and you have to use a loop like this 
+
+		$localePare = $params['title'];
+
+		foreach ($localePare as $localeKey => $fileId) {
+			$newPublication->setData('jatsParser::fullText', $htmlDocument->saveAsHTML(), $localeKey);
+		}
+
+		further information: https://github.com/Vitaliy-1/JATSParserPlugin/blob/21425c486f0f157cd8dc6b829322cd32159dd408/JatsParserPlugin.inc.php#L619 
+
+		For elements which are not multilangual you can skip the parameter $localeKey and just do it like this: 
+			$newPublication->setData('geoOJS::spatialProperties', $spatialProperties);
+
+		Take care, function is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
+		*/
+
+
+		if ($spatialProperties !== null) {
+			$newPublication->setData('geoOJS::spatialProperties', $spatialProperties);
+		}
+
+		if ($spatialProperties !== null) {
+			$newPublication->setData('geoOJS::timestamp', $datetimes);
+		}
+
+		// $newPublication->setData('coverage', $exampleCoverageElement); // TODO store the real coverage element 
 
 		/*
 		The following lines are probably needed if you want to store text in a certain language to set the local key,
