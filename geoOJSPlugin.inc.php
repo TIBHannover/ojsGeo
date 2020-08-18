@@ -43,7 +43,8 @@ class geoOJSPlugin extends GenericPlugin
 
 			// Hook for creating and setting a new field in the database 
 			HookRegistry::register('Schema::get::publication', array($this, 'addToSchema'));
-			HookRegistry::register('Publication::edit', array($this, 'editPublication'));
+			HookRegistry::register('Publication::edit', array($this, 'editPublication')); // Take care, hook is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
+
 
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);

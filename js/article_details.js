@@ -25,9 +25,33 @@ else if (spatialProperties.features[0].geometry.type === 'Point') {
 var map = L.map('mapdiv').setView([latFirstCoordinateGeojson, lngFirstCoordinateGeojson], 10); // TODO auf den Ort der Untersuchung setzen 
 L.geoJSON(spatialProperties).addTo(map);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+    maxZoom: 18
 }).addTo(map);
+
+var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 18
+});
+
+var baseLayers = {
+    "OpenStreetMap": osmlayer,
+    "Esri World Imagery": Esri_WorldImagery
+};
+
+// add two baseLayers (Open Street Map and Esri World Imagery) to the map 
+L.control.layers(baseLayers).addTo(map);
+
+
+
+
+
+
+
+
+
 
 // add a search to the map 
 var geocoder = L.Control.geocoder({
@@ -59,8 +83,8 @@ $(function () {
         timePicker: false,
         autoApply: true,
         autoUpdateInput: true,
-        startDate: temporalProperties,
-        endDate: temporalPropertiesEnd,
+        startDate: "2020-08-03 11:59 A",
+        endDate: "2020-08-14 05:17 AM",
         locale: {
             format: 'YYYY-MM-DD hh:mm A'
         }
