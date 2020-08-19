@@ -178,6 +178,15 @@ class geoOJSPlugin extends GenericPlugin
 		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
 		//$coverage = $publication->getData('coverage');
 
+		// for the case that no data is available 
+		if ($temporalProperties === null) {
+			$temporalProperties = "no data"; 
+		}
+
+		if ($spatialProperties === null) {
+			$spatialProperties = "no data"; 
+		}
+
 		//assign data as variables to the template 
 		$templateMgr->assign('temporalProperties', $temporalProperties);
 		$templateMgr->assign('spatialProperties', $spatialProperties);
@@ -243,7 +252,7 @@ class geoOJSPlugin extends GenericPlugin
 		$newPublication = $args[0];
 		$params = $args[2];
 
-		$datetimes = $_POST['datetimes'];
+		$temporalProperties = $_POST['temporalProperties'];
 		$spatialProperties = $_POST['spatialProperties'];
 
 		/*
@@ -273,14 +282,15 @@ class geoOJSPlugin extends GenericPlugin
 
 		Take care, function is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
 		*/
-
-
-		if ($spatialProperties !== null) {
+		
+		// null if there is no possibility to input data (metadata input before Schedule for Publication)
+		// "" if the author does not input something 
+		if ($spatialProperties !== null && $spatialProperties !== "") {
 			$newPublication->setData('geoOJS::spatialProperties', $spatialProperties);
 		}
 
-		if ($spatialProperties !== null) {
-			$newPublication->setData('geoOJS::timestamp', $datetimes);
+		if ($temporalProperties !== null && $temporalProperties !== "") {
+			$newPublication->setData('geoOJS::timestamp', $temporalProperties);
 		}
 
 		// $newPublication->setData('coverage', $exampleCoverageElement); // TODO store the real coverage element 

@@ -9,6 +9,7 @@
     <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description"}
     </p>
     <input type="text" name="datetimes" style="width: 1116px; height: 32px; z-index: 0;" />
+    <input type="text" id="temporalProperties" name="temporalProperties" style="width: 1116px; height: 32px; z-index: 0; visibility: hidden;" />
     {/fbvFormSection}
 
     {*spatial*}

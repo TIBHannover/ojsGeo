@@ -1,20 +1,35 @@
 {*the main template is here extended*}
 
 <div style="clear:both;">
-    <section class="item geospatialmetadata">
+    <section id="item geospatialmetadata" class="item geospatialmetadata">
         <h2 class="label">{translate key="plugins.generic.geoOJS.geospatialmetadata"}</h2>
     </section>
 
-    <section class="item temporal">
+    <section id="item temporal" class="item temporal">
         <h2 class="label">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal"}</h2>
-        <input type="text" name="datetimes" style="width: 499px; height: 30px; z-index: 0;" />
-        <input type="text" id="temporalProperties" name="temporalProperties" size="30" style="visibility: hidden;" value='{$temporalProperties}' />
+        <div id="temporalPropertiesShow">
+            <table>
+                <tr>
+                    <td valign="top"><b>{translate
+                            key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.start"}:</b></td>
+                    <td id="start"></td>
+                </tr>
+                <tr>
+                    <td valign="top"><b>{translate
+                            key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.end"}:</b></td>
+                    <td id="end"></td>
+                </tr>
+            </table>
+        </div>
+        <input type="text" id="temporalProperties" name="temporalProperties" size="30" style="visibility: hidden;"
+            value='{$temporalProperties}' />
     </section>
 
-    <section class="item spatial">
+    <section id="item spatial" class="item spatial">
         <h2 class="label">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial"}</h2>
         <div id="mapdiv" style="width: 499px; height: 300px; margin-bottom: 20px; float: left; z-index: 0;"></div>
-        <input type="text" id="spatialProperties" name="spatialProperties" size="30" style="visibility: hidden;" value='{$spatialProperties}'>
+        <input type="text" id="spatialProperties" name="spatialProperties" size="30" style="visibility: hidden;"
+            value='{$spatialProperties}'>
     </section>
 </div>
 

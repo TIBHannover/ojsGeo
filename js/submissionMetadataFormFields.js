@@ -235,11 +235,41 @@ $(function () {
         startDate: moment().startOf('hour'),
         endDate: moment().startOf('hour').add(32, 'hour'),
         locale: {
-            format: 'YYYY-MM-DD hh:mm A'
+            format: 'YYYY-MM-DD hh:mm:ss A'
         }
     }, function (start, end, label) {
-        var start = start.format('YYYY-MM-DD hh:mm A');
-        var end = end.format('YYYY-MM-DD hh:mm A');
+        var start = start.format('YYYY-MM-DD hh:mm:ss A');
+        var end = end.format('YYYY-MM-DD hh:mm:ss A');
+
+        var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
+        var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
+
+        var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
+
+        document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
     });
+
 });
+
+/**
+ * function to convert a UTC timestamp with AM/ PM to a Unix timestamp in milliseconds 
+ * @param {*} UTCInAMPM 
+ */
+function UTCInAMPMToUnixTimestampMillisecond(UTCInAMPM) {
+
+    var year = UTCInAMPM.substring(0, 4);
+    var month = UTCInAMPM.substring(5, 7) - 1; // -1 because Date.UTC() starts with zero, localeTimeInAMPM not 
+    var day = UTCInAMPM.substring(8, 10);
+    var hour = parseInt(UTCInAMPM.substring(11, 13));
+    var minute = UTCInAMPM.substring(14, 16);
+    var second = UTCInAMPM.substring(17, 19);
+    var amPm = UTCInAMPM.substring(20, 22);
+
+    // add 12 if time is pm 
+    if (amPm === 'PM') {
+        hour = hour + 12;
+    }
+
+    return Date.UTC(year, month, day, hour, minute, second);
+}
 
