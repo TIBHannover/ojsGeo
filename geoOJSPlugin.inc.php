@@ -1,9 +1,9 @@
 <?php
 // import of genericPlugin
+import('lib.pkp.classes.plugins.GenericPlugin');
 
 use phpDocumentor\Reflection\Types\Null_;
-
-import('lib.pkp.classes.plugins.GenericPlugin');
+use \PKP\components\forms\FormComponent;
 
 /**
  * geoOJSPlugin, a generic Plugin for enabling geospatial properties in OJS 
@@ -27,6 +27,8 @@ class geoOJSPlugin extends GenericPlugin
 			// Hook for changing the frontent and adding a new form 
 			// Templates::Submission::SubmissionMetadataForm::AdditionalMetadata -> Template for Submission Step 3 
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
+			HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
+			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendScheduleForPublication2'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'doSomething'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'addGeospatialProperties'));
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array(&$this, 'storeGeospatialProperties'));
@@ -37,9 +39,6 @@ class geoOJSPlugin extends GenericPlugin
 			// Templates::Article::Main 
 			// Templates::Article::Details
 			// Templates::Article::Footer::PageFooter
-
-			// not working 
-			HookRegistry::register('Templates::Manager::Sections::SectionForm::AdditionalMetadata', array(&$this, 'extendReview'));
 
 			// Hook for creating and setting a new field in the database 
 			HookRegistry::register('Schema::get::publication', array($this, 'addToSchema'));
@@ -180,11 +179,11 @@ class geoOJSPlugin extends GenericPlugin
 
 		// for the case that no data is available 
 		if ($temporalProperties === null) {
-			$temporalProperties = "no data"; 
+			$temporalProperties = "no data";
 		}
 
 		if ($spatialProperties === null) {
-			$spatialProperties = "no data"; 
+			$spatialProperties = "no data";
 		}
 
 		//assign data as variables to the template 
@@ -197,16 +196,35 @@ class geoOJSPlugin extends GenericPlugin
 		return false;
 	}
 
-	// not working 
-	public function extendReview($hookName, $params)
+	// not working function to add a form before Schedule for Publication 
+	public function extendScheduleForPublication(string $hookName, FormComponent $form): void
 	{
-		$templateMgr = &$params[1];
-		$output = &$params[2];
+		if ($form->id !== 'metadata' || !empty($form->errors)) return;
 
-		echo '<p>Helloooooooooooo</p>';
+		if ($form->id === 'metadata') {
 
-		return false;
+			/*
+			$publication = Services::get('publication');
+			$temporalProperties = $publication->getData('geoOJS::timestamp');
+			$spatialProperties = $publication->getData('geoOJS::spatialProperties');
+			*/
+
+			$form->addField(new \PKP\components\forms\FieldOptions('jatsParser::references', [
+				'label' => 'Hello',
+				'description' => 'Hello',
+				'type' => 'radio',
+				'options' => null,
+				'value' => null
+			]));
+		}
 	}
+
+	// not working function to write something in Schedule for Publication 
+	public function extendScheduleForPublication2($hookName, $args)
+	{
+		echo "<p> Hello </p>";
+	}
+
 
 	/**
 	 * Function which extends the schema of the publication_settings table in the database. 
@@ -282,7 +300,7 @@ class geoOJSPlugin extends GenericPlugin
 
 		Take care, function is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
 		*/
-		
+
 		// null if there is no possibility to input data (metadata input before Schedule for Publication)
 		// "" if the author does not input something 
 		if ($spatialProperties !== null && $spatialProperties !== "") {

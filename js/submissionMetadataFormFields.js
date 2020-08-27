@@ -189,6 +189,142 @@ function createGeojsonFromLeafletOutput(drawnItems) {
 }
 
 /**
+ * function that performs the Ajax request to the API Geonames for any latitude and longitude. 
+ * https://www.geonames.org/ 
+ * @param {*} lng 
+ * @param {*} lat 
+ */
+function ajaxRequestGeonames(lng, lat) {
+    /*
+    https://www.geonames.org/export/ws-overview.html
+
+    http://api.geonames.org/extendedFindNearby?lat=51.953152612307456&lng=7.614898681640625&username=tnier01
+    http://api.geonames.org/countrySubdivisionJSON?lat=51.953152612307456&lng=7.614898681640625&username=tnier01
+    http://api.geonames.org/searchJSON?lat=51.953152612307456&lng=7.614898681640625&maxRows=10&username=tnier01
+    http://api.geonames.org/hierarchyJSON?formatted=true&lat=51.953152612307456&lng=7.614898681640625&username=tnier01&style=full 
+     */
+
+    var resultGeonames;
+    var urlGeonames = 'http://api.geonames.org/hierarchyJSON?formatted=true&lat=' + lat + '&lng=' + lng + '&username=tnier01&style=full';
+    $.ajax({
+        url: urlGeonames,
+        async: false,
+        success: function (result) {
+            resultGeonames = result;
+        }
+    });
+    return resultGeonames;
+}
+
+/**
+ * function to proof if all positions in an array are the same 
+ * @param {*} el 
+ * @param {*} index 
+ * @param {*} arr 
+ */
+function isSameAnswer(el, index, arr) {
+    // Do not test the first array element, as you have nothing to compare to
+    if (index === 0) {
+        return true;
+    }
+    else {
+        //do each array element value match the value of the previous array element
+        return (el.geonameId === arr[index - 1].geonameId);
+    }
+}
+
+/**
+ * function which returns for each feature an array with the administrative units that match at all points of the feature. 
+ * The administrative units are queried via the API geonames. 
+ * @param {*} geojsonFeature 
+ */
+function getAdministrativeUnitFromGeonames(geojsonFeature) {
+
+    var administrativeUnitsPerFeatureRaw = [];
+    /*
+    For each point of the GeoJSON feature the API Geonames is requested,
+    to get the hierarchy of administrative units for each point. 
+    The result is stored as array by the the variable administrativeUnitsPerFeatureRaw.
+    For each hierarchy level the asciiName and the geonameId is stored. 
+    A distinction is made between Point, LineString and Polygon, 
+    because the coordinates are stored differently in the GeoJSON.  
+    For the point can be saved directly, no comparison between different points of the feature is necessary, 
+    because there is only one point. 
+    */
+    var geojsonFeatureCoordinates;
+    if (geojsonFeature.geometry.type === 'Point') {
+        var lng = geojsonFeature.geometry.coordinates[0];
+        var lat = geojsonFeature.geometry.coordinates[1];
+
+        var administrativeUnitRaw = ajaxRequestGeonames(lng, lat);
+
+        var administrativeUnitsPerPoint = [];
+        for (var k = 0; k < administrativeUnitRaw.geonames.length; k++) {
+            var administrativeUnit = {
+                'asciiName': administrativeUnitRaw.geonames[k].asciiName,
+                'geonameId': administrativeUnitRaw.geonames[k].geonameId
+            }
+            administrativeUnitsPerPoint.push(administrativeUnit);
+        }
+        return administrativeUnitsPerPoint;
+    }
+    else if (geojsonFeature.geometry.type === 'LineString') {
+        geojsonFeatureCoordinates = geojsonFeature.geometry.coordinates;
+    }
+    else if (geojsonFeature.geometry.type === 'Polygon') {
+        geojsonFeatureCoordinates = geojsonFeature.geometry.coordinates[0];
+    }
+
+    for (var j = 0; j < geojsonFeatureCoordinates.length; j++) {
+
+        var lng = geojsonFeatureCoordinates[j][0];
+        var lat = geojsonFeatureCoordinates[j][1];
+
+        var administrativeUnitRaw = ajaxRequestGeonames(lng, lat);
+
+        var administrativeUnitsPerPoint = [];
+        for (var k = 0; k < administrativeUnitRaw.geonames.length; k++) {
+            var administrativeUnit = {
+                'asciiName': administrativeUnitRaw.geonames[k].asciiName,
+                'geonameId': administrativeUnitRaw.geonames[k].geonameId
+            }
+            administrativeUnitsPerPoint.push(administrativeUnit);
+        }
+        administrativeUnitsPerFeatureRaw.push(administrativeUnitsPerPoint);
+    }
+
+    // The number of hierarchy levels for the point with the fewest hierarchy levels is calculated  
+    var numberOfAdministrativeUnits = 100;
+    for (var l = 0; l < administrativeUnitsPerFeatureRaw.length; l++) {
+
+        if (numberOfAdministrativeUnits > administrativeUnitsPerFeatureRaw[l].length) {
+            numberOfAdministrativeUnits = administrativeUnitsPerFeatureRaw[l].length;
+        }
+    }
+
+    /*
+    It is checked which lowest level in the administrative hierarchy system is the same for all points. 
+    For this purpose, the hierarchical levels of the different points are stored in an array and checked for equality (by the helpfunction isSameAnswer). 
+    The lowest level at which there is a match is stored as the administrative unit for the feature. 
+    */
+    var administrativeUnitForFeature = [];
+    for (var m = 0; m < numberOfAdministrativeUnits; m++) {
+        var comparingUnits = [];
+
+        for (var n = 0; n < administrativeUnitsPerFeatureRaw.length; n++) {
+            comparingUnits.push(administrativeUnitsPerFeatureRaw[n][m]);
+        }
+
+        if (comparingUnits.every(isSameAnswer) === true) {
+
+            administrativeUnitForFeature.push(comparingUnits[0]);
+        }
+    }
+    return administrativeUnitForFeature;
+}
+
+
+/**
  * function to edit the layer(s) and update the db correspondingly with the geoJSON
  */
 map.on('draw:created', function (e) {
@@ -203,6 +339,11 @@ map.on('draw:created', function (e) {
 
     geojson = createGeojsonFromLeafletOutput(drawnItems);
 
+    // For each geoJSON feature the administrative units that matches is stored. 
+    for (var i = 0; i < geojson.features.length; i++) {
+        geojson.features[i].properties.name = getAdministrativeUnitFromGeonames(geojson.features[i]);
+    }
+
     document.getElementById("spatialProperties").value = JSON.stringify(geojson);
 });
 
@@ -213,6 +354,11 @@ map.on('draw:edited', function (e) {
 
     geojson = createGeojsonFromLeafletOutput(drawnItems);
 
+    // For each geoJSON feature the administrative units that matches is stored. 
+    for (var i = 0; i < geojson.features.length; i++) {
+        geojson.features[i].properties.name = getAdministrativeUnitFromGeonames(geojson.features[i]);
+    }
+
     document.getElementById("spatialProperties").value = JSON.stringify(geojson);
 });
 
@@ -222,6 +368,11 @@ map.on('draw:edited', function (e) {
 map.on('draw:deleted', function (e) {
 
     geojson = createGeojsonFromLeafletOutput(drawnItems);
+
+    // For each geoJSON feature the administrative units that matches is stored. 
+    for (var i = 0; i < geojson.features.length; i++) {
+        geojson.features[i].properties.name = getAdministrativeUnitFromGeonames(geojson.features[i]);
+    }
 
     document.getElementById("spatialProperties").value = JSON.stringify(geojson);
 });
