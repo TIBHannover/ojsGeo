@@ -4,12 +4,15 @@
     <message key="plugins.generic.geoOJS.geospatialmetadata">Geospatial Metadata</message>
     <message key="plugins.generic.geoOJS.geospatialmetadata.description">Here the article can be specified in terms of its spatial and temporal properties.</message>
     <message key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal">Temporal Properties</message>
-    <message key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description">Define the temporal properties of the articles content by specifying date and time (time in UTC).</message>
+    <message key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description">Define the temporal properties of the articles content by specifying date and time (time in UTC). The input is possible via the text field as well as via the calendar view.</message>
     <message key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.start">Start</message>
     <message key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.end">End</message>
 
     <message key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial">Spatial Properties</message>
     <message key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description">Define the spatial properties of the articles content by an layer. You can choose in the control on the left side between polyline, polygon, rectangle, point.</message>
+    <message key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit">Coverage Information</message>
+    <message key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description">On basis of your input in the map, an administrative unit is proposed which has been selected according to your input. If you accept this administrative unit, it will be stored as coverage information in the metadata. Alternatively, you can delete, modify it, or only input coverage information without map input.</message>
+    <message key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView">Coverage Information</message>
 
     <message key="plugins.generic.geoOJS.name">geoOJS</message>
     <message key="plugins.generic.geoOJS.description">Plug-in which enables the storage of geospatial metadata.</message>

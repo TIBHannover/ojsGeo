@@ -129,8 +129,15 @@ class geoOJSPlugin extends GenericPlugin
 	 */
 	public function extendSubmissionMetadataFormTemplate($hookName, $params)
 	{
-		$smarty = &$params[1];
+		$templateMgr = &$params[1];
 		$output = &$params[2];
+
+		/*
+		TODO Datenabfrage
+		$publication = $templateMgr->getTemplateVars('publication');
+		$submission = $templateMgr->getTemplateVars('article');
+		$submissionId = $submission->getId();
+		*/
 
 		// example: by the arrow is used to to access the attribute smarty of the variable smarty 
 		// $templateMgr = $smarty->smarty; 
@@ -151,7 +158,7 @@ class geoOJSPlugin extends GenericPlugin
 		*/
 		// echo "TestTesTest"; // by echo a direct output is created on the page
 
-		$output .= $smarty->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
+		$output .= $templateMgr->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
 
 		return false;
 	}
@@ -175,21 +182,25 @@ class geoOJSPlugin extends GenericPlugin
 		// get data from database 
 		$temporalProperties = $publication->getData('geoOJS::timestamp');
 		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
-		//$coverage = $publication->getData('coverage');
+		$administrativeUnit = $publication->getData('coverage');
 
 		// for the case that no data is available 
 		if ($temporalProperties === null) {
-			$temporalProperties = "no data";
+			$temporalProperties = 'no data';
 		}
 
-		if ($spatialProperties === null) {
-			$spatialProperties = "no data";
+		if ($spatialProperties === null || $spatialProperties === '') {
+			$spatialProperties = 'no data';
+		}
+
+		if (current($administrativeUnit) === '' || $administrativeUnit === '') {
+			$administrativeUnit = 'no data';
 		}
 
 		//assign data as variables to the template 
 		$templateMgr->assign('temporalProperties', $temporalProperties);
 		$templateMgr->assign('spatialProperties', $spatialProperties);
-		//$templateMgr->assign('coverage', $coverage);
+		$templateMgr->assign('administrativeUnit', $administrativeUnit);
 
 		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details.tpl'));
 
@@ -220,9 +231,17 @@ class geoOJSPlugin extends GenericPlugin
 	}
 
 	// not working function to write something in Schedule for Publication 
-	public function extendScheduleForPublication2($hookName, $args)
+	public function extendScheduleForPublication2($hookName, $params)
 	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+
 		echo "<p> Hello </p>";
+
+		// $output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details.tpl'));
+
+		return false;
 	}
 
 
@@ -272,6 +291,7 @@ class geoOJSPlugin extends GenericPlugin
 
 		$temporalProperties = $_POST['temporalProperties'];
 		$spatialProperties = $_POST['spatialProperties'];
+		$administrativeUnit = $_POST['administrativeUnit'];
 
 		/*
 		In php you can use json_decode and json_encode, similar to JSON.parse and JSON.stringify in js! 
@@ -303,7 +323,7 @@ class geoOJSPlugin extends GenericPlugin
 
 		// null if there is no possibility to input data (metadata input before Schedule for Publication)
 		// "" if the author does not input something 
-		if ($spatialProperties !== null && $spatialProperties !== "") {
+		if ($spatialProperties !== null) {
 			$newPublication->setData('geoOJS::spatialProperties', $spatialProperties);
 		}
 
@@ -311,7 +331,9 @@ class geoOJSPlugin extends GenericPlugin
 			$newPublication->setData('geoOJS::timestamp', $temporalProperties);
 		}
 
-		// $newPublication->setData('coverage', $exampleCoverageElement); // TODO store the real coverage element 
+		if ($administrativeUnit !== null) {
+			$newPublication->setData('coverage', $administrativeUnit);
+		}
 
 		/*
 		The following lines are probably needed if you want to store text in a certain language to set the local key,

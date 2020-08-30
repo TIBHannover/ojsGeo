@@ -4,14 +4,19 @@ var spatialPropertiesDecoded = document.getElementById("spatialProperties").valu
 // load temporal properties from .tpl 
 var temporalPropertiesDecoded = document.getElementById("temporalProperties").value;
 
+// load temporal properties from .tpl 
+var administrativeUnitDecoded = document.getElementById("administrativeUnit").value;
+console.log(administrativeUnitDecoded);
+
 /*
-If neither temporal nor spatial properties are available, the corresponding elements in the article_details.tpl are deleted 
+If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
 and no geospatial metadata are displayed.  
 */
-if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no data") {
-    document.getElementById("item spatial").innerHTML = null;
-    document.getElementById("item temporal").innerHTML = null;
-    document.getElementById("item geospatialmetadata").innerHTML = null;
+if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no data" && administrativeUnitDecoded === "no data") {
+    document.getElementById("item spatial").remove();
+    document.getElementById("item temporal").remove();
+    document.getElementById("item geospatialmetadata").remove();
+    document.getElementById("item administrativeUnit").remove();
 }
 
 /*
@@ -20,7 +25,7 @@ If no spatial properties are available, the corresponding elements in the articl
 and no spatial metadata are displayed. Otherwise the map is created and the spatial properties are displayed. 
 */
 if (spatialPropertiesDecoded === "no data") {
-    document.getElementById("item spatial").innerHTML = null;
+    document.getElementById("item spatial").remove(); 
 }
 else {
     var spatialProperties = JSON.parse(spatialPropertiesDecoded);
@@ -85,13 +90,77 @@ else {
         .addTo(map);
 }
 
+/**
+ * function to proof if a taken string is valid JSON
+ * @param {} string
+ */
+function IsJsonString(string) {
+    try {
+        JSON.parse(string);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * function that performs the Ajax request to the API Geonames for any geonameId. 
+ * https://www.geonames.org/ 
+ * @param {*} geonameId 
+ */
+function ajaxRequestGeonamesCoordinates(geonameId) {
+    
+    var resultGeonames;
+    var urlGeonames = 'http://api.geonames.org/hierarchyJSON?geonameId=' + geonameId + '&username=tnier01';
+
+    $.ajax({
+        url: urlGeonames,
+        async: false,
+        success: function (result) {
+            resultGeonames = result;
+        }
+    });
+    return resultGeonames;
+}
+
+/*
+administrative unit
+The administrative unit is requested from the OJS database. 
+If a geonamedId is available, there is a further API request for the further hierarchy. 
+This hierarchy is then displayed on the article view. 
+If there is no geonameId, only the storage from the database is shown in the article view.  
+*/
+if (administrativeUnitDecoded === "no data") {
+    document.getElementById("item administrativeUnit").remove();
+}
+else {
+    // if there is no object with name and geonameId available, the storaged element from the database is displayed directly. 
+    if (IsJsonString(administrativeUnitDecoded) == false) {
+        document.getElementById("administrativeUnitDescription").innerHTML = administrativeUnitDecoded;
+    }
+    else {
+        var administrativeUnit = JSON.parse(administrativeUnitDecoded);
+
+        var administrativeUnitHierarchyRaw = ajaxRequestGeonamesCoordinates(administrativeUnit.geonameId);
+        var administrativeUnitHierarchy = administrativeUnitHierarchyRaw.geonames
+        var administrativeUnitHierarchyPlaceNames = []; 
+
+        for (var i = 0; i < administrativeUnitHierarchy.length; i++) {
+            administrativeUnitHierarchyPlaceNames.push(administrativeUnitHierarchy[i].name);
+        } 
+
+        var divElement = '<div>' +  administrativeUnit.asciiName + '</div>' + '</br>' + 'which is classified in the following hierarchical system of administrative units: ' +  administrativeUnitHierarchyPlaceNames.join(", ");
+        document.getElementById("administrativeUnitDescription").innerHTML = divElement;
+    }
+}
+
 /*
 temporal properties
 If no temporal properties are available, the corresponding elements in the article_details.tpl are deleted 
 and no temporal metadata are displayed. Otherwise the map is created and the temporal properties are displayed. 
 */
 if (temporalPropertiesDecoded === "no data") {
-    document.getElementById("item temporal").innerHTML = null;
+    document.getElementById("item temporal").remove();
 }
 else {
     // display temporal properties in utc
