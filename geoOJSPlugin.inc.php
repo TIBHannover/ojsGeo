@@ -129,16 +129,10 @@ class geoOJSPlugin extends GenericPlugin
 	 */
 	public function extendSubmissionMetadataFormTemplate($hookName, $params)
 	{
+
 		$templateMgr = &$params[1];
 		$output = &$params[2];
-
-		/*
-		TODO Datenabfrage
-		$publication = $templateMgr->getTemplateVars('publication');
-		$submission = $templateMgr->getTemplateVars('article');
-		$submissionId = $submission->getId();
-		*/
-
+		
 		// example: by the arrow is used to to access the attribute smarty of the variable smarty 
 		// $templateMgr = $smarty->smarty; 
 
