@@ -50,9 +50,8 @@ else {
 
 
     // set focus of the map on the first coordinate of the geojson (var spatialProperites)
-    var map = L.map('mapdiv').setView([latFirstCoordinateGeojson, lngFirstCoordinateGeojson], 10); // TODO auf den Ort der Untersuchung setzen 
+    var map = L.map('mapdiv').setView([latFirstCoordinateGeojson, lngFirstCoordinateGeojson], 11); // TODO auf den Ort der Untersuchung setzen 
     L.geoJSON(spatialProperties).addTo(map); // TODO je nach Art des geoJSON Farbe ändern 
-
 
     var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -164,8 +163,8 @@ if (temporalPropertiesDecoded === "no data") {
 else {
     // display temporal properties in utc
     var temporalProperties = JSON.parse(temporalPropertiesDecoded);
-    var utcStart = new Date(temporalProperties[0]);
-    var utcEnd = new Date(temporalProperties[1]);
+    var utcStart = (new Date(temporalProperties[0])).toUTCString();
+    var utcEnd = (new Date(temporalProperties[1])).toUTCString();
 
     document.getElementById("start").innerHTML = utcStart;
     document.getElementById("end").innerHTML = utcEnd;

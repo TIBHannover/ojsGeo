@@ -603,8 +603,8 @@ $(function () {
 
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,
-            startDate: yearStart + '-' + monthStart + '-' + dayStart + ' ' + hourStart + ':' + minutesStart + 'seconds' + '' + amPmStart,
-            endDate: yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + hourEnd + ':' + minutesEnd + 'seconds' + '' + amPmEnd,
+            startDate: yearStart + '-' + monthStart + '-' + dayStart + ' ' + hourStart + ':' + minutesStart + ':' + secondsStart + ' ' + amPmStart,
+            endDate: yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + hourEnd + ':' + minutesEnd + ':' + secondsEnd + ' ' + amPmEnd,
             locale: {
                 format: 'YYYY-MM-DD hh:mm:ss A'
             }
