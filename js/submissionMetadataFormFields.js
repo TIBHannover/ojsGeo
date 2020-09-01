@@ -58,6 +58,9 @@ var baseLayers = {
     "Esri World Imagery": Esri_WorldImagery
 };
 
+// add scale to the map 
+L.control.scale().addTo(map);
+
 // add two baseLayers (Open Street Map and Esri World Imagery) to the map 
 L.control.layers(baseLayers).addTo(map);
 
