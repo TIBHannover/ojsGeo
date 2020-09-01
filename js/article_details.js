@@ -1,12 +1,11 @@
-//load spatial properties from .tpl 
+//load spatial properties from article_details.tpl 
 var spatialPropertiesDecoded = document.getElementById("spatialProperties").value;
 
-// load temporal properties from .tpl 
+// load temporal properties from article_details.tpl 
 var temporalPropertiesDecoded = document.getElementById("temporalProperties").value;
 
-// load temporal properties from .tpl 
+// load temporal properties from article_details.tpl 
 var administrativeUnitDecoded = document.getElementById("administrativeUnit").value;
-console.log(administrativeUnitDecoded);
 
 /*
 If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
@@ -94,7 +93,7 @@ else {
  * function to proof if a taken string is valid JSON
  * @param {} string
  */
-function IsJsonString(string) {
+function IsGivenStringJson(string) {
     try {
         JSON.parse(string);
     } catch (e) {
@@ -135,7 +134,7 @@ if (administrativeUnitDecoded === "no data") {
 }
 else {
     // if there is no object with name and geonameId available, the storaged element from the database is displayed directly. 
-    if (IsJsonString(administrativeUnitDecoded) == false) {
+    if (IsGivenStringJson(administrativeUnitDecoded) == false) {
         document.getElementById("administrativeUnitDescription").innerHTML = administrativeUnitDecoded;
     }
     else {

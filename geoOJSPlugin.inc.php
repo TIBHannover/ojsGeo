@@ -124,7 +124,8 @@ class geoOJSPlugin extends GenericPlugin
 
 
 	/**
-	 * Function which extends the sumbmissionMetadataFormFields template.
+	 * Function which extends the sumbmissionMetadataFormFields template and adds template variables concerning temporal- and spatial properties 
+	 * and the administrative unit if there is already a storage in the database 
 	 * @param hook Templates::Submission::SubmissionMetadataForm::AdditionalMetadata
 	 */
 	public function extendSubmissionMetadataFormTemplate($hookName, $params)
@@ -132,13 +133,43 @@ class geoOJSPlugin extends GenericPlugin
 
 		$templateMgr = &$params[1];
 		$output = &$params[2];
-		
+
 		// example: by the arrow is used to to access the attribute smarty of the variable smarty 
 		// $templateMgr = $smarty->smarty; 
 
 		$request = Application::get()->getRequest(); // alternativ auch "&$args[0];" aber dann geht "$request->getUserVar('submissionId');" nicht
 		//$issue = &$args[1]; // wird auch genannt: smarty 
 		//$article = &$args[2]; // wird auch genannt: output
+
+		/*
+		In case the user repeats the step "3. Enter Metadata" in the process "Submit to article" and comes back to this step to make changes again, 
+		the already entered data is read from the database, added to the template and displayed for the user. 
+		*/
+		$publicationDao = DAORegistry::getDAO('PublicationDAO');
+		$submissionId = $request->getUserVar('submissionId');
+		$publication = $publicationDao->getById($submissionId);
+
+		$temporalProperties = $publication->getData('geoOJS::timestamp');
+		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
+		$administrativeUnit = $publication->getData('coverage');
+
+		// for the case that no data is available 
+		if ($temporalProperties === null) {
+			$temporalProperties = 'no data';
+		}
+
+		if ($spatialProperties === null || $spatialProperties === '') {
+			$spatialProperties = 'no data';
+		}
+
+		if (current($administrativeUnit) === '' || $administrativeUnit === '') {
+			$administrativeUnit = 'no data';
+		}
+
+		//assign data as variables to the template 
+		$templateMgr->assign('temporalPropertiesFromDb', $temporalProperties);
+		$templateMgr->assign('spatialPropertiesFromDb', $spatialProperties);
+		$templateMgr->assign('administrativeUnitFromDb', $administrativeUnit);
 
 		/*
 		This way templates are loaded. 

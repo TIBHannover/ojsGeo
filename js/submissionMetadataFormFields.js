@@ -1,3 +1,46 @@
+//load temporal properties which got already stored in database from submissionMetadataFormFields.tpl 
+var temporalPropertiesFromDbDecoded = document.getElementById("temporalPropertiesFromDb").value;
+
+//load spatial properties which got already stored in database from submissionMetadataFormFields.tpl 
+var spatialPropertiesFromDbDecoded = document.getElementById("spatialPropertiesFromDb").value;
+
+//load administrative Unit which got already stored in database from submissionMetadataFormFields.tpl 
+var administrativeUnitFromDbDecoded = document.getElementById("administrativeUnitFromDb").value;
+
+/**
+ * function to proof if a taken string is valid JSON
+ * @param {} string
+ */
+function IsGivenStringJson(string) {
+    try {
+        JSON.parse(string);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+/*
+In case the user repeats the step "3. Enter Metadata" in the process "Submit to article" and comes back to this step to make changes again, 
+the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly. 
+ */
+if (administrativeUnitFromDbDecoded !== 'no data') {
+    if (IsGivenStringJson(administrativeUnitFromDbDecoded) === true) {
+        var administrativeUnitFromDb = JSON.parse(administrativeUnitFromDbDecoded);
+
+        document.getElementById("administrativeUnitInput").value = administrativeUnitFromDb.asciiName;
+
+        // The form for saving in the database is updated accordingly 
+        changedAdministrativeUnitByAuthor();
+    }
+    else {
+        document.getElementById("administrativeUnitInput").value = administrativeUnitFromDbDecoded;
+
+        // The form for saving in the database is updated accordingly 
+        changedAdministrativeUnitByAuthor();
+    }
+}
+
 var map = L.map('mapdiv').setView([51.96, 7.59], 13);
 
 var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -21,6 +64,22 @@ L.control.layers(baseLayers).addTo(map);
 // FeatureGroup is to store editable layers
 var drawnItems = new L.FeatureGroup();
 map.addLayer(drawnItems);
+
+/*
+In case the user repeats the step "3. Enter Metadata" in the process "Submit to article" and comes back to this step to make changes again, 
+the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly. 
+ */
+if (spatialPropertiesFromDbDecoded !== 'no data') {
+    var spatialPropertiesFromDb = JSON.parse(spatialPropertiesFromDbDecoded);
+
+    var geojsonLayer = L.geoJson(spatialPropertiesFromDb);
+    geojsonLayer.eachLayer(
+        function (l) {
+            drawnItems.addLayer(l);
+        });
+    storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
+    map.fitBounds(drawnItems.getBounds());
+}
 
 // edit which geometrical forms are drawable 
 var drawControl = new L.Control.Draw({
@@ -382,7 +441,7 @@ map.on('draw:created', function (e) {
 
     drawnItems.addLayer(layer);
 
-    storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems); 
+    storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
 });
 
 /**
@@ -416,7 +475,7 @@ function changedAdministrativeUnitByAuthor() {
 
     var administrativeUnitRaw = ajaxRequestGeonamesPlaceName(authorInput);
 
-    if (administrativeUnitRaw.totalResultsCount !== 0 && administrativeUnitRaw.geonames[0].name === authorInput) {
+    if (administrativeUnitRaw.totalResultsCount !== 0 && (administrativeUnitRaw.geonames[0].toponymName === authorInput || administrativeUnitRaw.geonames[0].name === authorInput)) {
 
         var administrativeUnit = {
             'asciiName': administrativeUnitRaw.geonames[0].name,
@@ -455,29 +514,29 @@ var geocoder = L.Control.geocoder({
     .addTo(map);
 
 /**
- * function to load the daterangepicker and store the date in the db 
+ * function which changes hour system from 24 hours to 12 hours
+ * @param {*} hour 
  */
-$(function () {
-    $('input[name="datetimes"]').daterangepicker({
-        timePicker: true,
-        startDate: moment().startOf('hour'),
-        endDate: moment().startOf('hour').add(32, 'hour'),
-        locale: {
-            format: 'YYYY-MM-DD hh:mm:ss A'
-        }
-    }, function (start, end, label) {
-        var start = start.format('YYYY-MM-DD hh:mm:ss A');
-        var end = end.format('YYYY-MM-DD hh:mm:ss A');
+function changeHourSystemFrom24To12(hour) {
+    if (hour >= 12) {
+        hour = hour - 12;
+    }
+    return hour;
+}
 
-        var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
-        var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
-
-        var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
-
-        document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
-    });
-
-});
+/**
+ * function which records am and pm for the corresponding times 
+ * @param {*} amPm 
+ */
+function calculateAmPmFor24Time(amPm) {
+    if (1 <= amPm && amPm <= 12) {
+        amPm = 'AM';
+    }
+    else {
+        amPm = 'PM';
+    }
+    return amPm;
+}
 
 /**
  * function to convert a UTC timestamp with AM/ PM to a Unix timestamp in milliseconds 
@@ -500,4 +559,87 @@ function UTCInAMPMToUnixTimestampMillisecond(UTCInAMPM) {
 
     return Date.UTC(year, month, day, hour, minute, second);
 }
+
+/**
+ * function to load the daterangepicker and store the date in the db.
+ * Furthermore data from db is loaded and displayed if available. 
+ */
+$(function () {
+
+    /*
+    In case the user repeats the step "3. Enter Metadata" in the process "Submit to article" and comes back to this step to make changes again, 
+    the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly. 
+    Otherwise, a current period is displayed initially as an example.
+    */
+    if (temporalPropertiesFromDbDecoded !== 'no data') {
+        var temporalPropertiesFromDb = JSON.parse(temporalPropertiesFromDbDecoded);
+
+        var utcStart = new Date(temporalPropertiesFromDb[0]);
+        var utcStartStringified = JSON.stringify(utcStart);
+        var utcEnd = new Date(temporalPropertiesFromDb[1]);
+        var utcEndStringified = JSON.stringify(utcEnd);
+
+        var yearStart = utcStartStringified.substring(1, 5);
+        var monthStart = utcStartStringified.substring(6, 8);
+        var dayStart = utcStartStringified.substring(9, 11);
+        var hourStart = utcStartStringified.substring(12, 14);
+        var minutesStart = utcStartStringified.substring(15, 17);
+        var secondsStart = utcStartStringified.substring(18, 20);
+        var amPmStart = utcStartStringified.substring(12, 14);
+
+        var yearEnd = utcEndStringified.substring(1, 5);
+        var monthEnd = utcEndStringified.substring(6, 8);
+        var dayEnd = utcEndStringified.substring(9, 11);
+        var hourEnd = utcEndStringified.substring(12, 14);
+        var minutesEnd = utcEndStringified.substring(15, 17);
+        var secondsEnd = utcEndStringified.substring(18, 20);
+        var amPmEnd = utcEndStringified.substring(12, 14);
+
+        hourStart = changeHourSystemFrom24To12(hourStart);
+        hourEnd = changeHourSystemFrom24To12(hourEnd);
+
+        amPmStart = calculateAmPmFor24Time(amPmStart);
+        amPmEnd = calculateAmPmFor24Time(amPmEnd);
+
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            startDate: yearStart + '-' + monthStart + '-' + dayStart + ' ' + hourStart + ':' + minutesStart + 'seconds' + '' + amPmStart,
+            endDate: yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + hourEnd + ':' + minutesEnd + 'seconds' + '' + amPmEnd,
+            locale: {
+                format: 'YYYY-MM-DD hh:mm:ss A'
+            }
+        }, function (start, end, label) {
+            var start = start.format('YYYY-MM-DD hh:mm:ss A');
+            var end = end.format('YYYY-MM-DD hh:mm:ss A');
+
+            var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
+            var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
+
+            var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
+
+            document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
+        });
+    }
+    else {
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
+            locale: {
+                format: 'YYYY-MM-DD hh:mm:ss A'
+            }
+        }, function (start, end, label) {
+            var start = start.format('YYYY-MM-DD hh:mm:ss A');
+            var end = end.format('YYYY-MM-DD hh:mm:ss A');
+
+            var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
+            var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
+
+            var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
+
+            document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
+        });
+    }
+});
+
 
