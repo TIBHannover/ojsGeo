@@ -9,7 +9,8 @@ var administrativeUnitDecoded = document.getElementById("administrativeUnit").va
 
 /*
 If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
-and no geospatial metadata are displayed.  
+and no geospatial metadata are displayed. 
+Otherwise, the display of the elements is initiated. 
 */
 if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no data" && administrativeUnitDecoded === "no data") {
     document.getElementById("item spatial").remove();
