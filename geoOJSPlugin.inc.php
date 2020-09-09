@@ -158,7 +158,7 @@ class geoOJSPlugin extends GenericPlugin
 			$temporalProperties = 'no data';
 		}
 
-		if ($spatialProperties === null || $spatialProperties === '') {
+		if ($spatialProperties === null || $spatialProperties === '' || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnit":{"name":"TODO","provenance":"TODO"}}') {
 			$spatialProperties = 'no data';
 		}
 

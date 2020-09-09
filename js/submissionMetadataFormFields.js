@@ -141,6 +141,9 @@ function createGeojson(allLayers) {
         if (allLayers[i][0] === 'Polygon') {
             var geojsonFeature = {
                 "type": "Feature",
+                "properties": {
+                    "provenance": "TODO"
+                },
                 "geometry": {
                     "type": allLayers[i][0],
                     "coordinates": [allLayers[i][1]]
@@ -150,6 +153,7 @@ function createGeojson(allLayers) {
         else {
             var geojsonFeature = {
                 "type": "Feature",
+                "properties": {},
                 "geometry": {
                     "type": allLayers[i][0],
                     "coordinates": allLayers[i][1]
@@ -161,7 +165,11 @@ function createGeojson(allLayers) {
 
     var geojson = {
         "type": "FeatureCollection",
-        "features": geojsonFeatures
+        "features": geojsonFeatures,
+        "administrativeUnit": {
+            "name": "TODO",
+            "provenance": "TODO"
+        }
     };
 
     return geojson;
@@ -394,6 +402,24 @@ function getAdministrativeUnitFromGeonames(geojsonFeature) {
 }
 
 /**
+ * function to highlight an html Element. Designed to alert users that something has changed in html element. 
+ * @param {*} htmlElement the affected html element 
+ */
+function highlightHTMLElement(htmlElement) {
+    document.getElementById(htmlElement).style.boxShadow = "0 0 5px rgba(81, 203, 238, 1)";
+    document.getElementById(htmlElement).style.padding = "3px 0px 3px 3px";
+    document.getElementById(htmlElement).style.margin = "5px 1px 3px 0px";
+    document.getElementById(htmlElement).style.border = "1px solid rgba(81, 203, 238, 1)";
+
+    setTimeout(() => {
+        document.getElementById(htmlElement).style.boxShadow = "";
+        document.getElementById(htmlElement).style.padding = "";
+        document.getElementById(htmlElement).style.margin = "";
+        document.getElementById(htmlElement).style.border = "";
+    }, 3000);
+}
+
+/**
  * function that first creates a geoJSON feature for all inputs on the map and a FeatureCollection in total. 
  * In addition, the lowest administrative unit that is valid for all features is calculated for the entire FeatureCollection. 
  * These two results are stored in hidden forms so that they can be queried in geoOJSPlugin.inc.php.  
@@ -415,10 +441,12 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
         var lowestadministrativeUnitForAllFeatures = administrativeUnitForAllFeatures[administrativeUnitForAllFeatures.length - 1];
         document.getElementById("administrativeUnitInput").value = lowestadministrativeUnitForAllFeatures.asciiName;
         document.getElementById("administrativeUnit").value = JSON.stringify(lowestadministrativeUnitForAllFeatures);
+        highlightHTMLElement("administrativeUnitInput");
     }
     else {
         document.getElementById("administrativeUnitInput").value = '';
         document.getElementById("administrativeUnit").value = '';
+        highlightHTMLElement("administrativeUnitInput");
     }
 
     // if there are no geoJSON Features/ no spatial data available, there is '' stored in database, otherwise the stringified geoJSON 
@@ -513,6 +541,8 @@ var geocoder = L.Control.geocoder({
         map.fitBounds(poly.getBounds());
 
         storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
+        highlightHTMLElement("mapdiv");
+        
     })
     .addTo(map);
 
