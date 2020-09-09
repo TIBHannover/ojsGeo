@@ -142,7 +142,7 @@ function createGeojson(allLayers) {
             var geojsonFeature = {
                 "type": "Feature",
                 "properties": {
-                    "provenance": "TODO"
+                    "provenance": allLayers[i][2]
                 },
                 "geometry": {
                     "type": allLayers[i][0],
@@ -153,7 +153,9 @@ function createGeojson(allLayers) {
         else {
             var geojsonFeature = {
                 "type": "Feature",
-                "properties": {},
+                "properties": {
+                    "provenance": allLayers[i][2]
+                },
                 "geometry": {
                     "type": allLayers[i][0],
                     "coordinates": allLayers[i][1]
@@ -198,9 +200,11 @@ function createGeojsonFromLeafletOutput(drawnItems) {
     */
     Object.keys(leafletLayers).forEach(function (key) {
 
+        var provenance = leafletLayers[key].provenance;
+
         // marker 
         if (leafletLayers[key] instanceof L.Marker) {
-            pureLayers.push(['Point', [leafletLayers[key]._latlng.lng, leafletLayers[key]._latlng.lat]]);
+            pureLayers.push(['Point', [leafletLayers[key]._latlng.lng, leafletLayers[key]._latlng.lat], provenance]);
         }
 
         // polygon + rectangle (rectangle is a subclass of polygon but the name is the same in geoJSON)
@@ -212,11 +216,11 @@ function createGeojsonFromLeafletOutput(drawnItems) {
             });
 
             /*
-            the first and last object object coordinates in a polygon must be the same, thats why the first element
+            the first and last object coordinates in a polygon must be the same, thats why the first element
             needs to be pushed again at the end because leaflet is not creating both  
             */
             coordinates.push([leafletLayers[key]._latlngs[0][0].lng, leafletLayers[key]._latlngs[0][0].lat]);
-            pureLayers.push(['Polygon', coordinates]);
+            pureLayers.push(['Polygon', coordinates, provenance]);
         }
 
         // polyline (polyline is a subclass of polygon but the name is the different in geoJSON)
@@ -227,7 +231,7 @@ function createGeojsonFromLeafletOutput(drawnItems) {
                 coordinates.push([leafletLayers[key]._latlngs[key3].lng, leafletLayers[key]._latlngs[key3].lat]);
             });
 
-            pureLayers.push(['LineString', coordinates]);
+            pureLayers.push(['LineString', coordinates, provenance]);
         }
     });
     var geojson = createGeojson(pureLayers);
@@ -470,6 +474,9 @@ map.on('draw:created', function (e) {
         // something specific concerning item 
     }
 
+    // this way information about the origin of the geometric shape is stored 
+    layer.provenance = "gemetric shape created by user (drawing)";
+
     drawnItems.addLayer(layer);
 
     storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
@@ -480,6 +487,15 @@ map.on('draw:created', function (e) {
  */
 map.on('draw:edited', function (e) {
 
+    var changedLayer = e.layers._layers;
+    // this way information about the origin of the geometric shape is stored 
+    Object.keys(changedLayer).forEach(function (key) {
+
+        if (changedLayer[key].provenance === "geometric shape created by user (acceppting the suggestion of the leaflet-control-geocoder)") {
+            drawnItems._layers[key].provenance = "geometric shape created by user (edited the suggestion of the leaflet-control-geocoder by drawing)"; 
+        }
+    });
+  
     storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
 });
 
@@ -530,19 +546,21 @@ var geocoder = L.Control.geocoder({
 })
     .on('markgeocode', function (e) {
         var bbox = e.geocode.bbox;
-        var poly = L.polygon([
+        var layer = L.polygon([
             bbox.getSouthEast(),
             bbox.getNorthEast(),
             bbox.getNorthWest(),
             bbox.getSouthWest()
         ]);
 
-        drawnItems.addLayer(poly);
-        map.fitBounds(poly.getBounds());
+        // this way information about the origin of the geometric shape is stored 
+        layer.provenance = "geometric shape created by user (acceppting the suggestion of the leaflet-control-geocoder)";
+
+        drawnItems.addLayer(layer);
+        map.fitBounds(layer.getBounds());
 
         storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
         highlightHTMLElement("mapdiv");
-        
     })
     .addTo(map);
 
