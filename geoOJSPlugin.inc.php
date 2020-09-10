@@ -210,7 +210,7 @@ class geoOJSPlugin extends GenericPlugin
 		$administrativeUnit = $publication->getData('coverage');
 
 		// for the case that no data is available 
-		if ($temporalProperties === null) {
+		if ($temporalProperties === null || $temporalProperties === '') {
 			$temporalProperties = 'no data';
 		}
 

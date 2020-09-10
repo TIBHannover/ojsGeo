@@ -21,7 +21,7 @@ msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal"
 msgstr "Temporal Properties"
 
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description"
-msgstr "Define the temporal properties of the articles content by specifying date and time (time in GMT). The input is possible via the text field as well as via the calendar view."
+msgstr "Define the temporal properties of the articles content by specifying date and time (time in GMT). The input is possible via the text field as well as via the calendar view, you just have to click the input field. If you press \"Apply\" the result will be saved and with \"Clear\" nothing will be saved or in case something was already saved it will be deleted."
 
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal.start"
 msgstr "Start"

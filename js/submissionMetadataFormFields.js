@@ -80,7 +80,7 @@ if (spatialPropertiesFromDbDecoded !== 'no data') {
         function (l) {
             drawnItems.addLayer(l);
         });
-    
+
     // the spatial properties are stored in the HTML element again 
     document.getElementById("spatialProperties").value = spatialPropertiesFromDbDecoded;
 
@@ -251,23 +251,18 @@ function createGeojsonFromLeafletOutput(drawnItems) {
     /*
     If there is a geojson object with features, the unix date range is stored in the geojson, 
     if it is available either from the current edit or from the database.
-    
-    TODO Fall wenn temporal properties vom Nutzer gewollt leer ist 
     */
     var temporalProperties = document.getElementById("temporalProperties").value;
 
     if (geojson !== 'no data') {
-        if (temporalProperties !== '') {
+        if (temporalProperties === 'no data') {
+            geojson.temporalProperties.unixDateRange = 'not available';
+            geojson.temporalProperties.provenance = 'not available';
+        }
+        else if (temporalProperties !== '') {
             geojson.temporalProperties.unixDateRange = temporalProperties;
             geojson.temporalProperties.provenance = "temporal properties created by user";
         }
-        /*
-        else if (temporalPropertiesFromDbDecoded !== 'no data') {
-            var temporalPropertiesFromDb = JSON.parse(temporalPropertiesFromDbDecoded);
-
-            geojson.temporalProperties.unixDateRange = temporalPropertiesFromDb;
-            geojson.temporalProperties.provenance = "temporal properties created by user";
-        }*/
     }
     return geojson;
 }
@@ -688,11 +683,15 @@ $(function () {
     /*
     In case the user repeats the step "3. Enter Metadata" in the process "Submit to article" and comes back to this step to make changes again, 
     the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly. 
-    Otherwise, a current period is displayed initially as an example.
+    Otherwise, the field is empty.
     */
     if (temporalPropertiesFromDbDecoded !== 'no data') {
         var temporalPropertiesFromDb = JSON.parse(temporalPropertiesFromDbDecoded);
 
+        // the temporal properties loaded from db are stored in the HTML element again 
+        document.getElementById("temporalProperties").value = temporalPropertiesFromDbDecoded;
+
+        // unix date range is converted in dates and displayed 
         var utcStart = new Date(temporalPropertiesFromDb[0]);
         var utcStartStringified = JSON.stringify(utcStart);
         var utcEnd = new Date(temporalPropertiesFromDb[1]);
@@ -722,14 +721,20 @@ $(function () {
 
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,
+            timePicker24Hour: true,
+            timePickerSeconds: true,
             startDate: yearStart + '-' + monthStart + '-' + dayStart + ' ' + hourStart + ':' + minutesStart + ':' + secondsStart + ' ' + amPmStart,
             endDate: yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + hourEnd + ':' + minutesEnd + ':' + secondsEnd + ' ' + amPmEnd,
             locale: {
+                cancelLabel: 'Clear',
                 format: 'YYYY-MM-DD hh:mm:ss A'
             }
-        }, function (start, end, label) {
-            var start = start.format('YYYY-MM-DD hh:mm:ss A');
-            var end = end.format('YYYY-MM-DD hh:mm:ss A');
+        });
+
+        $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD hh:mm:ss A') + ' - ' + picker.endDate.format('YYYY-MM-DD hh:mm:ss A'));
+            var start = picker.startDate.format('YYYY-MM-DD hh:mm:ss A');
+            var end = picker.endDate.format('YYYY-MM-DD hh:mm:ss A');
 
             var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
             var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
@@ -741,25 +746,44 @@ $(function () {
             // if the geojson exists, it is updated accordingly
             var geojsonRaw = document.getElementById("spatialProperties").value;
             if (geojsonRaw !== '' && geojsonRaw !== 'no data') {
-                console.log("Hello1");
                 var geojson = JSON.parse(geojsonRaw);
                 geojson.temporalProperties.unixDateRange = unixDaterange;
                 geojson.temporalProperties.provenance = "temporal properties created by user";
                 document.getElementById("spatialProperties").value = JSON.stringify(geojson);
             }
         });
+
+        $('input[name="datetimes"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            document.getElementById("temporalProperties").value = 'no data';
+
+            // if the geojson exists, it is updated accordingly
+            var geojsonRaw = document.getElementById("spatialProperties").value;
+            if (geojsonRaw !== '' && geojsonRaw !== 'no data') {
+                var geojson = JSON.parse(geojsonRaw);
+                geojson.temporalProperties.unixDateRange = 'not available' ;
+                geojson.temporalProperties.provenance = 'not available';
+                document.getElementById("spatialProperties").value = JSON.stringify(geojson);
+            }
+        });
     }
     else {
+
         $('input[name="datetimes"]').daterangepicker({
+            autoUpdateInput: false,
             timePicker: true,
-            startDate: moment().startOf('hour'),
-            endDate: moment().startOf('hour').add(32, 'hour'),
+            timePicker24Hour: true,
+            timePickerSeconds: true,
             locale: {
+                cancelLabel: 'Clear',
                 format: 'YYYY-MM-DD hh:mm:ss A'
             }
-        }, function (start, end, label) {
-            var start = start.format('YYYY-MM-DD hh:mm:ss A');
-            var end = end.format('YYYY-MM-DD hh:mm:ss A');
+        });
+
+        $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD hh:mm:ss A') + ' - ' + picker.endDate.format('YYYY-MM-DD hh:mm:ss A'));
+            var start = picker.startDate.format('YYYY-MM-DD hh:mm:ss A');
+            var end = picker.endDate.format('YYYY-MM-DD hh:mm:ss A');
 
             var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
             var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
@@ -771,10 +795,23 @@ $(function () {
             // if the geojson exists, it is updated accordingly
             var geojsonRaw = document.getElementById("spatialProperties").value;
             if (geojsonRaw !== '' && geojsonRaw !== 'no data') {
-                console.log("Hello2");
                 var geojson = JSON.parse(geojsonRaw);
                 geojson.temporalProperties.unixDateRange = unixDaterange;
                 geojson.temporalProperties.provenance = "temporal properties created by user";
+                document.getElementById("spatialProperties").value = JSON.stringify(geojson);
+            }
+        });
+
+        $('input[name="datetimes"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            document.getElementById("temporalProperties").value = 'no data';
+
+            // if the geojson exists, it is updated accordingly
+            var geojsonRaw = document.getElementById("spatialProperties").value;
+            if (geojsonRaw !== '' && geojsonRaw !== 'no data') {
+                var geojson = JSON.parse(geojsonRaw);
+                geojson.temporalProperties.unixDateRange = 'not available' ;
+                geojson.temporalProperties.provenance = 'not available';
                 document.getElementById("spatialProperties").value = JSON.stringify(geojson);
             }
         });
