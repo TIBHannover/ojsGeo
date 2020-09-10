@@ -10,7 +10,7 @@
     </p>
     <input type="text" name="datetimes" style="width: 1116px; height: 32px; z-index: 0;" />
     <input type="text" id="temporalProperties" name="temporalProperties"
-        style="height: 0px; width: 0px; z-index: 0; visibility: hidden;" />
+        {*style="height: 0px; width: 0px; z-index: 0; visibility: hidden;"*} />
     <input type="text" id="temporalPropertiesFromDb" name="temporalPropertiesFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalPropertiesFromDb}' />
     {/fbvFormSection}
@@ -20,7 +20,7 @@
     <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description"}
     </p>
     <div id="mapdiv" style="width: 1116px; height: 400px; float: left;  z-index: 0;"></div>
-    <input type="text" id="spatialProperties" name="spatialProperties" size="30" style="height: 0px; width: 0px; visibility: hidden;">
+    <input type="text" id="spatialProperties" name="spatialProperties" size="30" {*style="height: 0px; width: 0px; visibility: hidden;"*}>
     <input type="text" id="spatialPropertiesFromDb" name="spatialPropertiesFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialPropertiesFromDb}' />
     {/fbvFormSection}
