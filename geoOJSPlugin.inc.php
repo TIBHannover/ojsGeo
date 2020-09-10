@@ -149,7 +149,7 @@ class geoOJSPlugin extends GenericPlugin
 		$submissionId = $request->getUserVar('submissionId');
 		$publication = $publicationDao->getById($submissionId);
 
-		$temporalProperties = $publication->getData('geoOJS::timestamp');
+		$temporalProperties = $publication->getData('geoOJS::temporalProperties');
 		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
 		$administrativeUnit = $publication->getData('coverage');
 
@@ -205,7 +205,7 @@ class geoOJSPlugin extends GenericPlugin
 		$submissionId = $submission->getId();
 
 		// get data from database 
-		$temporalProperties = $publication->getData('geoOJS::timestamp');
+		$temporalProperties = $publication->getData('geoOJS::temporalProperties');
 		$spatialProperties = $publication->getData('geoOJS::spatialProperties');
 		$administrativeUnit = $publication->getData('coverage');
 
@@ -241,7 +241,7 @@ class geoOJSPlugin extends GenericPlugin
 
 			/*
 			$publication = Services::get('publication');
-			$temporalProperties = $publication->getData('geoOJS::timestamp');
+			$temporalProperties = $publication->getData('geoOJS::temporalProperties');
 			$spatialProperties = $publication->getData('geoOJS::spatialProperties');
 			*/
 
@@ -289,7 +289,7 @@ class geoOJSPlugin extends GenericPlugin
 			]
 		}';
 		$timestampDecoded = json_decode($timestamp);
-		$schema->properties->{'geoOJS::timestamp'} = $timestampDecoded;
+		$schema->properties->{'geoOJS::temporalProperties'} = $timestampDecoded;
 
 		$spatialProperties = '{
 			"type": "string",
@@ -353,7 +353,7 @@ class geoOJSPlugin extends GenericPlugin
 		}
 
 		if ($temporalProperties !== null && $temporalProperties !== "") {
-			$newPublication->setData('geoOJS::timestamp', $temporalProperties);
+			$newPublication->setData('geoOJS::temporalProperties', $temporalProperties);
 		}
 
 		if ($administrativeUnit !== null) {
