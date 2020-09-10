@@ -169,8 +169,8 @@ function createGeojson(allLayers) {
         "type": "FeatureCollection",
         "features": geojsonFeatures,
         "administrativeUnit": {
-            "name": "TODO",
-            "provenance": "TODO"
+            "name": "not available",
+            "provenance": "not available"
         }
     };
 
@@ -445,17 +445,29 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
         var lowestadministrativeUnitForAllFeatures = administrativeUnitForAllFeatures[administrativeUnitForAllFeatures.length - 1];
         document.getElementById("administrativeUnitInput").value = lowestadministrativeUnitForAllFeatures.asciiName;
         document.getElementById("administrativeUnit").value = JSON.stringify(lowestadministrativeUnitForAllFeatures);
+
+        // information concerning administrativeUnit in the geojson 
+        geojson.administrativeUnit.name = lowestadministrativeUnitForAllFeatures.asciiName;
+        geojson.administrativeUnit.geonameId = lowestadministrativeUnitForAllFeatures.geonameId;
+        // this way information about the origin of the administrativeUnit is stored 
+        var provenance = "administrative unit created by user (acceppting the suggestion of the geonames API , which was created on basis of a geometric shape input)";
+        geojson.administrativeUnit.provenance = provenance;
+
         highlightHTMLElement("administrativeUnitInput");
     }
     else {
         document.getElementById("administrativeUnitInput").value = '';
         document.getElementById("administrativeUnit").value = '';
+        geojson.administrativeUnit.provenance = 'not available';
+        geojson.administrativeUnit.name = 'not available';
+        geojson.administrativeUnit.geonameId = 'not available';
+
         highlightHTMLElement("administrativeUnitInput");
     }
 
     // if there are no geoJSON Features/ no spatial data available, there is '' stored in database, otherwise the stringified geoJSON 
-    if (JSON.stringify(geojson) === '{"type":"FeatureCollection","features":[]}') {
-        document.getElementById("spatialProperties").value = '';
+    if (JSON.stringify(geojson) === '{"type":"FeatureCollection","features":[],"administrativeUnit":{"name":"not available","provenance":"not available","geonameId":"not available"}}') {
+        document.getElementById("spatialProperties").value = 'no data';
     }
     else {
         document.getElementById("spatialProperties").value = JSON.stringify(geojson);
@@ -475,7 +487,7 @@ map.on('draw:created', function (e) {
     }
 
     // this way information about the origin of the geometric shape is stored 
-    layer.provenance = "gemetric shape created by user (drawing)";
+    layer.provenance = "geometric shape created by user (drawing)";
 
     drawnItems.addLayer(layer);
 
@@ -492,10 +504,10 @@ map.on('draw:edited', function (e) {
     Object.keys(changedLayer).forEach(function (key) {
 
         if (changedLayer[key].provenance === "geometric shape created by user (acceppting the suggestion of the leaflet-control-geocoder)") {
-            drawnItems._layers[key].provenance = "geometric shape created by user (edited the suggestion of the leaflet-control-geocoder by drawing)"; 
+            drawnItems._layers[key].provenance = "geometric shape created by user (edited the suggestion of the leaflet-control-geocoder by drawing)";
         }
     });
-  
+
     storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
 });
 
@@ -513,6 +525,7 @@ map.on('draw:deleted', function (e) {
  * the input by the author is proofed by a further API request if there are corresponding entries in the APIs database, 
  * the first found is stored with name and geonameId in the database. 
  * Otherwise if there is no found by the API, the authorInput is used.
+ * The geoJSON is adjusted accordingly. 
  */
 function changedAdministrativeUnitByAuthor() {
 
@@ -522,17 +535,44 @@ function changedAdministrativeUnitByAuthor() {
 
     var administrativeUnitRaw = ajaxRequestGeonamesPlaceName(authorInput);
 
+
+    var geojsonRaw = document.getElementById("spatialProperties").value;
+
+    if (authorInput === '' && geojsonRaw !== '') {
+        geojson.administrativeUnit.name = null;
+        geojson.administrativeUnit.geonameId = null;
+        geojson.administrativeUnit.provenance = null;
+
+        return; 
+    }
     if (administrativeUnitRaw.totalResultsCount !== 0 && (administrativeUnitRaw.geonames[0].toponymName === authorInput || administrativeUnitRaw.geonames[0].name === authorInput)) {
 
         var administrativeUnit = {
             'asciiName': administrativeUnitRaw.geonames[0].name,
             'geonameId': administrativeUnitRaw.geonames[0].geonameId
-        }
+        }       
 
         document.getElementById("administrativeUnit").value = JSON.stringify(administrativeUnit);
+        
+        if (geojsonRaw !== '' && geojsonRaw !== 'no data') {
+            var geojson = JSON.parse(geojsonRaw); 
+            geojson.administrativeUnit.name = administrativeUnit.asciiName;
+            geojson.administrativeUnit.geonameId = administrativeUnit.geonameId;
+            geojson.administrativeUnit.provenance = "administrative unit created by user (acceppting the suggestion of the geonames API, which was created on basis of a textual input)";
+            document.getElementById("spatialProperties").value = JSON.stringify(geojson);
+        }
+
     }
     else {
         document.getElementById("administrativeUnit").value = authorInput;
+
+        if (geojsonRaw !== '' && geojsonRaw !== 'no data') {
+            var geojson = JSON.parse(geojsonRaw); 
+            geojson.administrativeUnit.name = authorInput;
+            geojson.administrativeUnit.geonameId = 'not available';
+            geojson.administrativeUnit.provenance = "administrative unit created by user (textual input, without suggestion of the geonames API)";
+            document.getElementById("spatialProperties").value = JSON.stringify(geojson);
+        } 
     }
 }
 

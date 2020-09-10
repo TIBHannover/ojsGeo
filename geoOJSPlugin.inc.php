@@ -158,11 +158,11 @@ class geoOJSPlugin extends GenericPlugin
 			$temporalProperties = 'no data';
 		}
 
-		if ($spatialProperties === null || $spatialProperties === '' || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnit":{"name":"TODO","provenance":"TODO"}}') {
+		if ($spatialProperties === null || $spatialProperties === '') {
 			$spatialProperties = 'no data';
 		}
 
-		if (current($administrativeUnit) === '' || $administrativeUnit === '') {
+		if (current($administrativeUnit) === '' || $administrativeUnit === '' || $administrativeUnit === null) {
 			$administrativeUnit = 'no data';
 		}
 
