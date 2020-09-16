@@ -20,8 +20,11 @@ msgstr "Here the article can be specified in terms of its spatial and temporal p
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal"
 msgstr "Temporal Properties"
 
-msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description"
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description.submission"
 msgstr "Define the temporal properties of the articles content by specifying date and time (time in GMT). The input is possible via the text field as well as via the calendar view, you just have to click the input field. If you press \"Apply\" the result will be saved and with \"Clear\" nothing will be saved or in case something was already saved it will be deleted."
+
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description.article"
+msgstr "Temporal properties of the articles content specified by date and time (time in GMT)."
 
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.temporal.start"
 msgstr "Start"
@@ -32,14 +35,20 @@ msgstr "End"
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial"
 msgstr "Spatial Properties"
 
-msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description"
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description.submission"
 msgstr "Define the spatial properties of the articles content by an layer. You can choose in the control on the left side between polyline, polygon, rectangle, point."
+
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description.article"
+msgstr "Spatial properties of the articles content. The geometric shape(s) are displayed in blue, and the administrative unit(s) in black. In the layer control in the upper right you can set which of them you want to display."
 
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit"
 msgstr "Coverage Information"
 
-msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description"
-msgstr "On basis of your input in the map, an administrative unit is proposed which has been selected according to your input. If you accept this administrative unit, it will be stored as coverage information in the metadata. Alternatively, you can delete, modify it, or only input coverage information without map input."
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
+msgstr "On basis of your input in the map, administrative unit(s) is/ are proposed which has/ have been selected according to your input in the map. Each time you update the map, the coverage information gets new calculated and updated correspondingly. You are able to delete administrative unit(s) by the red 'x'. If you hover over the administrative unit(s) the superior hierarchy of administrative unit(s) is displayed if available. Besides you can add further administrative units. You are only able to insert a further administrative unit if it fits to the already given hierarchy of administrative unit(s), and the given geometric shape(s) in the map. If you begin to insert, there are some suggestions you can accept by clicking, but nevertheless you can input your own administrative unit by hitting enter. The geometric shape(s) (in blue) and administrative unit (in black) which is the lowest common denominator are shown in the map. You can set which one to show by the control in the upper right corner. "
+
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description.article"
+msgstr "Administrative unit(s):"
 
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView"
 msgstr "Coverage Information"

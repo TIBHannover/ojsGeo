@@ -6,22 +6,22 @@
 
     {*temporal*}
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.temporal" for="period" inline=true}
-    <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description"}
+    <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description.submission"}
     </p>
     <input type="text" name="datetimes" style="width: 1116px; height: 32px; z-index: 0;" />
     <input type="text" id="temporalProperties" name="temporalProperties"
-        {*style="height: 0px; width: 0px; z-index: 0; visibility: hidden;" *} />
+        style="height: 0px; width: 0px; z-index: 0; visibility: hidden;" />
     <input type="text" id="temporalPropertiesFromDb" name="temporalPropertiesFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalPropertiesFromDb}' />
     {/fbvFormSection}
 
     {*spatial*}
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.spatial" for="period" inline=true}
-    <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description"}
+    <p class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description.submission"}
     </p>
     <div id="mapdiv" style="width: 1116px; height: 400px; float: left;  z-index: 0;"></div>
     <input type="text" id="spatialProperties" name="spatialProperties" size="30"
-        {*style="height: 0px; width: 0px; visibility: hidden;" *}>
+        style="height: 0px; width: 0px; visibility: hidden;">
     <input type="text" id="spatialPropertiesFromDb" name="spatialPropertiesFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialPropertiesFromDb}' />
     {/fbvFormSection}
@@ -30,10 +30,10 @@
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit" for="period"
     inline=true}
     <p class="description">{translate
-        key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description"}</p>
+        key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"}</p>
     <ul id="administrativeUnitInput">
     </ul>
-    <input type="text" id="administrativeUnit" name="administrativeUnit" size="30" {*style="visibility: hidden;" *}>
+    <input type="text" id="administrativeUnit" name="administrativeUnit" size="30" style="visibility: hidden;">
     <input type="text" id="administrativeUnitFromDb" name="administrativeUnitFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnitFromDb}' />
     {/fbvFormSection}

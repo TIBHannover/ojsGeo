@@ -158,7 +158,7 @@ class geoOJSPlugin extends GenericPlugin
 			$temporalProperties = 'no data';
 		}
 
-		if ($spatialProperties === null || $spatialProperties === '') {
+		if ($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}') {
 			$spatialProperties = 'no data';
 		}
 
@@ -214,7 +214,7 @@ class geoOJSPlugin extends GenericPlugin
 			$temporalProperties = 'no data';
 		}
 
-		if ($spatialProperties === null || $spatialProperties === '') {
+		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}')) {
 			$spatialProperties = 'no data';
 		}
 

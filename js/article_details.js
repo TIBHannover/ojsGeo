@@ -7,6 +7,59 @@ var temporalPropertiesDecoded = document.getElementById("temporalProperties").va
 // load temporal properties from article_details.tpl 
 var administrativeUnitDecoded = document.getElementById("administrativeUnit").value;
 
+// create map 
+var map = L.map('mapdiv');
+
+var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+    maxZoom: 18
+}).addTo(map);
+
+var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 18
+});
+
+var baseLayers = {
+    "OpenStreetMap": osmlayer,
+    "Esri World Imagery": Esri_WorldImagery
+};
+
+// add scale to the map 
+L.control.scale().addTo(map);
+
+// FeatureGroup for the items drawn or inserted by the search
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+// FeatureGroup for the administrativeUnits 
+var administrativeUnitsMap = new L.FeatureGroup();
+map.addLayer(administrativeUnitsMap);
+
+var overlayMaps = {
+    "geometric shape(s)": drawnItems,
+    "administrative unit": administrativeUnitsMap
+};
+
+// add layerControl to the map to the map 
+L.control.layers(baseLayers, overlayMaps).addTo(map);
+
+// add a search to the map 
+var geocoder = L.Control.geocoder({
+    defaultMarkGeocode: false
+})
+    .on('markgeocode', function (e) {
+        var bbox = e.geocode.bbox;
+        var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+        ])/*.addTo(map);*/
+        map.fitBounds(poly.getBounds());
+    })
+    .addTo(map);
+
 /*
 If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
 and no geospatial metadata are displayed. 
@@ -29,67 +82,32 @@ else {
     }
     else {
         var spatialProperties = JSON.parse(spatialPropertiesDecoded);
-        var lngFirstCoordinateGeojson;
-        var latFirstCoordinateGeojson;
 
-        /*
-        Depending on the object type, the geoJSON object is structured slightly differently, 
-        so that the coordinates are at different locations and must be queried differently. 
-        */
-        if (spatialProperties.features[0].geometry.type === 'Polygon') {
-            lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0][0];
-            latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0][1];
+        if (spatialProperties.features.length === 0) {
+            document.getElementById("item spatial").remove();
         }
-        else if (spatialProperties.features[0].geometry.type === 'LineString') {
-            lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0];
-            latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][1];
+        else {
+
+            /*
+            Depending on the object type, the geoJSON object is structured slightly differently, 
+            so that the coordinates are at different locations and must be queried differently. 
+            */
+            if (spatialProperties.features[0].geometry.type === 'Polygon') {
+                lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0][0];
+                latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0][1];
+            }
+            else if (spatialProperties.features[0].geometry.type === 'LineString') {
+                lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0];
+                latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][1];
+            }
+            else if (spatialProperties.features[0].geometry.type === 'Point') {
+                lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0];
+                latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[1];
+            }
+
+            drawnItems.addLayer(L.geoJSON(spatialProperties));
+            map.fitBounds(drawnItems.getBounds());
         }
-        else if (spatialProperties.features[0].geometry.type === 'Point') {
-            lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0];
-            latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[1];
-        }
-
-
-        // set focus of the map on the first coordinate of the geojson (var spatialProperites)
-        var map = L.map('mapdiv').setView([latFirstCoordinateGeojson, lngFirstCoordinateGeojson], 11); // TODO auf den Ort der Untersuchung setzen 
-        L.geoJSON(spatialProperties).addTo(map); // TODO je nach Art des geoJSON Farbe ändern 
-
-        var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 18
-        }).addTo(map);
-
-        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-            maxZoom: 18
-        });
-
-        var baseLayers = {
-            "OpenStreetMap": osmlayer,
-            "Esri World Imagery": Esri_WorldImagery
-        };
-
-        // add scale to the map 
-        L.control.scale().addTo(map);
-
-        // add two baseLayers (Open Street Map and Esri World Imagery) to the map 
-        L.control.layers(baseLayers).addTo(map);
-
-        // add a search to the map 
-        var geocoder = L.Control.geocoder({
-            defaultMarkGeocode: false
-        })
-            .on('markgeocode', function (e) {
-                var bbox = e.geocode.bbox;
-                var poly = L.polygon([
-                    bbox.getSouthEast(),
-                    bbox.getNorthEast(),
-                    bbox.getNorthWest(),
-                    bbox.getSouthWest()
-                ])/*.addTo(map);*/
-                map.fitBounds(poly.getBounds());
-            })
-            .addTo(map);
     }
 
     /**
@@ -128,32 +146,24 @@ else {
     /*
     administrative unit
     The administrative unit is requested from the OJS database. 
-    If a geonamedId is available, there is a further API request for the further hierarchy. 
-    This hierarchy is then displayed on the article view. 
-    If there is no geonameId, only the storage from the database is shown in the article view.  
+    The available elements are displayed. If there is a corresponding bbox available it is displayed in the map. 
     */
     if (administrativeUnitDecoded === "no data") {
         document.getElementById("item administrativeUnit").remove();
     }
     else {
-        // if there is no object with name and geonameId available, the storaged element from the database is displayed directly. 
-        if (IsGivenStringJson(administrativeUnitDecoded) == false) {
-            document.getElementById("administrativeUnitDescription").innerHTML = administrativeUnitDecoded;
+        var administrativeUnitEncoded = JSON.parse(administrativeUnitDecoded);
+
+        var administrativeUnitsNameList = [];
+
+        for (var i = 0; i < administrativeUnitEncoded.length; i++) {
+            administrativeUnitsNameList.push(administrativeUnitEncoded[i].name);
         }
-        else {
-            var administrativeUnit = JSON.parse(administrativeUnitDecoded);
 
-            var administrativeUnitHierarchyRaw = ajaxRequestGeonamesCoordinates(administrativeUnit.geonameId);
-            var administrativeUnitHierarchy = administrativeUnitHierarchyRaw.geonames
-            var administrativeUnitHierarchyPlaceNames = [];
+        document.getElementById("administrativeUnitDescription").innerHTML = administrativeUnitsNameList.join(', ');
 
-            for (var i = 0; i < administrativeUnitHierarchy.length; i++) {
-                administrativeUnitHierarchyPlaceNames.push(administrativeUnitHierarchy[i].name);
-            }
-
-            var divElement = '<div>' + administrativeUnit.asciiName + '</div>' + '</br>' + 'which is classified in the following hierarchical system of administrative units: ' + administrativeUnitHierarchyPlaceNames.join(", ");
-            document.getElementById("administrativeUnitDescription").innerHTML = divElement;
-        }
+        var spatialPropertiesEncoded = JSON.parse(spatialPropertiesDecoded);
+        displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesEncoded);
     }
 
     /*
@@ -172,5 +182,61 @@ else {
 
         document.getElementById("start").innerHTML = utcStart;
         document.getElementById("end").innerHTML = utcEnd;
+    }
+}
+
+/**
+ * Function which illustrates the bounding box (if available) of an administrative unit with the lowest common denominator, 
+ * for a given geojson with a number of administrative Units. 
+ * @param {*} geojson 
+ */
+function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(geojson) {
+
+    // check for which of the units a bounding box is available 
+    var bboxAvailable = [];
+    for (var i = 0; i < geojson.administrativeUnits.length; i++) {
+        if (geojson.administrativeUnits[i].bbox === 'not available') {
+            bboxAvailable.push(false);
+        }
+        else {
+            bboxAvailable.push(true);
+        }
+    }
+
+    // defining of bounding box of the lowest common denominator 
+    var bboxAdministrativeUnitLowestCommonDenominator;
+    for (var i = 0; i < bboxAvailable.length; i++) {
+        if (bboxAvailable[i] === true) {
+            bboxAdministrativeUnitLowestCommonDenominator = geojson.administrativeUnits[i].bbox;
+        }
+    }
+
+    // creation of the corresponding leaflet layer 
+    if (bboxAdministrativeUnitLowestCommonDenominator !== undefined) {
+        var layer = L.polygon([
+            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
+            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
+            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.east],
+            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.east],
+        ]);
+
+        layer.setStyle({
+            color: 'black',
+            fillOpacity: 0.5
+        })
+
+        // To ensure that only the lowest layer is displayed, the previous layers are deleted 
+        administrativeUnitsMap.clearLayers();
+
+        administrativeUnitsMap.addLayer(layer);
+
+        map.fitBounds(administrativeUnitsMap.getBounds());
+
+        if (geojson.administrativeUnits === {}) {
+            administrativeUnitsMap.clearLayers();
+        }
+    }
+    else {
+        administrativeUnitsMap.clearLayers();
     }
 }
