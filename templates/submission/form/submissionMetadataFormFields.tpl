@@ -2,7 +2,7 @@
 
 <div style="clear:both;">
     {fbvFormArea id="tagitFields" title="plugins.generic.geoOJS.geospatialmetadata"}
-    <p align="justify" class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.description"}</p>
+    <p align="justify" class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.description.submission"}</p>
 
     {*temporal*}
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.temporal" for="period" inline=true}

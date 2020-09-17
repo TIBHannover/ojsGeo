@@ -161,6 +161,9 @@ else {
         }
 
         document.getElementById("administrativeUnitDescription").innerHTML = administrativeUnitsNameList.join(', ');
+        
+        // store lowest administrative unit in metadata in the head of the html (https://dohmaindesigns.com/adding-geo-meta-tags-to-your-website/)
+        $('head').append( '<meta name="geo.placename" content="' + administrativeUnitsNameList[administrativeUnitsNameList.length-1] + '">' );
 
         var spatialPropertiesEncoded = JSON.parse(spatialPropertiesDecoded);
         displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesEncoded);

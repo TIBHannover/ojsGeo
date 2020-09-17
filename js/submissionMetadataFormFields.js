@@ -25,7 +25,7 @@ var baseLayers = {
 };
 
 // add scale to the map 
-L.control.scale({position: 'bottomright'}).addTo(map);
+L.control.scale({ position: 'bottomright' }).addTo(map);
 
 // FeatureGroup for the items drawn or inserted by the search
 var drawnItems = new L.FeatureGroup();
@@ -122,16 +122,17 @@ function createInitialGeojson() {
     else {
 
         var spatialPropertiesFromDb = JSON.parse(spatialPropertiesFromDbDecoded);
-
-        var geojsonLayer = L.geoJson(spatialPropertiesFromDb);
-        geojsonLayer.eachLayer(
-            function (l) {
-                drawnItems.addLayer(l);
-            });
-
-        map.fitBounds(drawnItems.getBounds());
-
         document.getElementById("spatialProperties").value = JSON.stringify(spatialPropertiesFromDb);
+
+        if (spatialPropertiesFromDb.features.length !== 0) {
+            var geojsonLayer = L.geoJson(spatialPropertiesFromDb);
+            geojsonLayer.eachLayer(
+                function (l) {
+                    drawnItems.addLayer(l);
+                });
+
+            map.fitBounds(drawnItems.getBounds());
+        }
 
         if (jQuery.isEmptyObject(spatialPropertiesFromDb.administrativeUnits) !== true) {
             displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesFromDb);
@@ -246,19 +247,20 @@ $("#administrativeUnitInput").tagit({
 $("#administrativeUnitInput").tagit({
     beforeTagAdded: function (event, ui) {
         if (document.getElementById("spatialProperties").value !== 'undefined') {
-        
-        var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-        var currentLabel = ui.tagLabel;
 
-        if (jQuery.isEmptyObject(geojson.administrativeUnits) !== true) {
-            for (var i = 0; i < geojson.administrativeUnits.length; i++) {
-                if (geojson.administrativeUnits[i].administrativeUnitSuborder !== 'not available') {
-                    if (currentLabel === geojson.administrativeUnits[i].name) {
-                        ui.tag[0].title = (geojson.administrativeUnits[i].administrativeUnitSuborder).join(', ');
+            var geojson = JSON.parse(document.getElementById("spatialProperties").value);
+            var currentLabel = ui.tagLabel;
+
+            if (jQuery.isEmptyObject(geojson.administrativeUnits) !== true) {
+                for (var i = 0; i < geojson.administrativeUnits.length; i++) {
+                    if (geojson.administrativeUnits[i].administrativeUnitSuborder !== 'not available') {
+                        if (currentLabel === geojson.administrativeUnits[i].name) {
+                            ui.tag[0].title = (geojson.administrativeUnits[i].administrativeUnitSuborder).join(', ');
+                        }
                     }
                 }
             }
-        }}
+        }
     }
 
 });
@@ -978,14 +980,13 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
                 // create for each administrativeUnit a tag 
                 $("#administrativeUnitInput").tagit("createTag", administrativeUnitForAllFeatures[i].name);
             }
-
-            highlightHTMLElement("administrativeUnitInput");
         }
     }
     else {
         geojson.administrativeUnits = {};
         document.getElementById("spatialProperties").value = JSON.stringify(geojson);
     }
+    highlightHTMLElement("administrativeUnitInput");
 }
 
 /**
