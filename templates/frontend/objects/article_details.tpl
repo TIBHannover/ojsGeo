@@ -8,7 +8,7 @@
     <section id="item temporal" class="item temporal">
         <h2 class="label">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal"}</h2>
         <div id="temporalPropertiesShow">
-            <p class="description" style="color: rgba(0,0,0,0.54)">{translate
+            <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
                 key="plugins.generic.geoOJS.geospatialmetadata.properties.temporal.description.article"}
             </p>
             <table>
@@ -30,10 +30,10 @@
 
     <section id="item spatial" class="item spatial">
         <h2 id="label" class="label">{translate key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial"}</h2>
-        <p class="description" style="color: rgba(0,0,0,0.54)">{translate
+        <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
             key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.description.article"}
         </p>
-        <div id="mapdiv" style="width: 499px; height: 300px; margin-bottom: 20px; float: left; z-index: 0;"></div>
+        <div id="mapdiv" style="width: 100%; height: 300px;"></div>
         <input type="text" id="spatialProperties" name="spatialProperties"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialProperties}'>
     </section>
@@ -41,7 +41,7 @@
     <section id="item administrativeUnit" class="item administrativeUnit">
         <h2 class="label">{translate
             key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView"}</h2>
-        <p class="description" style="color: rgba(0,0,0,0.54)">{translate
+        <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
             key="plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description.article"}
         </p>
         <div id="administrativeUnitDescription"></div>

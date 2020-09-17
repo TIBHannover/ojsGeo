@@ -302,10 +302,10 @@ class geoOJSPlugin extends GenericPlugin
 	 * There are two further rows in the table one for the spatial properties, and one for the timestamp 
 	 * @param hook Schema::get::publication
 	 */
-	public function addToSchema($hookName, $args)
+	public function addToSchema($hookName, $params)
 	{
 		// possible types: integer, string, text 
-		$schema = $args[0];
+		$schema = $params[0];
 
 		$timestamp = '{
 			"type": "string",
@@ -336,10 +336,10 @@ class geoOJSPlugin extends GenericPlugin
 	 * and requested from it in this php script by a POST-method. 
 	 * @param hook Publication::edit
 	 */
-	function editPublication(string $hookname, array $args)
+	function editPublication(string $hookname, array $params)
 	{
-		$newPublication = $args[0];
-		$params = $args[2];
+		$newPublication = $params[0];
+		$params = $params[2];
 
 		$temporalProperties = $_POST['temporalProperties'];
 		$spatialProperties = $_POST['spatialProperties'];
@@ -407,11 +407,11 @@ class geoOJSPlugin extends GenericPlugin
 	 * function for simple outputs. 
 	 */
 	/*
-	public function doSomething($hookName, $args)
+	public function doSomething($hookName, $params)
 	{
-		$request = Application::get()->getRequest(); // alternativly "&$args[0];" but then "$request->getUserVar('submissionId');" is not possible
-		$msarty = &$args[1];
-		$article = &$args[2];
+		$request = Application::get()->getRequest(); // alternativly "&$params[0];" but then "$request->getUserVar('submissionId');" is not possible
+		$msarty = &$params[1];
+		$article = &$params[2];
 
 		// to get the Id of the actual submission
 		$submissionId = $request->getUserVar('submissionId');

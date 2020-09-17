@@ -25,7 +25,7 @@ var baseLayers = {
 };
 
 // add scale to the map 
-L.control.scale().addTo(map);
+L.control.scale({position: 'bottomright'}).addTo(map);
 
 // FeatureGroup for the items drawn or inserted by the search
 var drawnItems = new L.FeatureGroup();
