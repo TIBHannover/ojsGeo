@@ -4,6 +4,7 @@ import('lib.pkp.classes.plugins.GenericPlugin');
 
 use phpDocumentor\Reflection\Types\Null_;
 use \PKP\components\forms\FormComponent;
+use \PKP\components\forms\FieldHTML;
 
 /**
  * geoOJSPlugin, a generic Plugin for enabling geospatial properties in OJS 
@@ -35,6 +36,8 @@ class geoOJSPlugin extends GenericPlugin
 
 			// Hook for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
+			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
+
 			// ArticleHandler::view -> general Article view 
 			// Templates::Article::Main 
 			// Templates::Article::Details
@@ -43,7 +46,6 @@ class geoOJSPlugin extends GenericPlugin
 			// Hook for creating and setting a new field in the database 
 			HookRegistry::register('Schema::get::publication', array($this, 'addToSchema'));
 			HookRegistry::register('Publication::edit', array($this, 'editPublication')); // Take care, hook is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
-
 
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
@@ -122,6 +124,19 @@ class geoOJSPlugin extends GenericPlugin
 		return $success;
 	}
 
+	/**
+	 * Function which extends the ArticleMain Template by a download button for the geospatial Metadata as geoJSON. 
+	 * @param hook Templates::Article::Details
+	 */
+	public function extendArticleDetailsTemplate($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details_download.tpl'));
+
+		return false;
+	}
 
 	/**
 	 * Function which extends the sumbmissionMetadataFormFields template and adds template variables concerning temporal- and spatial properties 
@@ -235,6 +250,10 @@ class geoOJSPlugin extends GenericPlugin
 	// not working function to add a form before Schedule for Publication 
 	public function extendScheduleForPublication(string $hookName, FormComponent $form): void
 	{
+
+		// Import the FORM_METADATA constant
+		import('lib.pkp.classes.components.forms.publication.PKPMetadataForm');
+
 		if ($form->id !== 'metadata' || !empty($form->errors)) return;
 
 		if ($form->id === 'metadata') {
@@ -245,13 +264,21 @@ class geoOJSPlugin extends GenericPlugin
 			$spatialProperties = $publication->getData('geoOJS::spatialProperties');
 			*/
 
-			$form->addField(new \PKP\components\forms\FieldOptions('jatsParser::references', [
+			/*$form->addField(new \PKP\components\forms\FieldOptions('jatsParser::references', [
 				'label' => 'Hello',
 				'description' => 'Hello',
 				'type' => 'radio',
 				'options' => null,
 				'value' => null
-			]));
+			]));*/
+
+			// Add a plain HTML field to the form
+			/*$form->addField(new FieldHTML('myFieldName', [
+				'label' => 'My Field Name',
+				'description' => '<p>Add any HTML code that you want.</p>
+				<div id="mapdiv" style="width: 1116px; height: 400px; float: left;  z-index: 0;"></div>
+				<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
+			]));*/
 		}
 	}
 

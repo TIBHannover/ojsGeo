@@ -70,6 +70,7 @@ if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no 
     document.getElementById("item temporal").remove();
     document.getElementById("item geospatialmetadata").remove();
     document.getElementById("item administrativeUnit").remove();
+    document.getElementById("item geospatialmetadatadownload").remove();   
 }
 else {
     /*
@@ -84,10 +85,9 @@ else {
         var spatialProperties = JSON.parse(spatialPropertiesDecoded);
 
         if (spatialProperties.features.length === 0) {
-            document.getElementById("item spatial").remove();
+            document.getElementById("item spatial").remove();   
         }
         else {
-
             /*
             Depending on the object type, the geoJSON object is structured slightly differently, 
             so that the coordinates are at different locations and must be queried differently. 
@@ -239,4 +239,30 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
     else {
         administrativeUnitsMap.clearLayers();
     }
+}
+
+/**
+ * Function which gets called if the corresponding button is pressed in the article view
+ * If pressed, the geojson with the geospatial metadata gets donwloaded, as long the geojson is available. 
+ */
+function downloadGeospatialMetadataAsGeoJSON() {
+
+    var spatialProperties = JSON.parse(spatialPropertiesDecoded);
+    downloadObjectAsJson(spatialProperties, "geospatialMetadata");
+}
+
+/**
+ * Downloads a object as JSON
+ * @param {*} exportObj to download
+ * @param {*} exportName name of object
+ */
+function downloadObjectAsJson(exportObj, exportName) {
+    //create download link, exectute it, remove it at the end
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", exportName + ".json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
 }

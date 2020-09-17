@@ -58,3 +58,6 @@ msgstr "geoOJS"
 
 msgid "plugins.generic.geoOJS.description"
 msgstr "Plug-in which enables the storage of geospatial metadata."
+
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.download.geoJSON"
+msgstr "Download geospatial metadata as geoJSON"
