@@ -1,3 +1,10 @@
+/**
+ * Script submissionMetadataFormFields.js which gets called in the geoOJSPlugin.inc.php. 
+ * Is used to enable input of spatio-temporal metadata during '3. Enter Metadata - Submit an Article'. 
+ */
+
+var usernameGeonames = 'tnier01'; // create a account on https://www.geonames.org/login and insert the username here 
+
 //load temporal properties which got already stored in database from submissionMetadataFormFields.tpl 
 var temporalPropertiesFromDbDecoded = document.getElementById("temporalPropertiesFromDb").value;
 
@@ -7,6 +14,9 @@ var spatialPropertiesFromDbDecoded = document.getElementById("spatialPropertiesF
 //load administrative Unit which got already stored in database from submissionMetadataFormFields.tpl 
 var administrativeUnitFromDbDecoded = document.getElementById("administrativeUnitFromDb").value;
 
+
+
+// Initialization of the map 
 var map = L.map('mapdiv').setView([51.96, 7.59], 13);
 
 var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -87,22 +97,14 @@ var drawControl = new L.Control.Draw({
 });
 map.addControl(drawControl);
 
+
+
+// create initial geoJSON
 createInitialGeojson();
 
 /**
- * Function enables tags for the administrative units. 
- * source: https://github.com/aehlke/tag-it 
- */
-$(document).ready(function () {
-
-    $("#administrativeUnitInput").tagit({
-        allowSpaces: true,
-        readOnly: false
-    });
-});
-
-/**
- * function which creates the initial geoJSON
+ * Function which creates the initial geoJSON. 
+ * Either there is a geoJSON which gets loaded from the db and correspondingly displayed, otherwise there is an empty one created. 
  */
 function createInitialGeojson() {
 
@@ -140,76 +142,21 @@ function createInitialGeojson() {
     }
 }
 
-/**
- * Function which illustrates the bounding box (if available) of an administrative unit with the lowest common denominator, 
- * for a given geojson with a number of administrative Units. 
- * @param {*} geojson 
- */
-function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(geojson) {
 
-    // check for which of the units a bounding box is available 
-    var bboxAvailable = [];
-    for (var i = 0; i < geojson.administrativeUnits.length; i++) {
-        if (geojson.administrativeUnits[i].bbox === 'not available') {
-            bboxAvailable.push(false);
-        }
-        else {
-            bboxAvailable.push(true);
-        }
-    }
 
-    // defining of bounding box of the lowest common denominator 
-    var bboxAdministrativeUnitLowestCommonDenominator;
-    for (var i = 0; i < bboxAvailable.length; i++) {
-        if (bboxAvailable[i] === true) {
-            bboxAdministrativeUnitLowestCommonDenominator = geojson.administrativeUnits[i].bbox;
-        }
-    }
-
-    // creation of the corresponding leaflet layer 
-    if (bboxAdministrativeUnitLowestCommonDenominator !== undefined) {
-        var layer = L.polygon([
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.east],
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.east],
-        ]);
-
-        layer.setStyle({
-            color: 'black',
-            fillOpacity: 0.5
-        })
-
-        // To ensure that only the lowest layer is displayed, the previous layers are deleted 
-        administrativeUnitsMap.clearLayers();
-
-        administrativeUnitsMap.addLayer(layer);
-
-        map.fitBounds(administrativeUnitsMap.getBounds());
-
-        highlightHTMLElement("mapdiv");
-
-        if (geojson.administrativeUnits === {}) {
-            administrativeUnitsMap.clearLayers();
-        }
-    }
-    else {
-        administrativeUnitsMap.clearLayers();
-    }
-}
+// tags for the administrative unit 
 
 /**
- * function to proof if a taken string is valid JSON
- * @param {} string
+ * Function enables tags for the administrative units. 
+ * source: https://github.com/aehlke/tag-it 
  */
-function IsGivenStringJson(string) {
-    try {
-        JSON.parse(string);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
+$(document).ready(function () {
+
+    $("#administrativeUnitInput").tagit({
+        allowSpaces: true,
+        readOnly: false
+    });
+});
 
 /**
  * Function that makes suggestions for the administrative units when the user enters the administrative unit himself.  
@@ -222,7 +169,7 @@ $("#administrativeUnitInput").tagit({
                 url: "http://api.geonames.org/searchJSON",
                 data: {
                     name_startsWith: request.term,
-                    username: 'tnier01',
+                    username: usernameGeonames,
                     featureClass: "A",
                     style: "full",
                     maxRows: 12,
@@ -242,7 +189,7 @@ $("#administrativeUnitInput").tagit({
 });
 
 /**
- * function which stores if available in each tag its hierarchy concerning administrative units.
+ * Function which stores if available in each tag its hierarchy concerning administrative units.
  */
 $("#administrativeUnitInput").tagit({
     beforeTagAdded: function (event, ui) {
@@ -262,10 +209,10 @@ $("#administrativeUnitInput").tagit({
             }
         }
     }
-
 });
 
 /**
+ * Function which triggers further processes when a tag is added. 
  * If the new tag is created by the geonames API after the creation of a geometric shape on the map, only the tag is created. 
  * Otherwise, if the tag is created by the user, it will be checked with the geonames API. 
  * If there is an entry, it will be suggested to the user, and for the administrative unit the bounding box and hierarchical structure of administrative units is stored if available. 
@@ -279,8 +226,6 @@ $("#administrativeUnitInput").tagit({
         var geojson;
         if (document.getElementById("spatialProperties").value === 'undefined') {
             return input;
-            // geojson = JSON.parse(spatialPropertiesFromDbDecoded);
-            // console.log("Hello1");
         }
         else {
             geojson = JSON.parse(document.getElementById("spatialProperties").value);
@@ -400,7 +345,131 @@ $("#administrativeUnitInput").tagit({
 });
 
 /**
- * function which proofs if all Features of a given geojson are inside (not completly but touching) an other given Polygon. 
+ * Before a tag is deleted, the corresponding form in which the administrative units are stored is also updated for later storage in the database. 
+ * The tag will be deleted in the form and later on in the database. 
+ * The geoJSON will also be updated accordingly, if available. 
+ */
+$("#administrativeUnitInput").tagit({
+    // beforeTagRemoved is always triggered before a tag is deleted 
+    beforeTagRemoved: function (event, ui) {
+        var currentTag = ui.tagLabel;
+        var administrativeUnitRaw = document.getElementById("administrativeUnit").value;
+        var administrativeUnitGeoJSON;
+        var geojson = JSON.parse(document.getElementById("spatialProperties").value);
+
+        if (administrativeUnitRaw === 'no data') {
+            administrativeUnitGeoJSON = {};
+        }
+        else {
+
+            var administrativeUnit = JSON.parse(administrativeUnitRaw);
+
+            // the corresponding element is removed 
+            for (var i = 0; i < administrativeUnit.length; i++) {
+                if (currentTag === administrativeUnit[i].name) {
+                    // needs to be deleted twice, because im some cases otherwise the element does not get deleted  
+                    administrativeUnit.splice(i, 1);
+                    administrativeUnit.splice(i, 1);
+                }
+            }
+
+            administrativeUnitGeoJSON = administrativeUnit;
+
+            // If there is no more element this is indicated by 'no data', otherwise the geoJSON gets updated, if available 
+            if (administrativeUnit.length === 0) {
+                administrativeUnit = 'no data';
+                document.getElementById("administrativeUnit").value = administrativeUnit;
+
+                administrativeUnitGeoJSON = {};
+
+            }
+            else {
+                document.getElementById("administrativeUnit").value = JSON.stringify(administrativeUnit);
+            }
+        }
+
+        // the geojson is updated accordingly
+        geojson.administrativeUnits = administrativeUnitGeoJSON;
+        document.getElementById("spatialProperties").value = JSON.stringify(geojson);
+
+        displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(geojson);
+
+    }
+});
+
+/**
+ * Function which illustrates the bounding box (if available) of an administrative unit with the lowest common denominator, 
+ * for a given geojson with a number of administrative Units. 
+ * @param {*} geojson 
+ */
+function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(geojson) {
+
+    // check for which of the units a bounding box is available 
+    var bboxAvailable = [];
+    for (var i = 0; i < geojson.administrativeUnits.length; i++) {
+        if (geojson.administrativeUnits[i].bbox === 'not available') {
+            bboxAvailable.push(false);
+        }
+        else {
+            bboxAvailable.push(true);
+        }
+    }
+
+    // defining of bounding box of the lowest common denominator 
+    var bboxAdministrativeUnitLowestCommonDenominator;
+    for (var i = 0; i < bboxAvailable.length; i++) {
+        if (bboxAvailable[i] === true) {
+            bboxAdministrativeUnitLowestCommonDenominator = geojson.administrativeUnits[i].bbox;
+        }
+    }
+
+    // creation of the corresponding leaflet layer 
+    if (bboxAdministrativeUnitLowestCommonDenominator !== undefined) {
+        var layer = L.polygon([
+            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
+            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
+            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.east],
+            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.east],
+        ]);
+
+        layer.setStyle({
+            color: 'black',
+            fillOpacity: 0.5
+        })
+
+        // to ensure that only the lowest layer is displayed, the previous layers are deleted 
+        administrativeUnitsMap.clearLayers();
+
+        administrativeUnitsMap.addLayer(layer);
+
+        map.fitBounds(administrativeUnitsMap.getBounds());
+
+        highlightHTMLElement("mapdiv");
+
+        if (geojson.administrativeUnits === {}) {
+            administrativeUnitsMap.clearLayers();
+        }
+    }
+    else {
+        administrativeUnitsMap.clearLayers();
+    }
+}
+
+/**
+ * Function to proof if a given string is valid JSON.
+ * @param {} string
+ */
+function IsGivenStringJson(string) {
+    try {
+        JSON.parse(string);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Function which proofs if all Features of a given geojson are inside (not completly but touching) an other given Polygon. 
  * If all features are inside the function returns true, otherwise false. 
  * @param {*} geojson 
  * @param {*} givenPolygon 
@@ -456,7 +525,7 @@ function proofIfAllFeaturesAreInPolygon(geojson, givenPolygon) {
 }
 
 /**
- * function to delete the tag, if it is not valid (do not fit in the current hierarchy of administrative units)
+ * Function to delete a tag, if it is not valid (do not fit in the current hierarchy of administrative units).
  */
 function notValidTag() {
     var currentTags = $("#administrativeUnitInput").tagit("assignedTags");
@@ -467,58 +536,6 @@ function notValidTag() {
         }
     }
 }
-/**
- * Before a tag is deleted, the corresponding form in which the administrative units are stored is also updated for later storage in the database. 
- * The tag will be deleted in the form and later on in the database. 
- * The geoJSON will also be updated accordingly, if available. 
- */
-$("#administrativeUnitInput").tagit({
-    // beforeTagRemoved is always triggered before a tag is deleted 
-    beforeTagRemoved: function (event, ui) {
-        var currentTag = ui.tagLabel;
-        var administrativeUnitRaw = document.getElementById("administrativeUnit").value;
-        var administrativeUnitGeoJSON;
-        var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-
-        if (administrativeUnitRaw === 'no data') {
-            administrativeUnitGeoJSON = {};
-        }
-        else {
-
-            var administrativeUnit = JSON.parse(administrativeUnitRaw);
-
-            // the corresponding element is removed 
-            for (var i = 0; i < administrativeUnit.length; i++) {
-                if (currentTag === administrativeUnit[i].name) {
-                    // needs to be deleted twice, because im some cases otherwise the element does not get deleted  
-                    administrativeUnit.splice(i, 1);
-                    administrativeUnit.splice(i, 1);
-                }
-            }
-
-            administrativeUnitGeoJSON = administrativeUnit;
-
-            // If there is no more element this is indicated by 'no data', otherwise the geoJSON gets updated, if available 
-            if (administrativeUnit.length === 0) {
-                administrativeUnit = 'no data';
-                document.getElementById("administrativeUnit").value = administrativeUnit;
-
-                administrativeUnitGeoJSON = {};
-
-            }
-            else {
-                document.getElementById("administrativeUnit").value = JSON.stringify(administrativeUnit);
-            }
-        }
-
-        // the geojson is updated accordingly
-        geojson.administrativeUnits = administrativeUnitGeoJSON;
-        document.getElementById("spatialProperties").value = JSON.stringify(geojson);
-
-        displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(geojson);
-
-    }
-});
 
 /*
 In case the user repeats the step "3. Enter Metadata" in the process "Submit to article" and comes back to this step to make changes again, 
@@ -538,11 +555,16 @@ if (administrativeUnitFromDbDecoded !== 'no data') {
 }
 else {
     document.getElementById("administrativeUnit").value = 'no data';
-
 }
 
+
+
+/*
+functions which all called in a cascade of functions by the function called 'storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms' 
+which is called on map change (draw:created, draw:edited, draw:deleted, search) 
+*/
 /**
- * function which creates a feature for given array of layers. 
+ * Function which creates a feature for given array of layers. 
  * @param {} allLayers 
  */
 function createFeaturesForGeoJSON(allLayers) {
@@ -585,7 +607,7 @@ function createFeaturesForGeoJSON(allLayers) {
 }
 
 /**
- * function which takes the Leaflet layers from leaflet and creates a valid geoJSON from it. 
+ * Function which takes the Leaflet layers from leaflet and creates a valid geoJSON from it. 
  * @param {} drawnItems 
  */
 function updateGeojsonWithLeafletOutput(drawnItems) {
@@ -649,7 +671,7 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
     }
 
     /*
-    If there is a geojson object with features, the unix date range is stored in the geojson, 
+    if there is a geojson object with features, the unix date range is stored in the geojson, 
     if it is available either from the current edit or from the database.
     */
     var temporalProperties = document.getElementById("temporalProperties").value;
@@ -666,7 +688,7 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
 }
 
 /**
- * function that performs the Ajax request to the API Geonames for any placeName. 
+ * Function that performs the Ajax request to the API Geonames for any placeName. 
  * https://www.geonames.org/ 
  * @param {*} placeName 
  */
@@ -678,7 +700,7 @@ function ajaxRequestGeonamesPlaceName(placeName) {
         async: false,
         data: {
             name_equals: placeName,
-            username: 'tnier01',
+            username: usernameGeonames,
             style: "full",
             maxRows: 12,
         },
@@ -690,23 +712,15 @@ function ajaxRequestGeonamesPlaceName(placeName) {
 }
 
 /**
- * function that performs the Ajax request to the API Geonames for any latitude and longitude. 
+ * Function that performs the Ajax request to the API Geonames for any latitude and longitude. 
  * https://www.geonames.org/ 
  * @param {*} lng 
  * @param {*} lat 
  */
 function ajaxRequestGeonamesCoordinates(lng, lat) {
-    /*
-    https://www.geonames.org/export/ws-overview.html
-
-    http://api.geonames.org/extendedFindNearby?lat=51.953152612307456&lng=7.614898681640625&username=tnier01
-    http://api.geonames.org/countrySubdivisionJSON?lat=51.953152612307456&lng=7.614898681640625&username=tnier01
-    http://api.geonames.org/searchJSON?lat=51.953152612307456&lng=7.614898681640625&maxRows=10&username=tnier01
-    http://api.geonames.org/hierarchyJSON?formatted=true&lat=51.953152612307456&lng=7.614898681640625&username=tnier01&style=full 
-     */
-
+    
     var resultGeonames;
-    var urlGeonames = 'http://api.geonames.org/hierarchyJSON?formatted=true&lat=' + lat + '&lng=' + lng + '&username=tnier01&style=full&featureClass=P';
+    var urlGeonames = 'http://api.geonames.org/hierarchyJSON?formatted=true&lat=' + lat + '&lng=' + lng + '&username=' + usernameGeonames + '&style=full&featureClass=P';
     $.ajax({
         url: urlGeonames,
         async: false,
@@ -718,7 +732,8 @@ function ajaxRequestGeonamesCoordinates(lng, lat) {
 }
 
 /**
- * function that performs the Ajax request to the API Geonames and returns for a given geonameId, the corresponding hierarchical administrative structure of its parent administrative units. 
+ * Function that performs the Ajax request to the API Geonames and returns for a given geonameId, the corresponding hierarchical administrative structure of its parent administrative units. 
+ * https://www.geonames.org/ 
  * @param {*} id 
  */
 function ajaxRequestGeonamesGeonameIdHierarchicalStructure(id) {
@@ -730,7 +745,7 @@ function ajaxRequestGeonamesGeonameIdHierarchicalStructure(id) {
         data: {
             geonameId: id,
             formatted: true,
-            username: 'tnier01',
+            username: usernameGeonames,
             style: "full",
             maxRows: 12,
         },
@@ -755,7 +770,7 @@ function getAdministrativeUnitSuborderForAdministrativeUnit(geonameId) {
 }
 
 /**
- * function that performs the Ajax request to the API Geonames for any id and returns the boundingbox for the id if available. 
+ * Function that performs the Ajax request to the API Geonames for any id and returns the boundingbox for the id if available. 
  * https://www.geonames.org/ 
  * @param {*} placeName 
  */
@@ -768,7 +783,7 @@ function ajaxRequestGeonamesGeonamesIdBbox(id) {
         data: {
             geonameId: id,
             formatted: true,
-            username: 'tnier01',
+            username: usernameGeonames,
             style: "full",
             maxRows: 12,
         },
@@ -780,7 +795,7 @@ function ajaxRequestGeonamesGeonamesIdBbox(id) {
 }
 
 /**
- * function to proof if all positions in an array are the same 
+ * Function to proof if all positions in an array are the same. 
  * @param {*} el 
  * @param {*} index 
  * @param {*} arr 
@@ -797,7 +812,7 @@ function isSameAnswer(el, index, arr) {
 }
 
 /**
- * function takes a two dimensional array. 
+ * Function which takes a two dimensional array. 
  * In this array are the hierarchical orders of administrative units respectively for a point or feature. 
  * The hierarchies of the points/ features are compared and the lowest match for all points/ features is returned.
  * @param {} features 
@@ -834,7 +849,7 @@ function calculateDeepestHierarchicalCompliance(features) {
 }
 
 /**
- * function which returns for each feature an array with the administrative units that match at all points of the feature. 
+ * Function which returns for each feature an array with the administrative units that match at all points of the feature. 
  * The administrative units are queried via the API geonames. 
  * @param {*} geojsonFeature 
  */
@@ -899,7 +914,7 @@ function getAdministrativeUnitFromGeonames(geojsonFeature) {
 }
 
 /**
- * function to highlight an html Element. Designed to alert users that something has changed in html element. 
+ * Function to highlight an html Element. Designed to alert users that something has changed in html element. 
  * @param {*} htmlElement the affected html element 
  */
 function highlightHTMLElement(htmlElement) {
@@ -917,11 +932,11 @@ function highlightHTMLElement(htmlElement) {
 }
 
 /**
- * function which adds all geometric shapes created by leaflet to a geojson.
+ * Function which adds all geometric shapes created by leaflet to a geojson.
  * In addition, further operations are done with the given geojson data.
- * - the lowest administrative unit that is valid for all features is calculated for the entire FeatureCollection.
- * - bounding box and hierarchical structure of the parent administrative units is calculated for each administrative unit. 
- * - provenance for each feature is calculated. 
+ * - The lowest administrative unit that is valid for all features is calculated for the entire FeatureCollection.
+ * - Bounding box and hierarchical structure of the parent administrative units is calculated for each administrative unit. 
+ * - Provenance for each feature is calculated. 
  * These results are stored on the one hand as geoJSON with all results in a hidden form and 
  * on the other side the administrativeUnits are stored additionally seperated in a further hidden form.  
  * They are stored in hidden forms so that they can be queried in geoOJSPlugin.inc.php.  
@@ -936,7 +951,7 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
 
     if (geojson.features.length !== 0) {
         var administrativeUnitsForAllFeatures = [];
-        // For each geoJSON feature the administrative unit that matches is stored. 
+        // for each geoJSON feature the administrative unit that matches is stored. 
         for (var i = 0; i < geojson.features.length; i++) {
             administrativeUnitsForAllFeatures.push(getAdministrativeUnitFromGeonames(geojson.features[i]));
         }
@@ -990,7 +1005,7 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
 }
 
 /**
- * function to edit the layer(s) and update the db correspondingly with the geoJSON
+ * Function to create the layer(s) and update the db correspondingly with the geoJSON.
  */
 map.on('draw:created', function (e) {
     var type = e.layerType,
@@ -1009,7 +1024,7 @@ map.on('draw:created', function (e) {
 });
 
 /**
- * function to edit the layer(s) and update the db correspondingly with the geoJSON
+ * Function to edit the layer(s) and update the db correspondingly with the geoJSON.
  */
 map.on('draw:edited', function (e) {
 
@@ -1026,14 +1041,14 @@ map.on('draw:edited', function (e) {
 });
 
 /**
- * function to delete the layer(s) and update the db correspondingly with the geoJSON
+ * Function to delete the layer(s) and update the db correspondingly with the geoJSON.
  */
 map.on('draw:deleted', function (e) {
     storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
 });
 
 /**
- * add a search to the map 
+ * Add a search to the map. 
  * When the user searches for a location, a bounding box with the corresponding administrative unit is automatically suggested. 
  * This can be edited or deleted and further elements can be added. 
  */
@@ -1053,15 +1068,17 @@ var geocoder = L.Control.geocoder({
         layer.provenance = "geometric shape created by user (acceppting the suggestion of the leaflet-control-geocoder)";
 
         drawnItems.addLayer(layer);
-        // map.fitBounds(drawnItems.getBounds());
 
         storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
         highlightHTMLElement("mapdiv");
     })
     .addTo(map);
 
+
+
+// Functions that allow the specification of time and space
 /**
- * function which changes hour system from 24 hours to 12 hours
+ * Function which changes hour system from 24 hours to 12 hours.
  * @param {*} hour 
  */
 function changeHourSystemFrom24To12(hour) {
@@ -1072,7 +1089,7 @@ function changeHourSystemFrom24To12(hour) {
 }
 
 /**
- * function which records am and pm for the corresponding times 
+ * Function which records am and pm for the corresponding times. 
  * @param {*} amPm 
  */
 function calculateAmPmFor24Time(amPm) {
@@ -1086,7 +1103,7 @@ function calculateAmPmFor24Time(amPm) {
 }
 
 /**
- * function to convert a UTC timestamp with AM/ PM to a Unix timestamp in milliseconds 
+ * Function to convert a UTC timestamp with AM/ PM to a Unix timestamp in milliseconds. 
  * @param {*} UTCInAMPM 
  */
 function UTCInAMPMToUnixTimestampMillisecond(UTCInAMPM) {
@@ -1108,7 +1125,7 @@ function UTCInAMPMToUnixTimestampMillisecond(UTCInAMPM) {
 }
 
 /**
- * function to load the daterangepicker and store the date in the db.
+ * Function to load the daterangepicker and store the date in the db.
  * Furthermore data from db is loaded and displayed if available. 
  */
 $(function () {

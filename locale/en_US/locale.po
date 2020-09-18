@@ -48,7 +48,7 @@ msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrati
 msgstr "Coverage Information"
 
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
-msgstr "On basis of your input in the map, administrative unit(s) is/ are proposed which has/ have been selected according to your input in the map. Each time you update the map, the coverage information gets new calculated and updated correspondingly. You are able to delete administrative unit(s) by the red \"x\". If you hover over the administrative unit(s) the superior hierarchy of administrative unit(s) is displayed if available. Besides you can add further administrative units. You are only able to insert a further administrative unit if it fits to the already given hierarchy of administrative unit(s), and the given geometric shape(s) in the map. If you begin to insert, there are some suggestions you can accept by clicking, but nevertheless you can input your own administrative unit by hitting \"Enter\". The administrative unit (in black) which is the lowest common denominator for all geometric shape(s) is shown in the map. The administrative unit is not editable or deletable in the map, but here via the input field."
+msgstr "On basis of your input in the map, administrative unit(s) is/ are proposed which has/ have been selected according to your input in the map. Each time you update the map, the coverage information gets new calculated and updated correspondingly. You are able to delete administrative unit(s) by the red \"x\". If you hover over the administrative unit(s) the superior hierarchy of administrative unit(s) is displayed if available. Besides you can add further administrative units. You are only able to insert a further administrative unit if it fits to the already given hierarchy of administrative unit(s), and the given geometric shape(s) in the map. If you begin to insert, there are some suggestions you can accept by clicking, but nevertheless you can input your own administrative unit by hitting \"Enter\". The administrative unit (in black) which is the lowest common denominator for all geometric shape(s) is shown in the map. The administrative unit is not editable or deletable in the map, but here via the input field. If there are automatic changes in the map caused by changes in the coverage information and vice versa, this is indicated by a blue frame around the coverage element or the map."
 
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.description.article"
 msgstr "Here the administrative units are listed, which are superior to the location the article is dealing with, with the highest level on the left and the lowest on the right."
@@ -56,11 +56,13 @@ msgstr "Here the administrative units are listed, which are superior to the loca
 msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView"
 msgstr "Coverage Information"
 
+msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.download.geoJSON"
+msgstr "Download geospatial metadata as geoJSON"
+
 msgid "plugins.generic.geoOJS.name"
 msgstr "geoOJS"
 
 msgid "plugins.generic.geoOJS.description"
-msgstr "Plug-in which enables the storage of geospatial metadata."
+msgstr "Plug-in which enables the input, standardization, storage and discovery of geospatial metadata."
 
-msgid "plugins.generic.geoOJS.geospatialmetadata.properties.spatial.download.geoJSON"
-msgstr "Download geospatial metadata as geoJSON"
+

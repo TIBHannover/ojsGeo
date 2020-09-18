@@ -1,4 +1,4 @@
-{*the main template is here extended*}
+{*the main template is here extended using the hook 'Templates::Article::Details'*}
 
 <div style="clear:both;">
     <section id="item geospatialmetadatadownload" class="item geospatialmetadatadownload">
@@ -9,4 +9,4 @@
     </section>
 </div>
 
-{*main js script is already loaded in article_details.js*}
+{*main js script is already loaded in article_details.tpl*}

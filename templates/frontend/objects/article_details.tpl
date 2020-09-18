@@ -1,4 +1,4 @@
-{*the main template is here extended*}
+{*the main template is here extended using the hook 'Templates::Article::Main'*}
 
 <div style="clear:both;">
     <section id="item geospatialmetadata" class="item geospatialmetadata">
@@ -55,9 +55,6 @@
             style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnit}'>
     </section>
 </div>
-
-<style>
-</style>
 
 {*main js script, needs to be loaded last*}
 <script src="{$article_detailsJS}" type="text/javascript" defer></script>

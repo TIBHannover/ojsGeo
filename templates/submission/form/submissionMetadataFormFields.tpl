@@ -1,8 +1,10 @@
-{*the main template is here extended*}
+{*the main template is here extended using the hook
+'Templates::Submission::SubmissionMetadataForm::AdditionalMetadata'*}
 
 <div style="clear:both;">
     {fbvFormArea id="tagitFields" title="plugins.generic.geoOJS.geospatialmetadata"}
-    <p align="justify" class="description">{translate key="plugins.generic.geoOJS.geospatialmetadata.description.submission"}</p>
+    <p align="justify" class="description">{translate
+        key="plugins.generic.geoOJS.geospatialmetadata.description.submission"}</p>
 
     {*temporal*}
     {fbvFormSection title="plugins.generic.geoOJS.geospatialmetadata.properties.temporal" for="period" inline=true}
@@ -51,5 +53,6 @@
         z-index: 1;
     }
 </style>
+
 {*main js script, needs to be loaded last*}
 <script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>

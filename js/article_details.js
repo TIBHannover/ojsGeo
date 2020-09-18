@@ -1,4 +1,9 @@
-//load spatial properties from article_details.tpl 
+/**
+ * Script article_details.js which gets called in the geoOJSPlugin.inc.php. 
+ * Is used to display spatio-temporal metadata in the article view. 
+ */
+
+// load spatial properties from article_details.tpl 
 var spatialPropertiesDecoded = document.getElementById("spatialProperties").value;
 
 // load temporal properties from article_details.tpl 
@@ -62,7 +67,7 @@ var geocoder = L.Control.geocoder({
 
 /*
 If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
-and no geospatial metadata are displayed. 
+and no geospatial metadata are displayed also the download of the geojson is not provided, because there is no data for the geojson. 
 Otherwise, the display of the elements is initiated. 
 */
 if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no data" && administrativeUnitDecoded === "no data") {
@@ -110,43 +115,10 @@ else {
         }
     }
 
-    /**
-     * function to proof if a taken string is valid JSON
-     * @param {} string
-     */
-    function IsGivenStringJson(string) {
-        try {
-            JSON.parse(string);
-        } catch (e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * function that performs the Ajax request to the API Geonames for any geonameId. 
-     * https://www.geonames.org/ 
-     * @param {*} geonameId 
-     */
-    function ajaxRequestGeonamesCoordinates(geonameId) {
-
-        var resultGeonames;
-        var urlGeonames = 'http://api.geonames.org/hierarchyJSON?geonameId=' + geonameId + '&username=tnier01';
-
-        $.ajax({
-            url: urlGeonames,
-            async: false,
-            success: function (result) {
-                resultGeonames = result;
-            }
-        });
-        return resultGeonames;
-    }
-
     /*
     administrative unit
     The administrative unit is requested from the OJS database. 
-    The available elements are displayed. If there is a corresponding bbox available it is displayed in the map. 
+    The available elements are displayed. If there is a corresponding bbox available, the bbox for the lowest level is displayed in the map. 
     */
     if (administrativeUnitDecoded === "no data") {
         document.getElementById("item administrativeUnit").remove();
@@ -233,6 +205,7 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
 
         administrativeUnitsMap.addLayer(layer);
 
+        // the map is fitted to the given layer 
         map.fitBounds(administrativeUnitsMap.getBounds());
 
         if (geojson.administrativeUnits === {}) {
@@ -245,17 +218,16 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
 }
 
 /**
- * Function which gets called if the corresponding button is pressed in the article view
- * If pressed, the geojson with the geospatial metadata gets donwloaded, as long the geojson is available. 
+ * Function which gets called if the corresponding button is pressed in the article view. 
+ * If pressed, the geojson with the geospatial metadata gets downloaded, as long the geojson is available. 
  */
 function downloadGeospatialMetadataAsGeoJSON() {
-
     var spatialProperties = JSON.parse(spatialPropertiesDecoded);
     downloadObjectAsJson(spatialProperties, "geospatialMetadata");
 }
 
 /**
- * Downloads a object as JSON
+ * Function to download an object as json. 
  * @param {*} exportObj to download
  * @param {*} exportName name of object
  */
