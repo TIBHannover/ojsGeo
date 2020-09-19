@@ -26,7 +26,7 @@ class geoOJSPlugin extends GenericPlugin
 
 			// Hooks for changing the frontent Submit an Article 3. Enter Metadata 
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
-			
+
 			// Hooks for changing the Metadata right before Schedule for Publication (not working yet)
 			HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
 			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendScheduleForPublication2'));
@@ -80,7 +80,7 @@ class geoOJSPlugin extends GenericPlugin
 			these are included by the following lines and need not be referenced (e.g. in .tbl files).
 			Further information can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts
 			*/
-			
+
 			// loading the leaflet scripts, source: https://leafletjs.com/examples/quick-start/
 			$templateMgr->addStyleSheet('leafletCSS', $urlLeafletCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript('leafletJS', $urlLeafletJS, array('contexts' => array('frontend', 'backend')));
@@ -88,7 +88,7 @@ class geoOJSPlugin extends GenericPlugin
 			// loading the leaflet draw scripts, source: https://www.jsdelivr.com/package/npm/leaflet-draw?path=dist
 			$templateMgr->addStyleSheet("leafletDrawCSS", $urlLeafletDrawCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("leafletDrawJS", $urlLeafletDrawJS, array('contexts' => array('frontend', 'backend')));
-			
+
 			// loading the daterangepicker scripts, source: https://www.daterangepicker.com/#example2 
 			//$templateMgr->addJavaScript("jqueryJS", $urlJqueryJS, array('contexts' => array('frontend', 'backend')));
 			// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
@@ -131,7 +131,16 @@ class geoOJSPlugin extends GenericPlugin
 		// example: the arrow is used to access the attribute smarty of the variable smarty 
 		// $templateMgr = $smarty->smarty; 
 
-		$request = Application::get()->getRequest(); 
+
+		$request = Application::get()->getRequest();
+		$context = $request->getContext();
+
+		/*
+		Check if the user has entered an username in the plugin settings for the geonames API (https://www.geonames.org/login). 
+		The result is passed on accordingly to submissionMetadataFormFields.js as template variable. 
+		*/
+		$usernameGeonames = $this->getSetting($context->getId(), 'usernameGeonames');
+		$templateMgr->assign('usernameGeonames', $usernameGeonames);
 
 		/*
 		In case the user repeats the step "3. Enter Metadata" in the process 'Submit an Article' and comes back to this step to make changes again, 
@@ -152,7 +161,7 @@ class geoOJSPlugin extends GenericPlugin
 			$temporalProperties = 'no data';
 		}
 
-		if ($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}') {
+		if ($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":{"description":"not available","id":"not available"}}}') {
 			$spatialProperties = 'no data';
 		}
 
@@ -166,7 +175,7 @@ class geoOJSPlugin extends GenericPlugin
 		$templateMgr->assign('administrativeUnitFromDb', $administrativeUnit);
 
 		// echo "TestTesTest"; // by echo a direct output is created on the page
-		
+
 		// here the original template is extended by the additional template modified by geoOJS  
 		$output .= $templateMgr->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
 
@@ -329,29 +338,6 @@ class geoOJSPlugin extends GenericPlugin
 		*/
 	}
 
-
-	/**
-	 * Provide a name for this plugin (plugin gallery)
-	 *
-	 * The name will appear in the Plugin Gallery where editors can
-	 * install, enable and disable plugins.
-	 */
-	public function getDisplayName()
-	{
-		return __('plugins.generic.geoOJS.name');
-	}
-
-	/**
-	 * Provide a description for this plugin (plugin gallery) 
-	 *
-	 * The description will appear in the Plugin Gallery where editors can
-	 * install, enable and disable plugins.
-	 */
-	public function getDescription()
-	{
-		return __('plugins.generic.geoOJS.description');
-	}
-
 	/**
 	 * Not working function to edit a form before Schedule for Publication. 
 	 * Possible solution can be found here: https://forum.pkp.sfu.ca/t/insert-in-submission-settings-table/61291/19?u=tnier01, 
@@ -393,7 +379,7 @@ class geoOJSPlugin extends GenericPlugin
 
 	/**
 	 * Not working function to edit a form before Schedule for Publication. 
-	 */	
+	 */
 	public function extendScheduleForPublication2($hookName, $params)
 	{
 		$templateMgr = &$params[1];
@@ -404,5 +390,103 @@ class geoOJSPlugin extends GenericPlugin
 		// $output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details.tpl'));
 
 		return false;
+	}
+
+	/**
+	 * @copydoc Plugin::getActions() - https://docs.pkp.sfu.ca/dev/plugin-guide/en/settings
+	 * Function needed for Plugin Settings.
+	 */
+	public function getActions($request, $actionArgs)
+	{
+
+		// Get the existing actions
+		$actions = parent::getActions($request, $actionArgs);
+		if (!$this->getEnabled()) {
+			return $actions;
+		}
+
+		// Create a LinkAction that will call the plugin's
+		// `manage` method with the `settings` verb.
+		$router = $request->getRouter();
+		import('lib.pkp.classes.linkAction.request.AjaxModal');
+		$linkAction = new LinkAction(
+			'settings',
+			new AjaxModal(
+				$router->url(
+					$request,
+					null,
+					null,
+					'manage',
+					null,
+					array(
+						'verb' => 'settings',
+						'plugin' => $this->getName(),
+						'category' => 'generic'
+					)
+				),
+				$this->getDisplayName()
+			),
+			__('manager.plugins.settings'),
+			null
+		);
+
+		// Add the LinkAction to the existing actions.
+		// Make it the first action to be consistent with
+		// other plugins.
+		array_unshift($actions, $linkAction);
+
+		return $actions;
+	}
+
+	/**
+	 * @copydoc Plugin::manage() - https://docs.pkp.sfu.ca/dev/plugin-guide/en/settings#the-form-class 
+	 * Function needed for Plugin Settings. 
+	 */
+	public function manage($args, $request)
+	{
+		switch ($request->getUserVar('verb')) {
+			case 'settings':
+
+				// Load the custom form
+				$this->import('geoOJSPluginSettingsForm');
+				$form = new geoOJSPluginSettingsForm($this);
+
+				// Fetch the form the first time it loads, before
+				// the user has tried to save it
+				if (!$request->getUserVar('save')) {
+					$form->initData();
+					return new JSONMessage(true, $form->fetch($request));
+				}
+
+				// Validate and execute the form
+				$form->readInputData();
+				if ($form->validate()) {
+					$form->execute();
+					return new JSONMessage(true);
+				}
+		}
+		return parent::manage($args, $request);
+	}
+
+	/**
+	 * Provide a name for this plugin (plugin gallery)
+	 *
+	 * The name will appear in the Plugin Gallery where editors can
+	 * install, enable and disable plugins.
+	 */
+	public function getDisplayName()
+	{
+		return __('plugins.generic.geoOJS.name');
+	}
+
+	/**
+	 * Provide a description for this plugin (plugin gallery) 
+	 *
+	 * The description will appear in the Plugin Gallery where editors can
+	 * install, enable and disable plugins.
+	 */
+	public function getDescription()
+	{
+		return __('plugins.generic.geoOJS.description');
 	}
 }

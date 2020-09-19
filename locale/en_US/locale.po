@@ -65,4 +65,10 @@ msgstr "geoOJS"
 msgid "plugins.generic.geoOJS.description"
 msgstr "Plug-in which enables the input, standardization, storage and discovery of geospatial metadata."
 
+msgid "plugins.generic.geoOJS.settings.usernameGeonames"
+msgstr "username for https://www.geonames.org/login"
+
+msgid "plugins.generic.geoOJS.settings.usernameGeonames.description"
+msgstr "You have to specify your username for the geonames api, so that an alignment for the administrative units is possible. Create a account on https://www.geonames.org/login and insert the username here!"
+
 

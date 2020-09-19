@@ -31,7 +31,7 @@ var baseLayers = {
 };
 
 // add scale to the map 
-L.control.scale({position: 'bottomright'}).addTo(map);
+L.control.scale({ position: 'bottomright' }).addTo(map);
 
 // FeatureGroup for the items drawn or inserted by the search
 var drawnItems = new L.FeatureGroup();
@@ -75,7 +75,7 @@ if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no 
     document.getElementById("item temporal").remove();
     document.getElementById("item geospatialmetadata").remove();
     document.getElementById("item administrativeUnit").remove();
-    document.getElementById("item geospatialmetadatadownload").remove();   
+    document.getElementById("item geospatialmetadatadownload").remove();
 }
 else {
     /*
@@ -90,7 +90,7 @@ else {
         var spatialProperties = JSON.parse(spatialPropertiesDecoded);
 
         if (spatialProperties.features.length === 0) {
-            document.getElementById("item spatial").remove();   
+            document.getElementById("item spatial").remove();
         }
         else {
             /*
@@ -133,9 +133,9 @@ else {
         }
 
         document.getElementById("administrativeUnitDescription").innerHTML = administrativeUnitsNameList.join(', ');
-        
+
         // store lowest administrative unit in metadata in the head of the html (https://dohmaindesigns.com/adding-geo-meta-tags-to-your-website/)
-        $('head').append( '<meta name="geo.placename" content="' + administrativeUnitsNameList[administrativeUnitsNameList.length-1] + '">' );
+        $('head').append('<meta name="geo.placename" content="' + administrativeUnitsNameList[administrativeUnitsNameList.length - 1] + '">');
 
         var spatialPropertiesEncoded = JSON.parse(spatialPropertiesDecoded);
         displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesEncoded);

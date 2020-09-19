@@ -41,6 +41,8 @@
     <input type="text" id="administrativeUnit" name="administrativeUnit" size="30" style="visibility: hidden;">
     <input type="text" id="administrativeUnitFromDb" name="administrativeUnitFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnitFromDb}' />
+    <input type="text" id="usernameGeonames" name="usernameGeonames"
+        style="height: 0px; width: 0px; visibility: hidden;" value='{$usernameGeonames}' />
     {/fbvFormSection}
     {/fbvFormArea}
 </div>
