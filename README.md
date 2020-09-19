@@ -7,7 +7,7 @@
 * [Abstract](https://github.com/tnier01/geoOJS#abstract)
 * [Download & Installation](https://github.com/tnier01/geoOJS#download--installation)
 * [Specify geonames username ](https://github.com/tnier01/geoOJS#specify-geonames-username)  
-* [Wiki](https://github.com/tnier01/geoOJS#wiki)  
+* [Wiki](https://github.com/tnier01/geoOJS/wiki)  
 
 # Abstract
 *geoOJS* offers a novel way for authors to provide spatial properties of research works when submitting an article to a journal based on the open source software Open Journal Systems (OJS, https://pkp.sfu.ca/ojs/)
@@ -51,7 +51,7 @@ In the article view, the properties specified by the author are then displayed a
 
 
 # Wiki 
-Further information you find in the Wiki.
+Further information you find in the [Wiki](https://github.com/tnier01/geoOJS/wiki).
 
 **Wiki Content**
 * [geoJSON-Specification](https://github.com/tnier01/geoOJS/wiki/geoJSON-Specification)
