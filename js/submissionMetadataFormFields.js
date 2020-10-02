@@ -341,6 +341,13 @@ $("#administrativeUnitInput").tagit({
                         return 'notValidTag';
                     }
                 }
+                else {
+                    // In case no administrative unit is currently available, it must still be checked if the new input matches the geometric shapes in the map 
+                    if (proofIfAllFeaturesAreInPolygon(geojson, administrativeUnitAuthorInput.bbox) === false) {
+                        alert('Your Input is not valid! You need to change the tag you want to add, so that it fits the geometric shape(s) in the map, or edit the geometric shape(s) in the map!');
+                        return 'notValidTag';
+                    }
+                }
 
                 document.getElementById("administrativeUnit").value = JSON.stringify(administrativeUnit);
 
