@@ -217,6 +217,7 @@ $("#administrativeUnitInput").tagit({
  */
 $("#administrativeUnitInput").tagit({
     beforeTagAdded: function (event, ui) {
+
         if (document.getElementById("spatialProperties").value !== 'undefined') {
 
             var geojson = JSON.parse(document.getElementById("spatialProperties").value);
@@ -276,13 +277,11 @@ $("#administrativeUnitInput").tagit({
                 }
             }
         }
-
         // If the input comes from the user it is stored, either as an administrative unit if a entry in the geoname API exists and if not directly 
         if (isThereAuthorInput === true) {
             var administrativeUnitRawAuthorInput = ajaxRequestGeonamesPlaceName(input);
 
             if ((administrativeUnitRawAuthorInput.totalResultsCount !== 0) && (administrativeUnitRawAuthorInput.geonames[0].asciiName === input)) {
-
                 var administrativeUnitAuthorInput = {
                     'name': administrativeUnitRawAuthorInput.geonames[0].asciiName,
                     'geonameId': administrativeUnitRawAuthorInput.geonames[0].geonameId,
@@ -305,7 +304,6 @@ $("#administrativeUnitInput").tagit({
                 // store the administrativeUnitSuborder, so the parent hierarchical structure of administrative units in the administrative Unit 
                 var administrativeUnitSuborder = getAdministrativeUnitSuborderForAdministrativeUnit(administrativeUnitAuthorInput.geonameId);
                 administrativeUnitAuthorInput.administrativeUnitSuborder = administrativeUnitSuborder;
-
                 administrativeUnit.push(administrativeUnitAuthorInput);
 
                 // there is a proof if the input tag is valid, so if it fits in the current hierarchy of administrative units with the lowest common denominator  of administrative units and if it fits concerning the geometric shape(s) displayed in map
@@ -328,29 +326,27 @@ $("#administrativeUnitInput").tagit({
                     }
 
                     if (inputTagIsValid === false && proofIfAllFeaturesAreInPolygon(geojson, administrativeUnitAuthorInput.bbox) === false) {
-                        alert('Your Input is not valid! On the one hand you need to delete one or more of the tags which are already displayed, so that your input tag fits in the current hierarchy of administrative units, or adapt your input tag! On the other side you need to change the tag you want to add, so that it fits the geometric shape(s) in the map, or edit the geometric shape(s) in the map!');
+                        alert('Your Input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) + ' is not valid! On the one hand you need to delete one or more of the tags which are already displayed, so that your input tag fits in the current hierarchy of administrative units, or adapt your input tag! On the other side you need to change the tag you want to add, so that it fits the geometric shape(s) in the map, or edit the geometric shape(s) in the map!');
                         return 'notValidTag';
                     }
                     if (inputTagIsValid === false) {
-                        alert('Your Input is not valid! You need to delete one or more of the other tags which are already displayed, so that your input tag fits in the current hierarchy of administrative units, or adapt your input tag!');
+                        alert('Your Input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) + ' is not valid! You need to delete one or more of the other tags which are already displayed, so that your input tag fits in the current hierarchy of administrative units, or adapt your input tag!');
                         return 'notValidTag';
                     }
-
                     if (proofIfAllFeaturesAreInPolygon(geojson, administrativeUnitAuthorInput.bbox) === false) {
-                        alert('Your Input is not valid! You need to change the tag you want to add, so that it fits the geometric shape(s) in the map, or edit the geometric shape(s) in the map!');
+                        alert('Your Input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) + ' is not valid! You need to change the tag you want to add, so that it fits the geometric shape(s) in the map, or edit the geometric shape(s) in the map!');
                         return 'notValidTag';
                     }
                 }
                 else {
                     // In case no administrative unit is currently available, it must still be checked if the new input matches the geometric shapes in the map 
                     if (proofIfAllFeaturesAreInPolygon(geojson, administrativeUnitAuthorInput.bbox) === false) {
-                        alert('Your Input is not valid! You need to change the tag you want to add, so that it fits the geometric shape(s) in the map, or edit the geometric shape(s) in the map!');
+                        alert('Your Input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) + ' is not valid! You need to change the tag you want to add, so that it fits the geometric shape(s) in the map, or edit the geometric shape(s) in the map!');
                         return 'notValidTag';
                     }
                 }
 
                 document.getElementById("administrativeUnit").value = JSON.stringify(administrativeUnit);
-
                 input = administrativeUnitAuthorInput.name;
 
             }
@@ -512,6 +508,11 @@ function IsGivenStringJson(string) {
  * @param {*} givenPolygon 
  */
 function proofIfAllFeaturesAreInPolygon(geojson, givenPolygon) {
+    
+    // In case there is no polygon, no check can be made if AllFeatures are in it, so the assumption is made that they are inside and therefore true is returned. 
+    if (givenPolygon === 'not available') {
+        return true; 
+    }
 
     var allFeaturesInPolygon = [];
 
