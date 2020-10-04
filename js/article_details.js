@@ -177,6 +177,12 @@ else {
 
         document.getElementById("start").innerHTML = utcStart;
         document.getElementById("end").innerHTML = utcEnd;
+
+        var isoStart = (new Date(temporalProperties[0])).toISOString();
+        var isoEnd = (new Date(temporalProperties[1])).toISOString();
+
+        // ISO 8601 - https://www.iso.org/iso-8601-date-and-time-format.html 
+        $('head').append('<meta name="ISO 8601" content="' + isoStart + '/' + isoEnd + '">');    
     }
 }
 
