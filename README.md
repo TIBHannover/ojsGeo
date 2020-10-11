@@ -55,7 +55,6 @@ In the article view, the properties specified by the author are then displayed a
 # Contribute
 
 All help is welcome: asking questions, providing documentation, testing, or even development.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
 By participating in this project you agree to abide by its terms.
