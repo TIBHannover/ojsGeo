@@ -7,6 +7,7 @@
 * [Abstract](https://github.com/tnier01/geoOJS#abstract)
 * [Download & Installation](https://github.com/tnier01/geoOJS#download--installation)
 * [Specify geonames username ](https://github.com/tnier01/geoOJS#specify-geonames-username)  
+* [Contribute](https://github.com/tnier01/geoOJS#contribute)  
 * [Wiki](https://github.com/tnier01/geoOJS/wiki)  
 
 # Abstract
@@ -49,6 +50,15 @@ In the article view, the properties specified by the author are then displayed a
 
 *Screenshot of geoOJS: plugin settings*
 </div>
+
+
+# Contribute
+
+All help is welcome: asking questions, providing documentation, testing, or even development.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
+By participating in this project you agree to abide by its terms.
 
 
 # Wiki 
