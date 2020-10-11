@@ -1,7 +1,7 @@
 <img src="logo.png" alt="Alt-Text" title="" />
 <!---created here: https://www.freelogodesign.org/preview?lang=de&name=geoOJS%20OJS&logo=421f5b45-02da-4a66-90da-d213adc643b4--->
 
-*A plugin for integrating geospatial data in OJS*
+*A plugin for integrating geospatial metadata in OJS*
 
 **Content**
 * [Abstract](https://github.com/tnier01/geoOJS#abstract)
