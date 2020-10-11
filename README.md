@@ -47,7 +47,7 @@ In the article view, the properties specified by the author are then displayed a
 <div style="text-align:center">
 <img src="screenshots/PluginSettings.png" alt="Alt-Text" title="Screenshot of geoOJS: plug-in settings" width="50%" align="middle"/>
 
-*Screenshot of geoOJS: plug-in settings*
+*Screenshot of geoOJS: plugin settings*
 </div>
 
 
