@@ -96,11 +96,11 @@ class geoOJSPlugin extends GenericPlugin
 			$templateMgr->addJavaScript("daterangepickerJS", $urlDaterangepickerJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("daterangepickerCSS", $urlDaterangepickerCSS, array('contexts' => array('frontend', 'backend')));
 
-			// loading leaflet control geocoder (search), source: https://github.com/vladimirbuskin/leaflet-control-geocoder 
+			// loading leaflet control geocoder (search), source: https://github.com/perliedman/leaflet-control-geocoder 
 			$templateMgr->addJavaScript("leafletControlGeocodeJS", $urlLeafletControlGeocodeJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("leafletControlGeocodeCSS", $urlLeafletControlGeocodeCSS, array('contexts' => array('frontend', 'backend')));
 
-			// main js script for loading leaflet
+			// main js scripts
 			$templateMgr->assign('submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
 			$templateMgr->assign('article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
 		}
@@ -108,7 +108,7 @@ class geoOJSPlugin extends GenericPlugin
 	}
 
 	/**
-	 * Function which extends the sumbmissionMetadataFormFields template and adds template variables concerning temporal- and spatial properties 
+	 * Function which extends the submissionMetadataFormFields template and adds template variables concerning temporal- and spatial properties 
 	 * and the administrative unit if there is already a storage in the database. 
 	 * @param hook Templates::Submission::SubmissionMetadataForm::AdditionalMetadata
 	 */
