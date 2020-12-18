@@ -31,6 +31,9 @@ In the article view, the properties specified by the author are then displayed a
 *Screenshot of geoOJS: geospatial properties in the OJS article view*
 </div>
 
+The plugin was developed as part of a bachelor thesis. This thesis can be found here: http://nbn-resolving.de/urn:nbn:de:hbz:6-69029469735. In addition, the plugin was presented at The Munin Conference on Scholarly Publishing 2020. Abstract, recording and slides can be found here: https://t.co/pSxKfqw1Ru?amp=1 or on youtube: youtu.be/-Lc9AjHq_AY.
+
+
 # Download & Installation 
 - download the plug-in here as ```geoOJS.zip```
 - rename the unzipped folder ```geoOJS-master``` to ```geoOJS```
@@ -51,7 +54,7 @@ In the article view, the properties specified by the author are then displayed a
 
 
 # Wiki 
-Further information you find in the [Wiki](https://github.com/tnier01/geoOJS/wiki).
+Further information you find in the [Wiki](https://github.com/tnier01/geoOJS/wiki). 
 
 **Wiki Content**
 * [geoJSON-Specification](https://github.com/tnier01/geoOJS/wiki/geoJSON-Specification)
