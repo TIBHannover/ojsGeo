@@ -42,6 +42,7 @@ The plugin was developed as part of a bachelor thesis. This thesis can be found 
 - insert the folder ```geoOJS``` in the path ```ojs/plugins/generic/``` in OJS 
 - activate the plugin geoOJS in the OJS plug-in settings 
 - Specify your geonames username
+- If you want to disable CDN you can do it [here](https://github.com/tnier01/geoOJS/wiki/Enable-CDN)
 
 # Specify geonames username 
 - You have to specify your username for the geonames api, so that an alignment for the administrative units is possible. 
@@ -68,6 +69,6 @@ Further information you find in the [Wiki](https://github.com/tnier01/geoOJS/wik
 
 **Wiki Content**
 * [geoJSON-Specification](https://github.com/tnier01/geoOJS/wiki/geoJSON-Specification)
-* [Enable CDN](https://github.com/tnier01/geoOJS/wiki/Enable-CDN)
+* [Disable CDN](https://github.com/tnier01/geoOJS/wiki/Enable-CDN)
 
 

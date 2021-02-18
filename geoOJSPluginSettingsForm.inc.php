@@ -30,6 +30,7 @@ class geoOJSPluginSettingsForm extends Form
     {
         $contextId = Application::get()->getRequest()->getContext()->getId();
         $this->setData('usernameGeonames', $this->plugin->getSetting($contextId, 'usernameGeonames'));
+        $this->setData('checkboxDisableCDN', $this->plugin->getSetting($contextId, 'checkboxDisableCDN'));
         parent::initData();
     }
 
@@ -39,6 +40,7 @@ class geoOJSPluginSettingsForm extends Form
     public function readInputData()
     {
         $this->readUserVars(['usernameGeonames']);
+        $this->readUserVars(['checkboxDisableCDN']);
         parent::readInputData();
     }
 
@@ -67,6 +69,7 @@ class geoOJSPluginSettingsForm extends Form
     {
         $contextId = Application::get()->getRequest()->getContext()->getId();
         $this->plugin->updateSetting($contextId, 'usernameGeonames', $this->getData('usernameGeonames'));
+        $this->plugin->updateSetting($contextId, 'checkboxDisableCDN', $this->getData('checkboxDisableCDN'));
 
         // Tell the user that the save was successful.
         import('classes.notification.NotificationManager');

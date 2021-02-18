@@ -71,4 +71,9 @@ msgstr "username for https://www.geonames.org/login"
 msgid "plugins.generic.geoOJS.settings.usernameGeonames.description"
 msgstr "You have to specify your username for the geonames api, so that an alignment for the administrative units is possible. Create a account on https://www.geonames.org/login and insert the username here!"
 
+msgid "plugins.generic.geoOJS.settings.CDN"
+msgstr "Disable CDN"
+
+msgid "plugins.generic.geoOJS.settings.CDN.description"
+msgstr "You have to specify if you want CDN to be enabled or not. If the checkbox is checked, CDN is disabled. By default CDN is enabled."
 

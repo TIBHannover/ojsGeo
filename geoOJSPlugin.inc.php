@@ -46,10 +46,17 @@ class geoOJSPlugin extends GenericPlugin
 			$templateMgr = TemplateManager::getManager($request);
 
 			/*
-			To respect the enable_cdn configuration setting. When this is off, 
-			plugins should not load any scripts or styles from a third-party website.
+			In previous OJS versions, there was an option in the config.inc.php to enable or disable CDN. 
+			As it was deprecated in OJS 3.3, we decide it to integrate it by a plugin setting: checkboxDisableCDN. 
+			If the checkbox is checked the variable $checkboxDisableCDN is = "on" , CDN is disabled. Thus the plugins should not load any scripts or styles from a third-party website.
+			Old configuration option which is disabled: Config::getVar('general', 'enable_cdn'). 
 			*/
-			if (Config::getVar('general', 'enable_cdn')) {
+			$request = Application::get()->getRequest();
+			$context = $request->getContext();
+			$checkboxDisableCDN = $this->getSetting($context->getId(), 'checkboxDisableCDN');
+
+			if ($checkboxDisableCDN !== "on") {
+				// if the user allows CDN 
 				$urlLeafletCSS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css';
 				$urlLeafletJS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js';
 				$urlLeafletDrawCSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
