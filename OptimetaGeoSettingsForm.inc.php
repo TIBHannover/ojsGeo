@@ -2,7 +2,7 @@
 import('lib.pkp.classes.form.Form');
 class OptimetaGeoSettingsForm extends Form {
 
-	/** @var PluginTemplatePlugin  */
+	/** @var OptimetaGeoPlugin  */
 	public $plugin;
 
 	/**

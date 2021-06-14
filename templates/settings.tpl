@@ -5,17 +5,17 @@
  * Copyright (c) 2003-2021 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * Settings form for the pluginTemplate plugin.
+ * Settings form for the optimetaGeo plugin.
  *}
 <script>
 	$(function() {ldelim}
-		$('#pluginTemplateSettings').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
+		$('#optimetaGeoSettings').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
 	{rdelim});
 </script>
 
 <form
 	class="pkp_form"
-	id="pluginTemplateSettings"
+	id="optimetaGeoSettings"
 	method="POST"
 	action="{url router=$smarty.const.ROUTE_COMPONENT op="manage" category="generic" plugin=$pluginName verb="settings" save=true}"
 >
@@ -23,12 +23,12 @@
 	{csrf}
 
 	{fbvFormArea}
-		{fbvFormSection label="plugins.generic.pluginTemplate.publicationStatement"}
+		{fbvFormSection label="plugins.generic.optimetaGeo.publicationStatement"}
 			{fbvElement
 				type="text"
 				id="publicationStatement"
 				value=$publicationStatement
-				description="plugins.generic.pluginTemplate.publicationStatement.description"
+				description="plugins.generic.optimetaGeo.publicationStatement.description"
 			}
 		{/fbvFormSection}
 	{/fbvFormArea}

@@ -6,8 +6,8 @@
  * Copyright (c) 2017-2021 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class PluginTemplatePlugin
- * @brief Plugin class for the PluginTemplate plugin.
+ * @class OptimetaGeoPlugin
+ * @brief Plugin class for the OptimetaGeo plugin.
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
 class OptimetaGeoPlugin extends GenericPlugin {
@@ -33,7 +33,7 @@ class OptimetaGeoPlugin extends GenericPlugin {
 	 * @return string
 	 */
 	public function getDisplayName() {
-		return __('plugins.generic.pluginTemplate.displayName');
+		return __('plugins.generic.optimetaGeo.displayName');
 	}
 
 	/**
@@ -45,7 +45,7 @@ class OptimetaGeoPlugin extends GenericPlugin {
 	 * @return string
 	 */
 	public function getDescription() {
-		return __('plugins.generic.pluginTemplate.description');
+		return __('plugins.generic.optimetaGeo.description');
 	}
 
 	/**
@@ -121,8 +121,8 @@ class OptimetaGeoPlugin extends GenericPlugin {
 			case 'settings':
 
 				// Load the custom form
-				$this->import('PluginTemplateSettingsForm');
-				$form = new PluginTemplateSettingsForm($this);
+				$this->import('OptimetaGeoSettingsForm');
+				$form = new OptimetaGeoSettingsForm($this);
 
 				// Fetch the form the first time it loads, before
 				// the user has tried to save it
