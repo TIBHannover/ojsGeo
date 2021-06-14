@@ -1,6 +1,6 @@
 <?php
 import('lib.pkp.classes.form.Form');
-class PluginTemplateSettingsForm extends Form {
+class OptimetaGeoSettingsForm extends Form {
 
 	/** @var PluginTemplatePlugin  */
 	public $plugin;
