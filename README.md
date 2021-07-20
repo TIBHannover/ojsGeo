@@ -32,6 +32,9 @@ In the article view, the properties specified by the author are then displayed a
 *Screenshot of geoOJS: geospatial properties in the OJS article view*
 </div>
 
+The plugin was developed as part of a bachelor thesis. This thesis can be found here: http://nbn-resolving.de/urn:nbn:de:hbz:6-69029469735. In addition, the plugin was presented at The Munin Conference on Scholarly Publishing 2020. Abstract, recording and slides can be found here: https://doi.org/10.7557/5.5590 or on youtube: https://youtu.be/-Lc9AjHq_AY.
+
+
 # Download & Installation 
 - to use the plugin, OJS must be running locally (further information you can find here: https://github.com/pkp/ojs)
 - download the plugin here as ```geoOJS.zip```
@@ -39,6 +42,7 @@ In the article view, the properties specified by the author are then displayed a
 - insert the folder ```geoOJS``` in the path ```ojs/plugins/generic/``` in OJS 
 - activate the plugin geoOJS in the OJS plug-in settings 
 - Specify your geonames username
+- If you want to disable CDN you can do it [here](https://github.com/tnier01/geoOJS/wiki/Disable-CDN)
 
 # Specify geonames username 
 - You have to specify your username for the geonames api, so that an alignment for the administrative units is possible. 
@@ -61,10 +65,10 @@ By participating in this project you agree to abide by its terms.
 
 
 # Wiki 
-Further information you find in the [Wiki](https://github.com/tnier01/geoOJS/wiki).
+Further information you find in the [Wiki](https://github.com/tnier01/geoOJS/wiki). 
 
 **Wiki Content**
 * [geoJSON-Specification](https://github.com/tnier01/geoOJS/wiki/geoJSON-Specification)
-* [Enable CDN](https://github.com/tnier01/geoOJS/wiki/Enable-CDN)
+* [Disable CDN](https://github.com/tnier01/geoOJS/wiki/Disable-CDN)
 
 
