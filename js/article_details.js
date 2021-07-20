@@ -1,6 +1,5 @@
 /**
- * Script article_details.js which gets called in the geoOJSPlugin.inc.php. 
- * Is used to display spatio-temporal metadata in the article view. 
+ * Script imported in the plugin main file to display spatio-temporal metadata in the article view. 
  */
 
 // load spatial properties from article_details.tpl 

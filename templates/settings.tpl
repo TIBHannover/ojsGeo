@@ -1,4 +1,4 @@
-{*template which creates settings for the geoOJS plugin.'*}
+{*template settings for the geo plugin.'*}
 <script>
     $(function() {ldelim}
     $('#tutorialExampleSettings').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
@@ -13,12 +13,12 @@
     {fbvFormArea}
     {fbvFormSection}
     <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
-        key="plugins.generic.geoOJS.settings.usernameGeonames.description"}
+        key="plugins.generic.optimetaGeo.settings.usernameGeonames.description"}
         {fbvElement
         type="text"
         id="usernameGeonames"
         value=$usernameGeonames
-        label="plugins.generic.geoOJS.settings.usernameGeonames"
+        label="plugins.generic.optimetaGeo.settings.usernameGeonames"
         }
         {/fbvFormSection}
         {/fbvFormArea}
