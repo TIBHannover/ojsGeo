@@ -11,6 +11,9 @@ msgstr ""
 "PO-Revision-Date: 2020-09-02T07:48:21+00:00\n"
 "Language: \n"
 
+msgid "plugins.generic.optimetaGeo.geospatialmetadata"
+msgstr "Geospatial Metadata"
+
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.submission"
 msgstr "Here the articles content can be specified in terms of location and time."
 

@@ -38,8 +38,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 			HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
 			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendScheduleForPublication2'));
 
-			eval(Psy\sh());
-
 			// Hook for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
 			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
@@ -140,8 +138,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		Further details can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/templates
 		Where are templates located: https://docs.pkp.sfu.ca/pkp-theming-guide/en/html-smarty
 		*/
-		
-		eval(Psy\sh());
 
 		$templateMgr = &$params[1];
 		$output = &$params[2];
@@ -151,8 +147,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		$request = Application::get()->getRequest();
 		$context = $request->getContext();
-
-		eval(Psy\sh());
 
 		/*
 		Check if the user has entered an username in the plugin settings for the GeoNames API (https://www.geonames.org/login). 
@@ -193,10 +187,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$templateMgr->assign('spatialPropertiesFromDb', $spatialProperties);
 		$templateMgr->assign('administrativeUnitFromDb', $administrativeUnit);
 
-		echo "TestTesTest"; // by echo a direct output is created on the page
-
-		eval(Psy\sh());
-
 		// here the original template is extended by the additional template for entering geospatial metadata  
 		$output .= $templateMgr->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
 
@@ -217,6 +207,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$publication = $templateMgr->getTemplateVars('publication');
 		$submission = $templateMgr->getTemplateVars('article');
 		$submissionId = $submission->getId();
+
+		eval(Psy\sh());
 
 		// get data from database 
 		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
@@ -256,6 +248,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$output = &$params[2];
 
 		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details_download.tpl'));
+
+		eval(Psy\sh());
 
 		return false;
 	}
@@ -342,6 +336,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 		if ($administrativeUnit !== null) {
 			$newPublication->setData('coverage', $administrativeUnit);
 		}
+		
+		eval(Psy\sh());
 
 		/*
 		The following lines are probably needed if you want to store text in a certain language to set the local key,
