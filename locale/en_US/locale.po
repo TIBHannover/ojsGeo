@@ -63,7 +63,7 @@ msgid "plugins.generic.optimetaGeo.description"
 msgstr "Plug-in which enables the input, standardization, storage and discovery of geospatial metadata."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
-msgstr "Username at https://www.geonames.org/login"
+msgstr "Username at https://www.geonames.org/login (username must be enabled to use the free webservice once at https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames.description"
 msgstr "You have to specify your username for the GeoNames API, so that an alignment for the administrative units is possible. Create an account on <a href="https://www.geonames.org/login">https://www.geonames.org/login</a> and insert the username here."

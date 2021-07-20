@@ -208,8 +208,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$submission = $templateMgr->getTemplateVars('article');
 		$submissionId = $submission->getId();
 
-		eval(Psy\sh());
-
 		// get data from database 
 		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
@@ -248,8 +246,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$output = &$params[2];
 
 		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details_download.tpl'));
-
-		eval(Psy\sh());
 
 		return false;
 	}
@@ -336,8 +332,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		if ($administrativeUnit !== null) {
 			$newPublication->setData('coverage', $administrativeUnit);
 		}
-		
-		eval(Psy\sh());
 
 		/*
 		The following lines are probably needed if you want to store text in a certain language to set the local key,
