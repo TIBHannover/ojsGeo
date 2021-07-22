@@ -59,8 +59,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 			Old configuration option which is disabled: Config::getVar('general', 'enable_cdn'). 
 			*/
 			$request = Application::get()->getRequest();
-			$context = $request->getContext();
-			$checkboxDisableCDN = $this->getSetting($context->getId(), 'checkboxDisableCDN');
+			$contextId = $this->getCurrentContextId();
+			$checkboxDisableCDN = $this->getSetting($contextId, 'checkboxDisableCDN');
 
 			if ($checkboxDisableCDN !== "on") {
 				// if the user allows CDN 
@@ -499,5 +499,15 @@ class OptimetaGeoPlugin extends GenericPlugin
 	public function getDescription()
 	{
 		return __('plugins.generic.optimetaGeo.description');
+	}
+
+	/**
+	 * Get the current context ID or the site-wide context ID (0) if no context
+	 * can be found.
+	 */
+	function getCurrentContextId()
+	{
+		$context = Application::get()->getRequest()->getContext();
+		return is_null($context) ? 0 : $context->getId();
 	}
 }
