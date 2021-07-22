@@ -2,6 +2,8 @@
 
 # OPTIMETA geo plugin
 
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+
 The OPTIMETA geo plugin offers a novel way to capture and provide geospatial properties of research articles in [Open Journal Systems](https://pkp.sfu.ca/ojs/) (OJS).
 It is developed as part of the BMBF-funded project [OPTIMETA](https://projects.tib.eu/optimeta/en/).
 A first prototype was developed under the name *geoOJS* by Tom Niers for the BSc. thesis [Geospatial Metadata for Discovery in Scholarly Publishing](http://nbn-resolving.de/urn:nbn:de:hbz:6-69029469735); the work was [presented at The Munin Conference on Scholarly Publishing, 2020](https://doi.org/10.7557/5.5590), see [recording](https://youtu.be/-Lc9AjHq_AY).
