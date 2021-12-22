@@ -2,7 +2,8 @@
 'Templates::Submission::SubmissionMetadataForm::AdditionalMetadata'*}
 
 <div style="clear:both;">
-    {fbvFormArea id="tagitFields" title="plugins.generic.optimetaGeo.geospatialmetadata"}
+    {fbvFormArea id="tagitFields"
+    title="plugins.generic.optimetaGeo.geospatialmetadata"}
     <p align="justify" class="description">{translate
         key="plugins.generic.optimetaGeo.geospatialmetadata.description.submission"}</p>
 
