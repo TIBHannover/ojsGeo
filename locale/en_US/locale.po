@@ -71,11 +71,5 @@ msgstr "You have to specify your username for the GeoNames API, so that an align
 msgid "plugins.generic.optimetaGeo.name"
 msgstr "OPTIMETA Geo Plugin"
 
-msgid "plugins.generic.optimetaGeo.settings.CDN"
-msgstr "Disable CDN"
-
-msgid "plugins.generic.optimetaGeo.settings.CDN.description"
-msgstr "You have to specify if you want CDN to be enabled or not. If the checkbox is checked, CDN is disabled. By default CDN is enabled."
-
 msgid "plugins.generic.optimetaGeo.description"
 msgstr "Collect and expose geospatial metadata for enhanced discovery of articles."
