@@ -56,8 +56,11 @@ msgstr "Here the administrative units are listed, which are superior to the loca
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView"
 msgstr "Coverage Information"
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.download.geoJSON"
-msgstr "Download geospatial metadata as geoJSON"
+msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.download"
+msgstr "Download geospatial metadata"
+
+msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.geoJSON.about"
+msgstr "About GeoJSON"
 
 msgid "plugins.generic.optimetaGeo.description"
 msgstr "This plugin enables the discovery of articles based on geospatial metadata."

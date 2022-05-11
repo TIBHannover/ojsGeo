@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file OptimetaGeoPlugin.inc.php
  *
@@ -18,14 +19,33 @@ use \PKP\components\forms\FieldHTML; // needed for function extendScheduleForPub
 
 class OptimetaGeoPlugin extends GenericPlugin
 {
+
+    protected $ojsVersion = '3.3.0.0';
+
+    protected $templateParameters = [
+        'pluginStylesheetURL' => '',
+        'pluginJavaScriptURL' => '',
+        //'pluginImagesURL' => '',
+        //'citationsKeyForm' => '',
+        'pluginApiUrl' => ''
+    ];
+
 	public function register($category, $path, $mainContextId = NULL)
 	{
 		// Register the plugin even when it is not enabled
 		$success = parent::register($category, $path, $mainContextId);
+
+		// Current Request / Context
+		$request = $this->getRequest();
+
+		// Fill generic template parameters
+		$this->templateParameters['pluginStylesheetURL'] = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/css';
+		$this->templateParameters['pluginJavaScriptURL'] = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js';
+
 		// important to check if plugin is enabled before registering the hook, cause otherwise plugin will always run no matter enabled or disabled! 
 		if ($success && $this->getEnabled()) {
 
-			/* 
+			/*
 			Hooks are the possibility to intervene the application. By the corresponding function which is named in the HookRegistery, the application
 			can be changed. Further information here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/categories#generic 
 			*/
@@ -53,7 +73,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			$request = Application::get()->getRequest();
 			$contextId = $this->getCurrentContextId();
-			
+
 			// jQuery is already loaded via ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
 			$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.css';
 			$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.js';
@@ -216,6 +236,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$templateMgr = &$params[1];
 		$output = &$params[2];
 
+        $templateMgr->assign($this->templateParameters);
+
 		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details_download.tpl'));
 
 		return false;
@@ -268,10 +290,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$temporalProperties = $_POST['temporalProperties'];
 		$spatialProperties = $_POST['spatialProperties'];
 		$administrativeUnit = $_POST['administrativeUnit'];
-
-		$exampleTimestamp = '2020-08-12 11:00 AM - 2020-08-13 07:00 PM';
-		$exampleSpatialProperties = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[7.516193389892579,51.94553466305084],[7.516193389892579,51.96447134091556],[7.56511688232422,51.96447134091556],[7.56511688232422,51.94553466305084],[7.516193389892579,51.94553466305084]]]},"properties":{"name":"TODO Administrative Unit"}}]}';
-		$exampleCoverageElement = 'TODO';
 
 		/*
 		If the element to store in the database is an element which is different in different languages 

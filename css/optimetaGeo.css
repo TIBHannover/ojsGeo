@@ -1,0 +1,19 @@
+/**
+ * @file plugins/generic/optimetaGeo/css/optimetaCitations.css
+ *
+ * Copyright (c) 2021+ WWU Münster
+ * Copyright (c) 2021+ Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @style optimetaGeo
+ * @ingroup plugins_generic_optimetageo
+ *
+ * @brief Main stylesheet for the plugin.
+ */
+
+.optimetageo_download_about a {
+    text-decoration: none;
+	color: #777; /* based on OJS @text-light */
+	font-size: 13px;
+	margin-left: 13px;
+}
