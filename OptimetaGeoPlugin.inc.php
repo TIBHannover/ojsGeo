@@ -27,8 +27,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			/* 
 			Hooks are the possibility to intervene the application. By the corresponding function which is named in the HookRegistery, the application
-			can be changed. 
-			Further information here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/categories#generic 
+			can be changed. Further information here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/categories#generic 
 			*/
 
 			// Hooks for changing the frontent Submit an Article 3. Enter Metadata 
@@ -52,48 +51,19 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
 
-			/*
-			In previous OJS versions, there was an option in the config.inc.php to enable or disable CDN. 
-			As it was deprecated in OJS 3.3, we decide it to integrate it by a plugin setting: checkboxDisableCDN. 
-			If the checkbox is checked the variable $checkboxDisableCDN is = "on" , CDN is disabled. Thus the plugins should not load any scripts or styles from a third-party website.
-			Old configuration option which is disabled: Config::getVar('general', 'enable_cdn'). 
-			*/
 			$request = Application::get()->getRequest();
 			$contextId = $this->getCurrentContextId();
-			$checkboxDisableCDN = $this->getSetting($contextId, 'checkboxDisableCDN');
-
-			if ($checkboxDisableCDN !== "on") {
-				// if the user allows CDN 
-				$urlLeafletCSS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css';
-				$urlLeafletJS = 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js';
-				$urlLeafletDrawCSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
-				$urlLeafletDrawJS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js';
-				// $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js';
-				// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
-				$urlMomentJS = 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js';
-				$urlDaterangepickerJS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js';
-				$urlDaterangepickerCSS = 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css';
-				$urlLeafletControlGeocodeJS = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js';
-				$urlLeafletControlGeocodeCSS = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css';
-			} else {
-				$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.css';
-				$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet/leaflet.js';
-				$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.css';
-				$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-draw/leaflet.draw.js';
-				// $urlJqueryJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/jquery.min.js';
-				// jquery - no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
-				$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/moment.min.js';
-				$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.min.js';
-				$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/daterangepicker/daterangepicker.css';
-				$urlLeafletControlGeocodeJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-control-geocoder/dist/Control.Geocoder.js';
-				$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/enable_cdn_Off/leaflet-control-geocoder/dist/Control.Geocoder.css';
-			}
-
-			/*
-			Here further scripts like JS and CSS are included, 
-			these are included by the following lines and need not be referenced (e.g. in .tbl files).
-			Further information can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-styles-scripts
-			*/
+			
+			// jQuery is already loaded via ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
+			$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.css';
+			$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.js';
+			$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet.draw-1.0.4/dist/leaflet.draw.css';
+			$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet.draw-1.0.4/dist/leaflet.draw.js';
+			$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/moment-2.18.1/moment.js';
+			$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker-3.1/daterangepicker.js';
+			$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker-3.1/daterangepicker.css';
+			$urlLeafletControlGeocodeJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Control.Geocoder.js';
+			$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Control.Geocoder.css';
 
 			// loading the leaflet scripts, source: https://leafletjs.com/examples/quick-start/
 			$templateMgr->addStyleSheet('leafletCSS', $urlLeafletCSS, array('contexts' => array('frontend', 'backend')));
@@ -132,7 +102,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		This way templates are loaded. 
 		Its important that the corresponding hook is activated. 
 		If you want to override a template you need to create a .tpl-file which is in the plug-ins template path which the same 
-		path it got in the regular ojs structure. E.g. if you want to override/ add something to this template 
+		path it got in the regular ojs structure. E.g. if you want to override/add something to this template 
 		'/ojs/lib/pkp/templates/submission/submissionMetadataFormTitleFields.tpl'
 		you have to store in in the plug-ins template path under this path 'submission/form/submissionMetadataFormFields.tpl'. 
 		Further details can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/templates
@@ -164,6 +134,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$publicationDao = DAORegistry::getDAO('PublicationDAO');
 		$submissionId = $request->getUserVar('submissionId');
 		$publication = $publicationDao->getById($submissionId);
+		// TODO check if the submission really belongs to the journal
 
 		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
@@ -386,21 +357,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 				<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
 			]));*/
 		}
-	}
-
-	/**
-	 * Not working function to edit a form before Schedule for Publication. 
-	 */
-	public function extendScheduleForPublication2($hookName, $params)
-	{
-		$templateMgr = &$params[1];
-		$output = &$params[2];
-
-		// echo "<p> Hello </p>";
-
-		// $output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details.tpl'));
-
-		return false;
 	}
 
 	/**

@@ -29,15 +29,15 @@ In the article view, the properties specified by the author are then displayed a
 
 # Download & Installation
 
-1. Download the plugin [here]() and unzip the folder into `ojs/plugins/generic/optimeta-geoplugin` in OJS
-2. Activate the plugin in the OJS plug-in settings
-3. Specify your GeoNames username
+1. Download the plugin [here](https://github.com/TIBHannover/optimetaGeo/) and unzip the folder into `ojs/plugins/generic/optimetaGeo` in OJS
+1. Go to the directory `js/lib` and run `php -f downloadJavascriptLibraries.php` to download required JS libs
+1. Activate the plugin in the OJS plug-in settings
+1. Specify your GeoNames username
 
    You have to specify your username for the GeoNames api, so that an alignment for the administrative units is possible.
 
-   1. Create an account on https://www.geonames.org/login
+   1. Create an account on <https://www.geonames.org/login>
    1. Enter the username in the settings (OJS > Settings > Website > Plugins > Installed Plugins > OPTIMETA geo plugin > blue arrow > Settings)
-4. Enable or disable CDN for JavaScript libraries
 
 Further information is available in the [wiki](https://github.com/tnier01/geoOJS/wiki).
 
