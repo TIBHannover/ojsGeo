@@ -55,15 +55,15 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$contextId = $this->getCurrentContextId();
 			
 			// jQuery is already loaded via ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
-			$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet/leaflet.css';
-			$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet/leaflet.js';
-			$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-draw/leaflet.draw.css';
-			$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-draw/leaflet.draw.js';
-			$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker/moment.js';
-			$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker/daterangepicker.js';
-			$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker/daterangepicker.css';
-			$urlLeafletControlGeocodeJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-control-geocoder/dist/Control.Geocoder.js';
-			$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-control-geocoder/dist/Control.Geocoder.css';
+			$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.css';
+			$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.js';
+			$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet.draw-1.0.4/dist/leaflet.draw.css';
+			$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet.draw-1.0.4/dist/leaflet.draw.js';
+			$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/moment-2.18.1/moment.js';
+			$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker-3.1/daterangepicker.js';
+			$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker-3.1/daterangepicker.css';
+			$urlLeafletControlGeocodeJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Control.Geocoder.js';
+			$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Control.Geocoder.css';
 
 			// loading the leaflet scripts, source: https://leafletjs.com/examples/quick-start/
 			$templateMgr->addStyleSheet('leafletCSS', $urlLeafletCSS, array('contexts' => array('frontend', 'backend')));
@@ -102,7 +102,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		This way templates are loaded. 
 		Its important that the corresponding hook is activated. 
 		If you want to override a template you need to create a .tpl-file which is in the plug-ins template path which the same 
-		path it got in the regular ojs structure. E.g. if you want to override/ add something to this template 
+		path it got in the regular ojs structure. E.g. if you want to override/add something to this template 
 		'/ojs/lib/pkp/templates/submission/submissionMetadataFormTitleFields.tpl'
 		you have to store in in the plug-ins template path under this path 'submission/form/submissionMetadataFormFields.tpl'. 
 		Further details can be found here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/templates
@@ -357,21 +357,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 				<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
 			]));*/
 		}
-	}
-
-	/**
-	 * Not working function to edit a form before Schedule for Publication. 
-	 */
-	public function extendScheduleForPublication2($hookName, $params)
-	{
-		$templateMgr = &$params[1];
-		$output = &$params[2];
-
-		// echo "<p> Hello </p>";
-
-		// $output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details.tpl'));
-
-		return false;
 	}
 
 	/**

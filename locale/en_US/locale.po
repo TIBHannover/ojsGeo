@@ -60,7 +60,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.downloa
 msgstr "Download geospatial metadata as geoJSON"
 
 msgid "plugins.generic.optimetaGeo.description"
-msgstr "Plug-in which enables the input, standardization, storage and discovery of geospatial metadata."
+msgstr "This plugin enables the discovery of articles based on geospatial metadata."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
 msgstr "Username at https://www.geonames.org/login (username must be enabled to use the free webservice once at https://www.geonames.org/manageaccount."

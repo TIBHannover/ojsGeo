@@ -45,11 +45,30 @@
 $libraries = [
     [
         'https://github.com/Leaflet/Leaflet/archive/refs/tags/v1.6.0.zip',
-        ['Leaflet-1.6.0/dist/leaflet.css', 'Leaflet-1.6.0/dist/leaflet.js']
+        [
+            'Leaflet-1.6.0/dist/leaflet.css',
+            'Leaflet-1.6.0/dist/leaflet.js',
+            'Leaflet-1.6.0/dist/images/marker-shadow.png',
+            'Leaflet-1.6.0/dist/images/marker-icon-2x.png',
+            'Leaflet-1.6.0/dist/images/marker-icon.png',
+            'Leaflet-1.6.0/dist/images/layers-2x.png',
+            'Leaflet-1.6.0/dist/images/layers.png' 
+        ]
     ],
     [
         'https://github.com/Leaflet/Leaflet.draw/archive/refs/tags/v1.0.4.zip',
-        ['Leaflet.draw-1.0.4/dist/leaflet.draw.css', 'Leaflet.draw-1.0.4/dist/leaflet.draw.js']
+        [
+            'Leaflet.draw-1.0.4/dist/leaflet.draw.css',
+            'Leaflet.draw-1.0.4/dist/leaflet.draw.js',
+            'Leaflet.draw-1.0.4/dist/images/layers-2x.png',
+            'Leaflet.draw-1.0.4/dist/images/marker-icon-2x.png',
+            'Leaflet.draw-1.0.4/dist/images/marker-shadow.png',
+            'Leaflet.draw-1.0.4/dist/images/spritesheet.png',
+            'Leaflet.draw-1.0.4/dist/images/layers.png',
+            'Leaflet.draw-1.0.4/dist/images/marker-icon.png',
+            'Leaflet.draw-1.0.4/dist/images/spritesheet-2x.png',
+            'Leaflet.draw-1.0.4/dist/images/spritesheet.svg',
+        ]
     ],
     [
         'https://github.com/moment/moment/archive/refs/tags/2.18.1.zip',
@@ -94,19 +113,8 @@ foreach ($libraries as $lib) {
         $zip = new ZipArchive;
 
         if ($zip->open($tmp_file)) {
-
-            foreach ($filenames as $filename) {
-                $destinationFile = $destinationPath . DIRECTORY_SEPARATOR . basename($filename);
-
-                if (is_file($destinationFile)) {
-                    die("File ${destinationFile} exists - please delete it before running this script.");
-                }
-
-                echo "Extracting ${filename} from ${tmp_file} and saving to ${destinationFile}\n";
-                $fileContents = $zip->getFromName($filename);
-                file_put_contents($destinationFile, $fileContents);
-            }
-
+            echo 'Extracting ' . implode(", ", $filenames) . " from ${tmp_file} and saving to ${destinationPath}\n";
+            $zip->extractTo($destinationPath, $filenames);
             $zip->close();
         } else {
             die("Error opening ZIP file ${tmp_file}");
