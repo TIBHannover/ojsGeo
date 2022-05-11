@@ -63,7 +63,7 @@ class OptimetaGeoSettingsForm extends Form
     /**
      * Save the settings
      */
-    public function execute()
+    public function execute(...$functionArgs)
     {
         $contextId = Application::get()->getRequest()->getContext()->getId();
         $this->plugin->updateSetting($contextId, 'usernameGeonames', $this->getData('usernameGeonames'));
