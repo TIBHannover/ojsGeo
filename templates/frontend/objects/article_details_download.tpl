@@ -6,14 +6,14 @@
     <section id="item geospatialmetadatadownload" class="item geospatialmetadatadownload">
         <section class="sub_item">
             <h2 class="label">
-                {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.download"}
+                {translate key="plugins.generic.optimetaGeo.article.details.download"}
             </h2>
             <div class="value">
                 <p>
                     <a class="obj_galley_link geoJSON" onclick="downloadGeospatialMetadataAsGeoJSON()">GeoJSON</a>
                     <span class="optimetageo_download_about">
                         <a href="https://geojson.org/">
-                        {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.geoJSON.about"}
+                        {translate key="plugins.generic.optimetaGeo.article.details.geoJSON.about"}
                         </a>
                     </span>
                 </p>

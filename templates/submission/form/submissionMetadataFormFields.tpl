@@ -3,7 +3,7 @@
 
 <div style="clear:both;">
     {fbvFormArea id="tagitFields"
-    title="plugins.generic.optimetaGeo.geospatialmetadata"}
+    title="plugins.generic.optimetaGeo.article.metadata.long"}
     <p align="justify" class="description">{translate
         key="plugins.generic.optimetaGeo.geospatialmetadata.description.submission"}</p>
 

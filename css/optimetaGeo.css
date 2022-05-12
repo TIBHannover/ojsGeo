@@ -12,8 +12,55 @@
  */
 
 .optimetageo_download_about a {
-    text-decoration: none;
-	color: #777; /* based on OJS @text-light */
+	text-decoration: none;
+	color: #777;
+	/* based on OJS @text-light */
 	font-size: 13px;
 	margin-left: 13px;
+}
+
+.optimetageo_timestamp {
+	font-weight: bold;
+}
+
+.optimetageo_coverage {
+	font-style: italic;
+}
+
+/* https://www.w3schools.com/css/css_tooltip.asp */
+.tooltip {
+	position: relative;
+	display: inline-block;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 300px;
+	border: 1px solid #777;
+	background-color: white;
+	text-align: center;
+	padding: 5px 0;
+	border-radius: 3px;
+
+	position: absolute;
+	z-index: 9;
+	left: 120%;
+
+	color: #777;
+	font-size: 13px;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+.tooltip .tooltiptext::after {
+	content: " ";
+	position: absolute;
+	top: 50%;
+	right: 100%; /* To the left of the tooltip */
+	margin-top: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent black transparent transparent;
 }

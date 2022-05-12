@@ -2,58 +2,41 @@
 
 <div style="clear:both;">
     <section id="item geospatialmetadata" class="item geospatialmetadata">
-        <h2 class="label">{translate key="plugins.generic.optimetaGeo.geospatialmetadata"}</h2>
-        <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
-            key="plugins.generic.optimetaGeo.geospatialmetadata.description.article"}
-        </p>
-    </section>
+        <h2 class="label">{translate key="plugins.generic.optimetaGeo.article.metadata.long"}</h2>
 
-    {*temporal*}
-    <section id="item temporal" class="item temporal">
-        <h2 class="label">{translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"}</h2>
-        <div id="temporalPropertiesShow">
-            <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
-                key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"}
-            </p>
-            <table>
-                <tr>
-                    <td valign="top"><b>{translate
-                            key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.start"}:</b></td>
-                    <td id="start"></td>
-                </tr>
-                <tr>
-                    <td valign="top"><b>{translate
-                            key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.end"}:</b></td>
-                    <td id="end"></td>
-                </tr>
-            </table>
-        </div>
+        {*temporal*}
+        <p id="item temporal" class="description">
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"} <span id="start"  class="optimetageo_timestamp"></span>
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"} <span id="end" class="optimetageo_timestamp"></span>.&nbsp;<span class="fas fa-question-circle tooltip">
+                <span class="tooltiptext" style="top: -18px;">{translate
+                key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"}</span>
+            </span>
+        </p>
+
+        {*spatial*} {*administrativeUnit*}
+        <p id="item spatial" class="description">
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"}&nbsp;<span class="fas fa-question-circle tooltip">
+                <span class="tooltiptext" style="top: -66px;">{translate
+                key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"}</span>
+        </p>
+
+        <div id="mapdiv" style="width: 100%; height: 300px; z-index: 1;"></div>
+
+        <p id="item admnistrativeUnit" class="description">
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"} <span id="administrativeUnit" class="optimetageo_coverage"></span>&nbsp;<span class="fas fa-question-circle tooltip">
+            <span class="tooltiptext" style="top: -42px;">{translate
+                key="plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit.description.article"}</span>
+            </span>
+        </p>
+
         <input type="text" id="temporalProperties" name="temporalProperties"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalProperties}' />
-    </section>
-
-    {*spatial*}
-    <section id="item spatial" class="item spatial">
-        <h2 id="label" class="label">{translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"}</h2>
-        <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
-            key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"}
-        </p>
-        <div id="mapdiv" style="width: 100%; height: 300px;"></div>
         <input type="text" id="spatialProperties" name="spatialProperties"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialProperties}'>
-    </section>
-
-    {*administrativeUnit*}
-    <section id="item administrativeUnit" class="item administrativeUnit">
-        <h2 class="label">{translate
-            key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView"}</h2>
-        <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">{translate
-            key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.article"}
-        </p>
-        <div id="administrativeUnitDescription"></div>
-        <input type="text" id="administrativeUnit" name="administrativeUnit"
+        <input type="text" id="administrativeUnitProperties" name="administrativeUnit"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnit}'>
     </section>
+
 </div>
 
 {*main js script, needs to be loaded last*}

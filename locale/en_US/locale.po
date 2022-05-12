@@ -11,11 +11,14 @@ msgstr ""
 "PO-Revision-Date: 2020-09-02T07:48:21+00:00\n"
 "Language: \n"
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata"
-msgstr "Geospatial Metadata"
+msgid "plugins.generic.optimetaGeo.article.metadata.short"
+msgstr "Time & location"
+
+msgid "plugins.generic.optimetaGeo.article.metadata.long"
+msgstr "Time and location"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.submission"
-msgstr "Here the articles content can be specified in terms of location and time."
+msgstr "Here the articles content can be specified in terms of time location."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.article"
 msgstr "Here the properties of the articles content in terms of place and time are illustrated."
@@ -27,22 +30,25 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.descri
 msgstr "Define the temporal properties of the articles content by specifying date and time (time in GMT). The input is possible via the text field as well as via the calendar view, you just have to click the input field below this text. If you press \"Apply\" the result will be saved and with \"Clear\" nothing will be saved or in case something was already saved it will be deleted. The input needs to match the following format: \"YYYY-MM-DD hh:mm:ss A\", whereby \"Y\" stands for years, \"M\" for months, \"D\" for days, \"h\" for hours, \"m\" for minutes, \"s\" for seconds and \"A\" for AM or PM."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"
-msgstr "Temporal properties of the articles content specified by date and time (time in GMT)."
+msgstr "Temporal properties of the article's content specified with a day resolution."
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.start"
-msgstr "Start"
+msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"
+msgstr "This article covers a time period from "
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.end"
-msgstr "End"
+msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"
+msgstr "to"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"
-msgstr "Spatial Properties"
+msgstr "This article covers location(s) or area(s) shown on the map below."
+
+msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"
+msgstr "The administrative units enclusing the coverage are: "
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.submission"
-msgstr "Define the location of the articles content by one or more geometric shape(s). You can choose in the control on the left side between polyline, polygon, rectangle and point. By the icons below you can edit or delete the created geometric shape(s). With the \"–\" and \"+\" in the upper left corner it is possible to zoom in and out. In the upper right corner you can change the layers. You can choose between an \"OpenStreetMap\" layer and an \"Esri World Imagery\" layer. You can also set whether the geometric shape(s) and the administrative unit should be displayed or not. For the administrative unit you will find a more detailed description in the next paragraph (Coverage Information). Below the layer control you will find a search for the map. You can search for locations and by hitting \"Enter\" you will be offered different locations that match your input. By clicking on a suggestion it will be accepted and a matching rectangle, describing the boundaries of the location, will be displayed on the map. This rectangle can also be deleted/ edited by clicking on the trash-/ edit icon on the left side. In the lower right corner there is a scale (upper specification in kilometers, lower specification in miles)."
+msgstr "Define the location of the articles content by one or more geometric shape(s). You can choose in the control on the left side between polyline, polygon, rectangle and point. By the icons below you can edit or delete the created geometric shape(s). With the \"–\" and \"+\" in the upper left corner it is possible to zoom in and out. In the upper right corner you can change the layers. You can choose between an \"OpenStreetMap\" layer and an \"Esri World Imagery\" layer. You can also set whether the geometric shape(s) and the administrative unit should be displayed or not. For the administrative unit you will find a more detailed description in the next paragraph (Coverage Information). Below the layer control you will find a search for the map. You can search for locations and by hitting \"Enter\" you will be offered different locations that match your input. By clicking on a suggestion it will be accepted and a matching rectangle, describing the boundaries of the location, will be displayed on the map. This rectangle can also be deleted/ edited by clicking on the trash-/ edit icon on the left side. In the lower right corner there is a scale (upper specification in kilometers, lower specification in miles). You can choose a coarser level of detail to protect sensitive locations."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"
-msgstr "Properties of the articles content in terms of the location. The geometric shape(s) (blue) represent the location of the articles content as accurately as possible. The administrative unit (black) represents, in the form of a rectangle, the next superior administrative unit for the location the article is dealing with."
+msgstr "The geometric shape(s) in blue represent the locations or areas of the article's content as provided by the authors. The administrative unit shown in a black rectangle represents the smallest administrative unit that encloses the spatial extent that the article is dealing with."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit"
 msgstr "Coverage Information"
@@ -50,16 +56,16 @@ msgstr "Coverage Information"
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
 msgstr "On basis of your input in the map, administrative unit(s) is/ are proposed which has/ have been selected according to your input in the map. Each time you update the map, the coverage information gets new calculated and updated correspondingly. You are able to delete administrative unit(s) by the red \"x\". If you hover over the administrative unit(s) the superior hierarchy of administrative unit(s) is displayed if available. Besides you can add further administrative units. You are only able to insert a further administrative unit if it fits to the already given hierarchy of administrative unit(s), and the given geometric shape(s) in the map. If you begin to insert, there are some suggestions you can accept by clicking, but nevertheless you can input your own administrative unit by hitting \"Enter\". The administrative unit (in black) which is the lowest common denominator for all geometric shape(s) is shown in the map. The administrative unit is not editable or deletable in the map, but here via the input field. If there are automatic changes in the map caused by changes in the coverage information and vice versa, this is indicated by a blue frame around the coverage element or the map."
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.article"
-msgstr "Here the administrative units are listed, which are superior to the location the article is dealing with, with the highest level on the left and the lowest on the right."
+msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit.description.article"
+msgstr "Here the administrative units are listed, which are superior to the location(s) the article is dealing with, with the highest level on the left and the lowest on the right."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView"
 msgstr "Coverage Information"
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.download"
+msgid "plugins.generic.optimetaGeo.article.details.download"
 msgstr "Download geospatial metadata"
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.geoJSON.about"
+msgid "plugins.generic.optimetaGeo.article.details.geoJSON.about"
 msgstr "About GeoJSON"
 
 msgid "plugins.generic.optimetaGeo.description"
