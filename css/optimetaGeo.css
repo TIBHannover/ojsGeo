@@ -36,16 +36,19 @@
 .tooltip .tooltiptext {
 	visibility: hidden;
 	width: 300px;
+	top: 100%;
+	left: 50%;
+	margin-top: 5px; /* space for arrow */
+	margin-left: -150px;
+	position: absolute;
+	z-index: 9;
+
 	border: 1px solid #777;
 	background-color: white;
 	text-align: center;
-	padding: 5px 0;
+	padding: 5px 5px;
 	border-radius: 3px;
-
-	position: absolute;
-	z-index: 9;
-	left: 120%;
-
+	
 	color: #777;
 	font-size: 13px;
 }
@@ -57,10 +60,10 @@
 .tooltip .tooltiptext::after {
 	content: " ";
 	position: absolute;
-	top: 50%;
-	right: 100%; /* To the left of the tooltip */
-	margin-top: -5px;
+	bottom: 100%;  /* At the top of the tooltip */
+	left: 50%;
+	margin-left: -5px;
 	border-width: 5px;
 	border-style: solid;
-	border-color: transparent black transparent transparent;
+	border-color: transparent transparent black transparent;
 }

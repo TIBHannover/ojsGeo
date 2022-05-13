@@ -17,9 +17,6 @@ msgstr "Time & location"
 msgid "plugins.generic.optimetaGeo.article.metadata.long"
 msgstr "Time and location"
 
-msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.submission"
-msgstr "Here the articles content can be specified in terms of time location."
-
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.article"
 msgstr "Here the properties of the articles content in terms of place and time are illustrated."
 
