@@ -24,7 +24,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"
 msgstr "Temporal Properties"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Define the temporal properties of the articles content by specifying date and time (time in GMT). The input is possible via the text field as well as via the calendar view, you just have to click the input field below this text. If you press \"Apply\" the result will be saved and with \"Clear\" nothing will be saved or in case something was already saved it will be deleted. The input needs to match the following format: \"YYYY-MM-DD hh:mm:ss A\", whereby \"Y\" stands for years, \"M\" for months, \"D\" for days, \"h\" for hours, \"m\" for minutes, \"s\" for seconds and \"A\" for AM or PM."
+msgstr "Define the temporal properties of the articles content by specifying the begin and end dates. The input is possible via the text field as well as via the calendar view. Click the input field below this text to open the calendar. Press \"Apply\" to save the calender setting. Press \"Clear\" to remove the current data. Textual input must match the following format and be confirmed by clicking \"Apply\" (not Enter!): begin and end are seperated by a hyphen surrounded by spaces; dates are given as \"YYYY-MM-DD\", whereby \"YYYY\" stands for years, \"M\" for months (with a leading zero), and \"D\" for days (with a leading zero)."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"
 msgstr "Temporal properties of the article's content specified with a day resolution."
