@@ -1,11 +1,24 @@
 {*the main template is here extended using the hook 'Templates::Article::Details'*}
 
+<link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
+
 <div style="clear:both;">
     <section id="item geospatialmetadatadownload" class="item geospatialmetadatadownload">
-        <p class="description" style="color: rgba(0,0,0,0.54); font-size: 13px;">{translate
-            key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.download.geoJSON"}
-        </p>
-        <a class="obj_galley_link geoJSON" onclick="downloadGeospatialMetadataAsGeoJSON()">geoJSON</a>
+        <section class="sub_item">
+            <h2 class="label">
+                {translate key="plugins.generic.optimetaGeo.article.details.download"}
+            </h2>
+            <div class="value">
+                <p>
+                    <a class="obj_galley_link geoJSON" onclick="downloadGeospatialMetadataAsGeoJSON()">GeoJSON</a>
+                    <span class="optimetageo_download_about">
+                        <a href="https://geojson.org/">
+                        {translate key="plugins.generic.optimetaGeo.article.details.geoJSON.about"}
+                        </a>
+                    </span>
+                </p>
+            </div>
+        </section>
     </section>
 </div>
 

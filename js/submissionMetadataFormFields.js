@@ -1156,28 +1156,6 @@ function calculateAmPmFor24Time(amPm) {
 }
 
 /**
- * Function to convert a UTC timestamp with AM/ PM to a Unix timestamp in milliseconds.
- * @param {*} UTCInAMPM
- */
-function UTCInAMPMToUnixTimestampMillisecond(UTCInAMPM) {
-
-    var year = UTCInAMPM.substring(0, 4);
-    var month = UTCInAMPM.substring(5, 7) - 1; // -1 because Date.UTC() starts with zero, localeTimeInAMPM not
-    var day = UTCInAMPM.substring(8, 10);
-    var hour = parseInt(UTCInAMPM.substring(11, 13));
-    var minute = UTCInAMPM.substring(14, 16);
-    var second = UTCInAMPM.substring(17, 19);
-    var amPm = UTCInAMPM.substring(20, 22);
-
-    // add 12 if time is pm
-    if (amPm === 'PM') {
-        hour = hour + 12;
-    }
-
-    return Date.UTC(year, month, day, hour, minute, second);
-}
-
-/**
  * Function to load the daterangepicker and store the date in the db.
  * Furthermore data from db is loaded and displayed if available.
  */
@@ -1203,117 +1181,57 @@ $(function () {
         var yearStart = utcStartStringified.substring(1, 5);
         var monthStart = utcStartStringified.substring(6, 8);
         var dayStart = utcStartStringified.substring(9, 11);
-        var hourStart = utcStartStringified.substring(12, 14);
-        var minutesStart = utcStartStringified.substring(15, 17);
-        var secondsStart = utcStartStringified.substring(18, 20);
-        var amPmStart = utcStartStringified.substring(12, 14);
-
         var yearEnd = utcEndStringified.substring(1, 5);
         var monthEnd = utcEndStringified.substring(6, 8);
         var dayEnd = utcEndStringified.substring(9, 11);
-        var hourEnd = utcEndStringified.substring(12, 14);
-        var minutesEnd = utcEndStringified.substring(15, 17);
-        var secondsEnd = utcEndStringified.substring(18, 20);
-        var amPmEnd = utcEndStringified.substring(12, 14);
-
-        hourStart = changeHourSystemFrom24To12(hourStart);
-        hourEnd = changeHourSystemFrom24To12(hourEnd);
-
-        amPmStart = calculateAmPmFor24Time(amPmStart);
-        amPmEnd = calculateAmPmFor24Time(amPmEnd);
 
         $('input[name="datetimes"]').daterangepicker({
-            timePicker: true,
-            timePicker24Hour: true,
-            timePickerSeconds: true,
-            startDate: yearStart + '-' + monthStart + '-' + dayStart + ' ' + hourStart + ':' + minutesStart + ':' + secondsStart + ' ' + amPmStart,
-            endDate: yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + hourEnd + ':' + minutesEnd + ':' + secondsEnd + ' ' + amPmEnd,
+            startDate: yearStart + '-' + monthStart + '-' + dayStart,
+            endDate: yearEnd + '-' + monthEnd + '-' + dayEnd,
             locale: {
                 cancelLabel: 'Clear',
-                format: 'YYYY-MM-DD hh:mm:ss A'
+                format: 'YYYY-MM-DD'
             }
         });
-
-        $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('YYYY-MM-DD hh:mm:ss A') + ' - ' + picker.endDate.format('YYYY-MM-DD hh:mm:ss A'));
-            var start = picker.startDate.format('YYYY-MM-DD hh:mm:ss A');
-            var end = picker.endDate.format('YYYY-MM-DD hh:mm:ss A');
-
-            var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
-            var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
-
-            var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
-
-            document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
-
-            // the geojson is updated accordingly
-            var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-            geojson.temporalProperties.unixDateRange = unixDaterange;
-            geojson.temporalProperties.provenance.description = "temporal properties created by user";
-            geojson.temporalProperties.provenance.id = 31;
-            document.getElementById("spatialProperties").value = JSON.stringify(geojson);
-
-        });
-
-        $('input[name="datetimes"]').on('cancel.daterangepicker', function (ev, picker) {
-            $(this).val('');
-            document.getElementById("temporalProperties").value = 'no data';
-
-            // the geojson is updated accordingly
-            var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-            geojson.temporalProperties.unixDateRange = 'not available';
-            geojson.temporalProperties.provenance.description = 'not available';
-            geojson.temporalProperties.provenance.id = 'not available';
-            document.getElementById("spatialProperties").value = JSON.stringify(geojson);
-
-        });
-    }
-    else {
-
+    } else {
         $('input[name="datetimes"]').daterangepicker({
             autoUpdateInput: false,
-            timePicker: true,
-            timePicker24Hour: true,
-            timePickerSeconds: true,
             locale: {
                 cancelLabel: 'Clear',
-                format: 'YYYY-MM-DD hh:mm:ss A'
+                format: 'YYYY-MM-DD'
             }
         });
-
-        $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('YYYY-MM-DD hh:mm:ss A') + ' - ' + picker.endDate.format('YYYY-MM-DD hh:mm:ss A'));
-            var start = picker.startDate.format('YYYY-MM-DD hh:mm:ss A');
-            var end = picker.endDate.format('YYYY-MM-DD hh:mm:ss A');
-
-            var unixTimestampMillisecondStart = UTCInAMPMToUnixTimestampMillisecond(start);
-            var unixTimestampMillisecondEnd = UTCInAMPMToUnixTimestampMillisecond(end);
-
-            var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
-
-            document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
-
-            // the geojson is updated accordingly
-            var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-            geojson.temporalProperties.unixDateRange = unixDaterange;
-            geojson.temporalProperties.provenance.description = "temporal properties created by user";
-            geojson.temporalProperties.provenance.id = 31;
-            document.getElementById("spatialProperties").value = JSON.stringify(geojson);
-
-        });
-
-        $('input[name="datetimes"]').on('cancel.daterangepicker', function (ev, picker) {
-            $(this).val('');
-            document.getElementById("temporalProperties").value = 'no data';
-
-            // the geojson is updated accordingly
-            var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-            geojson.temporalProperties.unixDateRange = 'not available';
-            geojson.temporalProperties.provenance.description = 'not available';
-            geojson.temporalProperties.provenance.id = 'not available';
-            document.getElementById("spatialProperties").value = JSON.stringify(geojson);
-        });
     }
+
+    $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        
+        var unixTimestampMillisecondStart =  Date.UTC(picker.startDate.year(), picker.startDate.month(), picker.startDate.date(), 0, 0, 0);
+        var unixTimestampMillisecondEnd = Date.UTC(picker.endDate.year(), picker.endDate.month(), picker.endDate.date(), 23, 59, 59);
+
+        var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
+
+        document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
+
+        // the geojson is updated accordingly
+        var geojson = JSON.parse(document.getElementById("spatialProperties").value);
+        geojson.temporalProperties.unixDateRange = unixDaterange;
+        geojson.temporalProperties.provenance.description = "temporal properties created by user";
+        geojson.temporalProperties.provenance.id = 31;
+        document.getElementById("spatialProperties").value = JSON.stringify(geojson);
+
+    });
+
+    $('input[name="datetimes"]').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+        document.getElementById("temporalProperties").value = 'no data';
+
+        // the geojson is updated accordingly
+        var geojson = JSON.parse(document.getElementById("spatialProperties").value);
+        geojson.temporalProperties.unixDateRange = 'not available';
+        geojson.temporalProperties.provenance.description = 'not available';
+        geojson.temporalProperties.provenance.id = 'not available';
+        document.getElementById("spatialProperties").value = JSON.stringify(geojson);
+
+    });
 });
-
-

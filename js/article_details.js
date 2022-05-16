@@ -9,7 +9,7 @@ var spatialPropertiesDecoded = document.getElementById("spatialProperties").valu
 var temporalPropertiesDecoded = document.getElementById("temporalProperties").value;
 
 // load temporal properties from article_details.tpl 
-var administrativeUnitDecoded = document.getElementById("administrativeUnit").value;
+var administrativeUnitDecoded = document.getElementById("administrativeUnitProperties").value;
 
 // create map 
 var map = L.map('mapdiv');
@@ -72,8 +72,8 @@ Otherwise, the display of the elements is initiated.
 if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no data" && administrativeUnitDecoded === "no data") {
     document.getElementById("item spatial").remove();
     document.getElementById("item temporal").remove();
+    document.getElementById("item admnistrativeUnit").remove();
     document.getElementById("item geospatialmetadata").remove();
-    document.getElementById("item administrativeUnit").remove();
     document.getElementById("item geospatialmetadatadownload").remove();
 }
 else {
@@ -131,7 +131,7 @@ else {
             administrativeUnitsNameList.push(administrativeUnitEncoded[i].name);
         }
 
-        document.getElementById("administrativeUnitDescription").innerHTML = administrativeUnitsNameList.join(', ');
+        document.getElementById("administrativeUnit").innerHTML = administrativeUnitsNameList.join(', ');
 
         var spatialPropertiesEncoded = JSON.parse(spatialPropertiesDecoded);
         displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesEncoded);
@@ -171,15 +171,11 @@ else {
     else {
         // display temporal properties in utc
         var temporalProperties = JSON.parse(temporalPropertiesDecoded);
-        var utcStart = (new Date(temporalProperties[0])).toUTCString();
-        var utcEnd = (new Date(temporalProperties[1])).toUTCString();
+        var isoStart = (new Date(temporalProperties[0])).toISOString().split('T')[0];
+        var isoEnd = (new Date(temporalProperties[1])).toISOString().split('T')[0];
 
-        document.getElementById("start").innerHTML = utcStart;
-        document.getElementById("end").innerHTML = utcEnd;
-
-        var isoStart = (new Date(temporalProperties[0])).toISOString();
-        var isoEnd = (new Date(temporalProperties[1])).toISOString();
-
+        document.getElementById("start").innerHTML = isoStart;
+        document.getElementById("end").innerHTML = isoEnd;
         // ISO 8601 - https://www.iso.org/iso-8601-date-and-time-format.html 
         $('head').append('<meta name="ISO 8601" content="' + isoStart + '/' + isoEnd + '">');    
     }
@@ -222,7 +218,7 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
 
         layer.setStyle({
             color: 'black',
-            fillOpacity: 0.5
+            fillOpacity: 0.15
         })
 
         // To ensure that only the lowest layer is displayed, the previous layers are deleted 

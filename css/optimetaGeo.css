@@ -1,0 +1,69 @@
+/**
+ * @file plugins/generic/optimetaGeo/css/optimetaCitations.css
+ *
+ * Copyright (c) 2021+ WWU Münster
+ * Copyright (c) 2021+ Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @style optimetaGeo
+ * @ingroup plugins_generic_optimetageo
+ *
+ * @brief Main stylesheet for the plugin.
+ */
+
+.optimetageo_download_about a {
+	text-decoration: none;
+	color: #777;
+	/* based on OJS @text-light */
+	font-size: 13px;
+	margin-left: 13px;
+}
+
+.optimetageo_timestamp {
+	font-weight: bold;
+}
+
+.optimetageo_coverage {
+	font-style: italic;
+}
+
+/* https://www.w3schools.com/css/css_tooltip.asp */
+.tooltip {
+	position: relative;
+	display: inline-block;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 300px;
+	top: 100%;
+	left: 50%;
+	margin-top: 5px; /* space for arrow */
+	margin-left: -150px;
+	position: absolute;
+	z-index: 9;
+
+	border: 1px solid #777;
+	background-color: white;
+	text-align: center;
+	padding: 5px 5px;
+	border-radius: 3px;
+	
+	color: #777;
+	font-size: 13px;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+.tooltip .tooltiptext::after {
+	content: " ";
+	position: absolute;
+	bottom: 100%;  /* At the top of the tooltip */
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent black transparent;
+}
