@@ -3,13 +3,13 @@
  */
 
 // load spatial properties from article_details.tpl 
-var spatialPropertiesDecoded = document.getElementById("spatialProperties").value;
+var spatialPropertiesDecoded = document.getElementById("optimeta_spatial").value;
 
 // load temporal properties from article_details.tpl 
-var temporalPropertiesDecoded = document.getElementById("temporalProperties").value;
+var temporalPropertiesDecoded = document.getElementById("optimeta_temporal").value;
 
 // load temporal properties from article_details.tpl 
-var administrativeUnitDecoded = document.getElementById("administrativeUnitProperties").value;
+var administrativeUnitDecoded = document.getElementById("optimeta_administrativeUnit").value;
 
 // create map 
 var map = L.map('mapdiv');
