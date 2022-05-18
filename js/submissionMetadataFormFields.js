@@ -4,7 +4,8 @@
  */
 
 // Check if a corresponding username for the geonames API has been entered in the plugin settings, otherwise trigger an alert with corresponding information.
-var usernameGeonames = document.getElementById("usernameGeonames").value;
+var usernameGeonames = document.getElementById("optimeta_usernameGeonames").value;
+var baseurlGeonames =  document.getElementById("optimeta_baseurlGeonames").value;
 
 if (usernameGeonames === "") {
     alert("You have to enter a valid usernames for the Geonames API. Visit https://www.geonames.org/login, register and enter the username in the plug-in settings.");

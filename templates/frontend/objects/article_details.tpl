@@ -29,11 +29,11 @@
             </span>
         </p>
 
-        <input type="text" id="temporalProperties" name="temporalProperties"
+        <input type="text" id="optimeta_temporal" name="temporalProperties"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalProperties}' />
-        <input type="text" id="spatialProperties" name="spatialProperties"
+        <input type="text" id="optimeta_spatial" name="spatialProperties"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialProperties}'>
-        <input type="text" id="administrativeUnitProperties" name="administrativeUnit"
+        <input type="text" id="optimeta_administrativeUnit" name="administrativeUnit"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnit}'>
     </section>
 
