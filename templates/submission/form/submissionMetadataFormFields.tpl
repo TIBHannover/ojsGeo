@@ -40,8 +40,10 @@
     <input type="text" id="administrativeUnit" name="administrativeUnit" size="30" style="visibility: hidden;">
     <input type="text" id="administrativeUnitFromDb" name="administrativeUnitFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnitFromDb}' />
-    <input type="text" id="usernameGeonames" name="usernameGeonames"
+    <input type="text" id="optimeta_usernameGeonames" name="usernameGeonames"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$usernameGeonames}' />
+    <input type="text" id="optimeta_baseurlGeonames" name="baseurlGeonames"
+        style="height: 0px; width: 0px; visibility: hidden;" value='{$baseurlGeonames}' />
     {/fbvFormSection}
     {/fbvFormArea}
 </div>

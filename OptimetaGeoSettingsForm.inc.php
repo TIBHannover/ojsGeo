@@ -7,6 +7,15 @@ import('lib.pkp.classes.form.Form');
 class OptimetaGeoSettingsForm extends Form
 {
     public $plugin;
+    
+    /**
+     * @desc Array of variables saved in the database
+     * @var string[]
+     */
+    private $settings = [
+        'optimetaGeo_geonames_username',
+        'optimetaGeo_geonames_baseurl'
+    ];
 
     public function __construct($plugin)
     {
@@ -28,8 +37,12 @@ class OptimetaGeoSettingsForm extends Form
      */
     public function initData()
     {
-        $contextId = Application::get()->getRequest()->getContext()->getId();
-        $this->setData('usernameGeonames', $this->plugin->getSetting($contextId, 'usernameGeonames'));
+        $context = Application::get()->getRequest()->getContext();
+        $contextId = $context ? $context->getId() : CONTEXT_SITE;
+        foreach($this->settings as $key){
+            $this->setData($key, $this->plugin->getSetting($contextId, $key));
+        }
+
         parent::initData();
     }
 
@@ -38,7 +51,9 @@ class OptimetaGeoSettingsForm extends Form
      */
     public function readInputData()
     {
-        $this->readUserVars(['usernameGeonames']);
+        foreach($this->settings as $key){
+            $this->readUserVars([$key]);
+        }
         parent::readInputData();
     }
 
@@ -65,8 +80,12 @@ class OptimetaGeoSettingsForm extends Form
      */
     public function execute(...$functionArgs)
     {
-        $contextId = Application::get()->getRequest()->getContext()->getId();
-        $this->plugin->updateSetting($contextId, 'usernameGeonames', $this->getData('usernameGeonames'));
+        $context = Application::get()->getRequest()->getContext();
+        $contextId = $context ? $context->getId() : CONTEXT_SITE;
+
+        foreach($this->settings as $key){
+            $this->plugin->updateSetting( $contextId, $key, $this->getData($key));
+        }
         
         // Tell the user that the save was successful.
         import('classes.notification.NotificationManager');

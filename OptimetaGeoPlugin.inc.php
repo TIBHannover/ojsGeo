@@ -146,8 +146,10 @@ class OptimetaGeoPlugin extends GenericPlugin
 		Check if the user has entered an username in the plugin settings for the GeoNames API (https://www.geonames.org/login). 
 		The result is passed on accordingly to submissionMetadataFormFields.js as template variable. 
 		*/
-		$usernameGeonames = $this->getSetting($context->getId(), 'usernameGeonames');
+		$usernameGeonames = $this->getSetting($context->getId(), 'optimetaGeo_geonames_username');
 		$templateMgr->assign('usernameGeonames', $usernameGeonames);
+		$baseurlGeonames = $this->getSetting($context->getId(), 'optimetaGeo_geonames_baseurl');
+		$templateMgr->assign('baseurlGeonames', $baseurlGeonames);
 
 		/*
 		In case the user repeats the step "3. Enter Metadata" in the process 'Submit an Article' and comes back to this step to make changes again, 
