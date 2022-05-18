@@ -164,7 +164,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
-		$administrativeUnit = $publication->getData('coverage');
+		$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
 
 		// for the case that no data is available 
 		if ($temporalProperties === null) {
@@ -208,7 +208,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		// get data from database 
 		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
-		$administrativeUnit = $publication->getData('coverage');
+		$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
 
 		// for the case that no data is available 
 		if ($temporalProperties === null || $temporalProperties === '') {
@@ -219,7 +219,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$spatialProperties = 'no data';
 		}
 
-		if ($administrativeUnit === null || current($administrativeUnit) === '' || $administrativeUnit === '') {
+		if ($administrativeUnit === null || $administrativeUnit === '') {
 			$administrativeUnit = 'no data';
 		}
 
