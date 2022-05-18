@@ -54,9 +54,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
 
 			// Hooks for changing the Metadata right before Schedule for Publication (not working yet)
-			HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
-			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendScheduleForPublication2'));
-
+			//HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
+			
 			// Hook for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
 			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
@@ -174,7 +173,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$spatialProperties = 'no data';
 		}
 
-		if (current($administrativeUnit) === '' || $administrativeUnit === '' || $administrativeUnit === null) {
+		if ($administrativeUnit === null || current($administrativeUnit) === '' || $administrativeUnit === '') {
 			$administrativeUnit = 'no data';
 		}
 
@@ -218,7 +217,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$spatialProperties = 'no data';
 		}
 
-		if (current($administrativeUnit) === '' || $administrativeUnit === '') {
+		if ($administrativeUnit === null || current($administrativeUnit) === '' || $administrativeUnit === '') {
 			$administrativeUnit = 'no data';
 		}
 
@@ -323,6 +322,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}';
 		$spatialPropertiesDecoded = json_decode($spatialProperties);
 		$schema->properties->{'optimetaGeo::spatialProperties'} = $spatialPropertiesDecoded;
+
+		return false;
 	}
 
 	/**
@@ -368,7 +369,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}
 
 		if ($administrativeUnit !== null) {
-			$newPublication->setData('coverage', $administrativeUnit);
+			$newPublication->setData('coverage', $administrativeUnit, 'en_US'); // we don't use locale for the field
 		}
 
 		/*
