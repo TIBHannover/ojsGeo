@@ -37,7 +37,9 @@ var administrativeUnitFromDbDecoded = document.getElementById("administrativeUni
 
 
 // Initialization of the map
-var map = L.map('mapdiv').setView([51.96, 7.59], 13);
+//var mapView =  document.getElementById("optimeta_mapView").value; // TODO make configurable
+var mapView = "0, 0, 1".split(",");
+var map = L.map('mapdiv').setView([mapView[0], mapView[1]], mapView[2]);
 
 var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -191,7 +193,7 @@ $("#administrativeUnitInput").tagit({
         source: function (request, response) {
 
             $.ajax({
-                url: "http://api.geonames.org/searchJSON",
+                url: baseurlGeonames.concat("/searchJSON"),
                 data: {
                     name_startsWith: request.term,
                     username: usernameGeonames,
@@ -738,7 +740,7 @@ function ajaxRequestGeonamesPlaceName(placeName) {
 
     var resultGeonames;
     $.ajax({
-        url: "http://api.geonames.org/searchJSON",
+        url: baseurlGeonames.concat("/searchJSON"),
         async: false,
         data: {
             name_equals: placeName,
@@ -762,7 +764,7 @@ function ajaxRequestGeonamesPlaceName(placeName) {
 function ajaxRequestGeonamesCoordinates(lng, lat) {
 
     var resultGeonames;
-    var urlGeonames = 'http://api.geonames.org/hierarchyJSON?formatted=true&lat=' + lat + '&lng=' + lng + '&username=' + usernameGeonames + '&style=full&featureClass=P';
+    var urlGeonames = baseurlGeonames.concat("/hierarchyJSON?formatted=true&lat=", lat, "&lng=", lng, "&username=", usernameGeonames, "&style=full&featureClass=P");
     $.ajax({
         url: urlGeonames,
         async: false,
@@ -782,7 +784,7 @@ function ajaxRequestGeonamesGeonameIdHierarchicalStructure(id) {
 
     var resultGeonames;
     $.ajax({
-        url: "http://api.geonames.org/hierarchyJSON",
+        url: baseurlGeonames.concat("/hierarchyJSON"),
         async: false,
         data: {
             geonameId: id,
@@ -820,7 +822,7 @@ function ajaxRequestGeonamesGeonamesIdBbox(id) {
 
     var resultGeonames;
     $.ajax({
-        url: "http://api.geonames.org/getJSON",
+        url: baseurlGeonames.concat("/getJSON"),
         async: false,
         data: {
             geonameId: id,
