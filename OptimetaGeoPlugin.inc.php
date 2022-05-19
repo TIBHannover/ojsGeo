@@ -54,9 +54,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
 
 			// Hooks for changing the Metadata right before Schedule for Publication (not working yet)
-			HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
-			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendScheduleForPublication2'));
-
+			//HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
+			
 			// Hook for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
 			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
@@ -147,8 +146,10 @@ class OptimetaGeoPlugin extends GenericPlugin
 		Check if the user has entered an username in the plugin settings for the GeoNames API (https://www.geonames.org/login). 
 		The result is passed on accordingly to submissionMetadataFormFields.js as template variable. 
 		*/
-		$usernameGeonames = $this->getSetting($context->getId(), 'usernameGeonames');
+		$usernameGeonames = $this->getSetting($context->getId(), 'optimetaGeo_geonames_username');
 		$templateMgr->assign('usernameGeonames', $usernameGeonames);
+		$baseurlGeonames = $this->getSetting($context->getId(), 'optimetaGeo_geonames_baseurl');
+		$templateMgr->assign('baseurlGeonames', $baseurlGeonames);
 
 		/*
 		In case the user repeats the step "3. Enter Metadata" in the process 'Submit an Article' and comes back to this step to make changes again, 
@@ -163,7 +164,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
-		$administrativeUnit = $publication->getData('coverage');
+		$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
 
 		// for the case that no data is available 
 		if ($temporalProperties === null) {
@@ -174,7 +175,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$spatialProperties = 'no data';
 		}
 
-		if (current($administrativeUnit) === '' || $administrativeUnit === '' || $administrativeUnit === null) {
+		if ($administrativeUnit === null || current($administrativeUnit) === '' || $administrativeUnit === '') {
 			$administrativeUnit = 'no data';
 		}
 
@@ -207,7 +208,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		// get data from database 
 		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
-		$administrativeUnit = $publication->getData('coverage');
+		$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
 
 		// for the case that no data is available 
 		if ($temporalProperties === null || $temporalProperties === '') {
@@ -218,7 +219,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$spatialProperties = 'no data';
 		}
 
-		if (current($administrativeUnit) === '' || $administrativeUnit === '') {
+		if ($administrativeUnit === null || $administrativeUnit === '') {
 			$administrativeUnit = 'no data';
 		}
 
@@ -323,6 +324,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}';
 		$spatialPropertiesDecoded = json_decode($spatialProperties);
 		$schema->properties->{'optimetaGeo::spatialProperties'} = $spatialPropertiesDecoded;
+
+		return false;
 	}
 
 	/**
@@ -368,7 +371,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}
 
 		if ($administrativeUnit !== null) {
-			$newPublication->setData('coverage', $administrativeUnit);
+			$newPublication->setData('coverage', $administrativeUnit, 'en_US'); // we don't use locale for the field
 		}
 
 		/*

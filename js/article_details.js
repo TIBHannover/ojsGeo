@@ -3,13 +3,13 @@
  */
 
 // load spatial properties from article_details.tpl 
-var spatialPropertiesDecoded = document.getElementById("spatialProperties").value;
+var spatialPropertiesDecoded = document.getElementById("optimeta_spatial").value;
 
 // load temporal properties from article_details.tpl 
-var temporalPropertiesDecoded = document.getElementById("temporalProperties").value;
+var temporalPropertiesDecoded = document.getElementById("optimeta_temporal").value;
 
 // load temporal properties from article_details.tpl 
-var administrativeUnitDecoded = document.getElementById("administrativeUnitProperties").value;
+var administrativeUnitDecoded = document.getElementById("optimeta_administrativeUnit").value;
 
 // create map 
 var map = L.map('mapdiv');
@@ -70,13 +70,10 @@ and no geospatial metadata are displayed also the download of the geojson is not
 Otherwise, the display of the elements is initiated. 
 */
 if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no data" && administrativeUnitDecoded === "no data") {
-    document.getElementById("item spatial").remove();
-    document.getElementById("item temporal").remove();
-    document.getElementById("item admnistrativeUnit").remove();
     document.getElementById("item geospatialmetadata").remove();
-    document.getElementById("item geospatialmetadatadownload").remove();
 }
-else {
+
+$(function () {
     /*
     spatial properties
     If no spatial properties are available, the corresponding elements in the article_details.tpl are deleted 
@@ -84,6 +81,7 @@ else {
     */
     if (spatialPropertiesDecoded === "no data") {
         document.getElementById("item spatial").remove();
+        document.getElementById("item geospatialmetadatadownload").remove();
     }
     else {
         var spatialProperties = JSON.parse(spatialPropertiesDecoded);
@@ -113,7 +111,9 @@ else {
             map.fitBounds(drawnItems.getBounds());
         }
     }
+});
 
+$(function () {
     /*
     administrative unit
     The administrative unit is requested from the OJS database. 
@@ -159,7 +159,9 @@ else {
         // ISO 19139 - https://boundingbox.klokantech.com/
         $('head').append('<meta name="ISO 19139" content="<gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>' + lowestAdministrativeUnit.bbox.west + '</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>' + lowestAdministrativeUnit.bbox.east + '</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>'+ lowestAdministrativeUnit.bbox.south + '</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>' + lowestAdministrativeUnit.bbox.north + '</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox>"/>');    
     }
+});
 
+$(function () {
     /*
     temporal properties
     If no temporal properties are available, the corresponding elements in the article_details.tpl are deleted 
@@ -179,7 +181,7 @@ else {
         // ISO 8601 - https://www.iso.org/iso-8601-date-and-time-format.html 
         $('head').append('<meta name="ISO 8601" content="' + isoStart + '/' + isoEnd + '">');    
     }
-}
+});
 
 /**
  * Function which illustrates the bounding box (if available) of an administrative unit with the lowest common denominator, 

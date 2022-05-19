@@ -16,9 +16,18 @@
         {translate key="plugins.generic.optimetaGeo.settings.usernameGeonames.description"}
         {fbvElement
         type="text"
-        id="usernameGeonames"
-        value=$usernameGeonames
+        id="optimetaGeo_geonames_username"
+        value=$optimetaGeo_geonames_username
         label="plugins.generic.optimetaGeo.settings.usernameGeonames"
+        }
+    </p>
+    <p align="justify" class="description" style="color: rgba(0,0,0,0.54)">
+        {translate key="plugins.generic.optimetaGeo.settings.baseurlGeonames.description"}
+        {fbvElement
+        type="text"
+        id="optimetaGeo_geonames_baseurl"
+        value=$optimetaGeo_geonames_baseurl
+        label="plugins.generic.optimetaGeo.settings.baseurlGeonames"
         }
     </p>
     {/fbvFormSection}
