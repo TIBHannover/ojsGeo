@@ -56,12 +56,16 @@ class OptimetaGeoPlugin extends GenericPlugin
 			// Hooks for changing the Metadata right before Schedule for Publication (not working yet)
 			//HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
 			
-			// Hook for changing the article page 
+			// Hooks for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
 			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
 			// Templates::Article::Main 
 			// Templates::Article::Details
 			// Templates::Article::Footer::PageFooter
+
+			// Hooks for changing the issue page 
+			HookRegistry::register('Templates::Issue::TOC::Main', array(&$this, 'extendIssueTocTemplate'));
+			HookRegistry::register('Templates::Issue::Issue::Article', array(&$this, 'extendIssueTocArticleTemplate'));
 
 			// Hook for adding a tab to the publication phase
 			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendPublicationTab'));
@@ -245,6 +249,38 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$templateMgr->assign($this->templateParameters);
 
 		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/article_details_download.tpl'));
+
+		return false;
+	}
+
+	/**
+	 * Function which extends the issue TOC with a timeline and map view - needs the optimetaGeoTheme plugin!
+	 * @param hook Templates::Issue::TOC::Main
+	 */
+	public function extendIssueTocTemplate($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		$templateMgr->assign($this->templateParameters);
+
+		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/issue_map.tpl'));
+
+		return false;
+	}
+
+	/**
+	 * Function which extends each article in an issue TOC with hidden fields with geospatial data
+	 * @param hook Templates::Issue::Issue::Article
+	 */
+	public function extendIssueTocArticleTemplate($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		$templateMgr->assign($this->templateParameters);
+
+		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/issue_details.tpl'));
 
 		return false;
 	}

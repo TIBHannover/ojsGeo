@@ -88,3 +88,6 @@ msgstr "OPTIMETA Geo Plugin"
 
 msgid "plugins.generic.optimetaGeo.description"
 msgstr "Collect and expose geospatial metadata for enhanced discovery of articles."
+
+msgid "plugins.generic.optimetaGeo.issue.title"
+msgstr "Times & locations"
