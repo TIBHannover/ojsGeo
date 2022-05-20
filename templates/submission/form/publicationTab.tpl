@@ -1,4 +1,4 @@
-<script src="{$pluginJavaScriptURL}/optimetaCitations.js"></script>
+<script src="{$pluginJavaScriptURL}/optimetaGeo.js"></script>
 <link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
 
 <script>
