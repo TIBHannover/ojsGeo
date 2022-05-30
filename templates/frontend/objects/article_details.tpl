@@ -40,4 +40,4 @@
 </div>
 
 {*main js script, needs to be loaded last*}
-<script src="{$article_detailsJS}" type="text/javascript" defer></script>
+<script src="{$optimeta_article_detailsJS}" type="text/javascript" defer></script>

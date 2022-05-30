@@ -110,9 +110,10 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->addJavaScript("leafletControlGeocodeJS", $urlLeafletControlGeocodeJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("leafletControlGeocodeCSS", $urlLeafletControlGeocodeCSS, array('contexts' => array('frontend', 'backend')));
 
-			// main js scripts
-			$templateMgr->assign('submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
-			$templateMgr->assign('article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
+			// plugins JS scripts
+			$templateMgr->assign('optimeta_submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
+			$templateMgr->assign('optimeta_article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
+			$templateMgr->assign('optimeta_issueJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
 
 			// publication tab
 		}
@@ -279,6 +280,28 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$output = &$params[2];
 
 		$templateMgr->assign($this->templateParameters);
+
+		$publication = $templateMgr->getTemplateVars('publication');
+		$submission = $templateMgr->getTemplateVars('article');
+		$submissionId = $submission->getId();
+
+		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
+		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}')) {
+			$spatialProperties = 'no data';
+		}
+		$templateMgr->assign('spatialProperties', $spatialProperties);
+		
+		//$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
+		//if ($temporalProperties === null || $temporalProperties === '') {
+		//	$temporalProperties = 'no data';
+		//}
+		//$templateMgr->assign('temporalProperties', $temporalProperties);
+		
+		//$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
+		//if ($administrativeUnit === null || $administrativeUnit === '') {
+		//	$administrativeUnit = 'no data';
+		//}
+		//$templateMgr->assign('administrativeUnit', $administrativeUnit);
 
 		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/issue_details.tpl'));
 

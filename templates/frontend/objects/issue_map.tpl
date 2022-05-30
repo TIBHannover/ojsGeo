@@ -24,7 +24,10 @@
  <div class="section">
 {if $section.articles}
     <{$heading}>{translate key="plugins.generic.optimetaGeo.issue.title"}</{$heading}>
-    
-    <div>Test map for issue no. {$issue->getBestIssueId()}!</div>
+
+	<div id="mapdiv" style="width: 100%; height: 360px; z-index: 1;"></div>
 {/if}
 </div>
+
+{*main js script, needs to be loaded last*}
+<script src="{$optimeta_issueJS}" type="text/javascript" defer></script>
