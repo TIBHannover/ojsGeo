@@ -40,64 +40,83 @@ var overlayMaps = {
 L.control.layers(baseLayers, overlayMaps).addTo(map);
 
 // highlighting features based on https://leafletjs.com/examples/choropleth/
-function highlightFeature(e) {
-    var layer = e.target;
-
-    layer.setStyle({
-        weight: 5,
-        color: 'red',
-        dashArray: '',
-        fillOpacity: 0.7
-    });
+function highlightFeature(layer) {
+    layer.setStyle(mapLayerStyleHighlight);
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         layer.bringToFront();
     }
-
-    // TODO use e.options.articleId to highlight article in the list
-    $('#' + layer.options.articleId).parent().closest('div').addClass('optimetageo_title_hover');
 }
 
-function resetHighlight(e) {
-    // e.target.resetStyle(); // e's layers is a geoJSON layer, so maybe access that function here somehow?
-    var layer = e.target;
+function highlightArticle(id) {
+    $('#' + id).parent().closest('div').addClass('optimetageo_title_hover');
+}
 
+function resetHighlightFeature(layer) {
+    // layer.resetStyle(); // e's layers is a geoJSON layer, so maybe access that function here somehow?
     layer.setStyle(mapLayerStyle);
-    $('#' + layer.options.articleId).parent().closest('div').removeClass('optimetageo_title_hover');
 }
+
+function resetHighlightArticle(id) {
+    $('#' + id).parent().closest('div').removeClass('optimetageo_title_hover');
+}
+
+var articleLayerMap = new Map();
 
 // load spatial data
 $(function () {
     // load properties for each article from issue_map.tpl
     var spatialInputs = $('.optimeta_data.spatial').toArray().map(input => {
         let geojson = JSON.parse(input.value);
-        return(geojson);
+        return (geojson);
     });
     var articleIdInputs = $('.optimeta_data.articleId').toArray().map(input => {
-        return(input.value);
+        return (input.value);
     });
     var popupInputs = $('.optimeta_data.popup').toArray().map(input => {
-        return(input.value);
+        return (input.value);
     });
     //var tooltipInputs = $('.optimeta_data.tooltip').toArray().map(input => {
     //    return(input.value);
     //});
 
     spatialInputs.forEach((spatialProperty, index) => {
+        let articleId = articleIdInputs[index];
         let layer = L.geoJSON(spatialProperty, {
-            onEachFeature: function(feature, layer) {
+            onEachFeature: (feature, layer) => {
                 layer.bindPopup(popupInputs[index]);
                 //layer.bindTooltip(tooltipInputs[index]);
                 layer.on({
-                    mouseover: highlightFeature,
-                    mouseout: resetHighlight
+                    mouseover: function(e) {
+                        highlightFeature(e.target);
+                        highlightArticle(e.target.options.articleId);
+                    },
+                    mouseout: function(e) {
+                        resetHighlightFeature(e.target);
+                        resetHighlightArticle(e.target.options.articleId);
+                    }
                 });
             },
             style: mapLayerStyle,
-            articleId: articleIdInputs[index]
+            articleId: articleId
         });
         articleLocations.addLayer(layer);
         map.fitBounds(articleLocations.getBounds());
+
+        // add event listener to article div for highlighting the related layer
+        articleLayerMap.set(articleId, layer);
+        let articleDiv = $('#' + layer.options.articleId).parent().closest('div');
+        articleDiv.hover(
+            () => {
+                let layer = articleLayerMap.get(articleId);
+                highlightFeature(layer);
+                console.log(articleId + ' enter');
+            },
+            () => {
+                let layer = articleLayerMap.get(articleId);
+                resetHighlightFeature(layer);
+                console.log(articleId + ' leave');
+            });
     });
 
     /*

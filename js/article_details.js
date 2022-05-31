@@ -107,7 +107,9 @@ $(function () {
                 latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[1];
             }
 
-            drawnItems.addLayer(L.geoJSON(spatialProperties));
+            let layer = L.geoJSON(spatialProperties);
+            layer.setStyle(mapLayerStyle);
+            drawnItems.addLayer(layer);
             map.fitBounds(drawnItems.getBounds());
         }
     }

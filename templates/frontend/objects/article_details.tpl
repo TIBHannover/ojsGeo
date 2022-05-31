@@ -1,5 +1,14 @@
 {*the main template is here extended using the hook 'Templates::Article::Main'*}
 
+<script type="text/javascript">
+var mapLayerStyle = {
+    weight: 5,
+    color: '#1E6292',
+    dashArray: '',
+    fillOpacity: 0.7
+};
+</script>
+
 <div style="clear:both;">
     <section id="item geospatialmetadata" class="item geospatialmetadata">
         <h2 class="label">{translate key="plugins.generic.optimetaGeo.article.metadata.long"}</h2>

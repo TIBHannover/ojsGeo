@@ -4,11 +4,18 @@
 
 <script type="text/javascript">
 var mapLayerStyle = {
-        weight: 5,
-        color: '#1E6292',
-        dashArray: '',
-        fillOpacity: 0.7
-    }
+    weight: 5,
+    color: '#1E6292',
+    dashArray: '',
+    fillOpacity: 0.7
+};
+
+var mapLayerStyleHighlight = {
+    weight: 5,
+    color: 'red',
+    dashArray: '',
+    fillOpacity: 0.7
+};
 </script>
 
 <input type="text" class="optimeta_data articleId" name="spatialProperties"
