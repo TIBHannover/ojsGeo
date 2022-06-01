@@ -1,10 +1,20 @@
 <?php
+/**
+ * Form for the plugin settings of the Optimeta geo plugin.
+ */
+
+namespace Optimeta\Geo;
+
 import('lib.pkp.classes.form.Form');
 
-/**
- * Form for the plugin settings of the Optimeta geo plugin. 
- */
-class OptimetaGeoSettingsForm extends Form
+use FormValidator;
+use FormValidatorPost;
+use FormValidatorCSRF;
+use Application;
+use TemplateManager;
+use NotificationManager;
+
+class SettingsForm extends \Form
 {
     public $plugin;
     

@@ -12,10 +12,12 @@
  */
 
 import('lib.pkp.classes.plugins.GenericPlugin');
+import('plugins.generic.optimetaGeo.classes.SettingsForm');
 
 use phpDocumentor\Reflection\Types\Null_;
 use \PKP\components\forms\FormComponent;
 use \PKP\components\forms\FieldHTML; // needed for function extendScheduleForPublication
+use Optimeta\Geo\SettingsForm;
 
 class OptimetaGeoPlugin extends GenericPlugin
 {
@@ -485,8 +487,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 			case 'settings':
 
 				// Load the custom form
-				$this->import('OptimetaGeoSettingsForm');
-				$form = new OptimetaGeoSettingsForm($this);
+				// $this->import('OptimetaGeoSettingsForm');
+				$form = new SettingsForm($this);
 
 				// Fetch the form the first time it loads, before
 				// the user has tried to save it
