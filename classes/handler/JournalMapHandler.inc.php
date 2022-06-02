@@ -12,6 +12,7 @@
  */
 
 import('classes.handler.Handler');
+import('lib.pkp.classes.submission.PKPSubmission'); // imports STATUS_PUBLISHED
 
 class JournalMapHandler extends Handler
 {
@@ -31,7 +32,7 @@ class JournalMapHandler extends Handler
         $publicationsGeodata = [];
         $publications = Services::get('publication')->getMany([
             'contextId' => $journal->getId(),
-            'status' => STATUS_PUBLISHED,
+            'status' => STATUS_PUBLISHED, // FIXME
             'count' => 9999, // large upper limit - make configurable?
         ]);
 
@@ -40,6 +41,10 @@ class JournalMapHandler extends Handler
 
         foreach ($publications as $publication) {
             $id = $publication->getData('id');
+
+            if($publication->getData('status') != STATUS_PUBLISHED) {
+                break;
+            }
 
             $issue = "";
             if ($publication->getData('issueId')) {
