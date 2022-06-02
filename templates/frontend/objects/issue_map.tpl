@@ -1,8 +1,9 @@
 {**
- * templates/frontend/objects/issue_map.tpl
+ * templates/frontend/objects/article_details.tpl
  *
- * Copyright (c) 2022 OPTIMETA, Daniel Nüst
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *
  * @brief View of a map for all articles of an issue
  *

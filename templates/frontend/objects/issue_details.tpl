@@ -1,21 +1,33 @@
-{*the main template is here extended using the hook 'Templates::Issue::Issue::Article'*}
+{**
+ * templates/frontend/objects/article_details.tpl
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ *
+ * @brief Embed geospatial metadata in hidden fields for use on the issue map.
+ *
+ * The main template is here extended using the hook 'Templates::Issue::Issue::Article'.
+ *}
 
 <link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
 
 <script type="text/javascript">
-var mapLayerStyle = {
+const optimetageo_mapLayerStyle = {
     weight: 5,
     color: '#1E6292',
     dashArray: '',
     fillOpacity: 0.7
 };
 
-var mapLayerStyleHighlight = {
+const optimetageo_mapLayerStyleHighlight = {
     weight: 5,
     color: 'red',
     dashArray: '',
     fillOpacity: 0.7
 };
+
+const optimetageo_layerName = '{translate key="plugins.generic.optimetaGeo.map.articleLayerName"}';
 </script>
 
 <input type="text" class="optimeta_data articleId" name="spatialProperties"

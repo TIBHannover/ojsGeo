@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *
  * Download JavaScript dependencies for OJS plugin OPTIMETA Geoplugin
  * 

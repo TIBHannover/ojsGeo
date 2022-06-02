@@ -1,5 +1,12 @@
 /**
- * Script imported in the plugin main file to display spatio-temporal metadata in the article view. 
+ * 
+ * js/article_details.js
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ * 
+ * @brief Display spatio-temporal metadata in the article view.
  */
 
 // load spatial properties from article_details.tpl 
@@ -41,8 +48,8 @@ var administrativeUnitsMap = new L.FeatureGroup();
 map.addLayer(administrativeUnitsMap);
 
 var overlayMaps = {
-    "geometric shape(s)": drawnItems,
-    "administrative unit": administrativeUnitsMap
+    [optimetageo_articleLayerName]: drawnItems,
+    [optimetageo_adminLayerName]: administrativeUnitsMap
 };
 
 // add layerControl to the map to the map 
@@ -108,7 +115,7 @@ $(function () {
             }
 
             let layer = L.geoJSON(spatialProperties);
-            layer.setStyle(mapLayerStyle);
+            layer.setStyle(optimetageo_mapLayerStyle);
             drawnItems.addLayer(layer);
             map.fitBounds(drawnItems.getBounds());
         }

@@ -1,8 +1,14 @@
 /**
- * Script imported in the plugin main file to display spatio-temporal metadata in the issue view. 
+ * 
+ * js/issue.js
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ * 
+ * @brief Display spatio-temporal metadata in the issue view. 
  */
 
-// create map 
 var map = L.map('mapdiv');
 
 var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -27,13 +33,8 @@ L.control.scale({ position: 'bottomright' }).addTo(map);
 var articleLocations = new L.FeatureGroup();
 map.addLayer(articleLocations);
 
-// FeatureGroup for the administrativeUnits 
-//var administrativeUnitsMap = new L.FeatureGroup();
-//map.addLayer(administrativeUnitsMap);
-
 var overlayMaps = {
-    "article locations": articleLocations,
-    //"administrative unit": administrativeUnitsMap
+    [optimetageo_layerName]: articleLocations,
 };
 
 // add layerControl to the map to the map 
@@ -41,7 +42,7 @@ L.control.layers(baseLayers, overlayMaps).addTo(map);
 
 // highlighting features based on https://leafletjs.com/examples/choropleth/
 function highlightFeature(layer) {
-    layer.setStyle(mapLayerStyleHighlight);
+    layer.setStyle(optimetageo_mapLayerStyleHighlight);
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         layer.bringToFront();
@@ -54,7 +55,7 @@ function highlightArticle(id) {
 
 function resetHighlightFeature(layer) {
     // layer.resetStyle(); // e's layers is a geoJSON layer, so maybe access that function here somehow?
-    layer.setStyle(mapLayerStyle);
+    layer.setStyle(optimetageo_mapLayerStyle);
 }
 
 function resetHighlightArticle(id) {
@@ -97,7 +98,7 @@ $(function () {
                     }
                 });
             },
-            style: mapLayerStyle,
+            style: optimetageo_mapLayerStyle,
             articleId: articleId
         });
         articleLocations.addLayer(layer);

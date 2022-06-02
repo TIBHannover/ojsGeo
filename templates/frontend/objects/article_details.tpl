@@ -1,12 +1,26 @@
-{*the main template is here extended using the hook 'Templates::Article::Main'*}
+{**
+ * templates/frontend/objects/article_details.tpl
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Copyright (c) 2021 Tom Niers
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ *
+ * @brief Show geospatial metadata on the article page.
+ *
+ * the main template is here extended using the hook 'Templates::Article::Main'.
+ *}
 
 <script type="text/javascript">
-var mapLayerStyle = {
+const optimetageo_mapLayerStyle = {
     weight: 5,
     color: '#1E6292',
     dashArray: '',
     fillOpacity: 0.7
 };
+
+const optimetageo_articleLayerName = '{translate key="plugins.generic.optimetaGeo.map.articleLayerName"}';
+const optimetageo_adminLayerName = '{translate key="plugins.generic.optimetaGeo.map.administrativeLayerName"}';
 </script>
 
 <div style="clear:both;">

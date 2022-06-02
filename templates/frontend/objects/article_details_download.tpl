@@ -1,4 +1,15 @@
-{*the main template is here extended using the hook 'Templates::Article::Details'*}
+ {**
+ * templates/frontend/objects/article_details_download.tpl
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Copyright (c) 2021 Tom Niers
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ *
+ * @brief Add download link for geospatial metadata to article page sidebar.
+ * 
+ * The main template is here extended using the hook 'Templates::Article::Details'.
+ *}
 
 <link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
 

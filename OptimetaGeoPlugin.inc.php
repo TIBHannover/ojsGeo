@@ -3,9 +3,9 @@
 /**
  * @file OptimetaGeoPlugin.inc.php
  *
- * Copyright (c) 2017-2021 Simon Fraser University
- * Copyright (c) 2017-2021 John Willinsky
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file dLICENSE.
  *
  * @class OptimetaGeoPlugin
  * @brief Plugin class for the OPTIMETA project's geo plugin.
@@ -413,24 +413,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$spatialProperties = $_POST['spatialProperties'];
 		$administrativeUnit = $_POST['administrativeUnit'];
 
-		/*
-		If the element to store in the database is an element which is different in different languages 
-		the property "multilingual" in the function addToSchema has to be true, and you have to use a loop like this 
-
-		$localePare = $params['title'];
-
-		foreach ($localePare as $localeKey => $fileId) {
-			$newPublication->setData('jatsParser::fullText', $htmlDocument->saveAsHTML(), $localeKey);
-		}
-
-		further information: https://github.com/Vitaliy-1/JATSParserPlugin/blob/21425c486f0f157cd8dc6b829322cd32159dd408/JatsParserPlugin.inc.php#L619 
-
-		For elements which are not multilangual you can skip the parameter $localeKey and just do it like this: 
-			$newPublication->setData('optimetaGeo::spatialProperties', $spatialProperties);
-
-		Take care, function is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
-		*/
-
 		// null if there is no possibility to input data (metadata input before Schedule for Publication)
 		if ($spatialProperties !== null) {
 			$newPublication->setData('optimetaGeo::spatialProperties', $spatialProperties);
@@ -443,21 +425,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		if ($administrativeUnit !== null) {
 			$newPublication->setData('coverage', $administrativeUnit, 'en_US'); // we don't use locale for the field
 		}
-
-		/*
-		The following lines are probably needed if you want to store text in a certain language to set the local key,
-		further information can be found here:
-		https://github.com/Vitaliy-1/JATSParserPlugin/blob/21425c486f0f157cd8dc6b829322cd32159dd408/JatsParserPlugin.inc.php#L619 
-		
-		$yourdata = 100;
-		$yourdata2 = '00:00:00';
-		$yourdata3 = 'TesTestTest';
-		$localePare = $params['title'];
-		foreach ($localePare as $localeKey => $fileId) {
-			continue;
-		}
-		$newPublication->setData('Textfeld', $yourdata3, $localeKey);
-		*/
 	}
 
 	/**

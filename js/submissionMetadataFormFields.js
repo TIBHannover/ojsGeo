@@ -1,6 +1,12 @@
 /**
- * Script submissionMetadataFormFields.js which gets called in the plugin PHP file.
- * Is used to enable input of geospatial metadata during article submission.
+ * 
+ * js/submissionMetadataFormFields.js
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ * 
+ * @brief Enable input of geospatial metadata during article submission.
  */
 
 // Check if a corresponding username for the geonames API has been entered in the plugin settings, otherwise trigger an alert with corresponding information.

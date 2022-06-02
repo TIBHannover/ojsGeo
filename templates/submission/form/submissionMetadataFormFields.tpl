@@ -1,5 +1,15 @@
-{*the main template is here extended using the hook
-'Templates::Submission::SubmissionMetadataForm::AdditionalMetadata'*}
+{**
+ * templates/submission/formsubmissionMetadataFormFields.tpl
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Copyright (c) 2021 Tom Niers
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ *
+ * @brief Add forms to enter geospatial metadata during the submission.
+ * 
+ * The main template is here extended using the hook 'Templates::Submission::SubmissionMetadataForm::AdditionalMetadata'
+ *}
 
 <div style="clear:both;">
     {fbvFormArea id="tagitFields"
