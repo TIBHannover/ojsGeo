@@ -44,11 +44,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		// important to check if plugin is enabled before registering the hook, cause otherwise plugin will always run no matter enabled or disabled! 
 		if ($success && $this->getEnabled()) {
-
-			/*
-			Hooks are the possibility to intervene the application. By the corresponding function which is named in the HookRegistery, the application
-			can be changed. Further information here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/categories#generic 
-			*/
+			// custom page handler, see https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-custom-page
+			HookRegistry::register('LoadHandler', array($this, 'setPageHandler'));
 
 			// Hooks for changing the frontent Submit an Article 3. Enter Metadata 
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
@@ -118,6 +115,20 @@ class OptimetaGeoPlugin extends GenericPlugin
 			// publication tab
 		}
 		return $success;
+	}
+
+	/**
+	 * @param hookName
+	 * @param params
+	 */
+	public function setPageHandler($hookName, $params) {
+		$page = $params[0];
+		if ($page === 'map') {
+			$this->import('classes/handler/JournalMapHandler');
+			define('HANDLER_CLASS', 'JournalMapHandler');
+			return true;
+		}
+		return false;
 	}
 
 	/**
