@@ -68,7 +68,11 @@
 	border-color: transparent transparent black transparent;
 }
 
-.optimetageo_issue_maplink a {
+.optimetageo_issue_maplink {
+	text-decoration: none;
+}
+
+.optimetageo_journal_maplink {
 	text-decoration: none;
 }
 

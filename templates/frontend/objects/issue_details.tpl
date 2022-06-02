@@ -36,7 +36,7 @@ const optimetageo_layerName = '{translate key="plugins.generic.optimetaGeo.map.a
     style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialProperties}'>
 <input type="text" class="optimeta_data popup" name="mapPopup"
     style="height: 0px; width: 0px; visibility: hidden;" value='<{$heading} class="title">
-		<a id="article-{$article->getId()}" {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if}>
+		<a id="article-{$article->getId()}" class="optimetageo_issue_maplink" {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if}>
 			{$article->getLocalizedTitle()|strip_unsafe_html}
 			{if $article->getLocalizedSubtitle()}
 				<span class="subtitle">

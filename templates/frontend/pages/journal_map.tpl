@@ -26,6 +26,8 @@ const optimetageo_articleBaseUrl = '{if $journal}{url journal=$journal->getPath(
 
 </script>
 
+<link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
+
 <input type="text" class="optimeta_data publications" name="publications"
     style="height: 0px; width: 0px; visibility: hidden;" value='{$publications}'>
 

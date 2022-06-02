@@ -53,7 +53,7 @@ $(function () {
         let articleIssue = publication['issue'];
         // popup content roughly based on issue_details.tpl
         const popupTemplate = `<h2 class="title">
-            <a id="article-${articleId}" href="${optimetageo_articleBaseUrl}/${articleId}">${articleTitle}</a>
+            <a id="article-${articleId}" class="optimetageo_journal_maplink" href="${optimetageo_articleBaseUrl}/${articleId}">${articleTitle}</a>
             </h2>
             <br/>
             <div class="authors">

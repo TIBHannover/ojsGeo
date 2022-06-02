@@ -22,6 +22,7 @@ class JournalMapHandler extends Handler
         $templateMgr = TemplateManager::getManager($request);
 
         $templateMgr->assign('optimeta_journalJS', $request->getBaseUrl() . '/' . $plugin->getPluginPath() . '/js/journal.js');
+        $templateMgr->assign('pluginStylesheetURL', $request->getBaseUrl() . '/' . $plugin->getPluginPath() . '/css');
 
         $journal = $request->getContext();
         if (!$journal) return false;
