@@ -52,7 +52,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			// Hooks for changing the Metadata right before Schedule for Publication (not working yet)
 			//HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
-			
+
 			// Hooks for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
 			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
@@ -70,6 +70,9 @@ class OptimetaGeoPlugin extends GenericPlugin
 			// Hook for creating and setting a new field in the database 
 			HookRegistry::register('Schema::get::publication', array($this, 'addToSchema'));
 			HookRegistry::register('Publication::edit', array($this, 'editPublication')); // Take care, hook is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
+
+			// https://forum.pkp.sfu.ca/t/add-item-to-navigation-menu-from-a-generic-plugin/73414/5
+			//HookRegistry::register('TemplateManager::display', array($this, 'addMapPageToMenu'));
 
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
@@ -122,7 +125,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 	 * @param hookName
 	 * @param params
 	 */
-	public function setPageHandler($hookName, $params) {
+	public function setPageHandler($hookName, $params)
+	{
 		$page = $params[0];
 		if ($page === 'map') {
 			$this->import('classes/handler/JournalMapHandler');
@@ -130,6 +134,22 @@ class OptimetaGeoPlugin extends GenericPlugin
 			return true;
 		}
 		return false;
+	}
+
+	public function addMapPageToMenu($hookName, $args)
+	{
+		$smarty = $args[0];
+		$smarty->unregisterPlugin('function', 'load_menu');
+		$smarty->registerPlugin('function', 'load_menu', [$this, 'doSomethingWithMenu']);
+		return false;
+	}
+
+	public function doSomethingWithMenu($params, $smarty)
+	{
+		// TODO run smartyLoadNavigationMenuArea and then add my own item somehow 
+		print_r($params);
+		// modify behavior
+		//print_r($smarty);
 	}
 
 	/**
@@ -302,13 +322,13 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$spatialProperties = 'no data';
 		}
 		$templateMgr->assign('spatialProperties', $spatialProperties);
-		
+
 		//$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		//if ($temporalProperties === null || $temporalProperties === '') {
 		//	$temporalProperties = 'no data';
 		//}
 		//$templateMgr->assign('temporalProperties', $temporalProperties);
-		
+
 		//$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
 		//if ($administrativeUnit === null || $administrativeUnit === '') {
 		//	$administrativeUnit = 'no data';
@@ -355,7 +375,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		$publicationDao = DAORegistry::getDAO('PublicationDAO');
 		$publication = $publicationDao->getById($submissionId);
-		
+
 		$this->templateParameters['submissionId'] = $submissionId;
 		//$this->templateParameters['citationsParsed'] = $citationsParsed;
 		//$this->templateParameters['citationsRaw'] = $citationsRaw;
@@ -462,7 +482,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 				'label' => 'My Field Name',
 				'description' => '<p>Add any HTML code that you want.</p>
 				<div id="mapdiv" style="width: 1116px; height: 400px; float: left;  z-index: 0;"></div>
-				<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
+				<script src="{$optimetageo_submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
 			]));*/
 		}
 	}
