@@ -17,6 +17,8 @@ use phpDocumentor\Reflection\Types\Null_;
 use \PKP\components\forms\FormComponent;
 use \PKP\components\forms\FieldHTML; // needed for function extendScheduleForPublication
 
+const MAP_URL_PATH = 'map';
+
 class OptimetaGeoPlugin extends GenericPlugin
 {
 
@@ -52,17 +54,15 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			// Hooks for changing the Metadata right before Schedule for Publication (not working yet)
 			//HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
-			
+
 			// Hooks for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
 			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
-			// Templates::Article::Main 
-			// Templates::Article::Details
-			// Templates::Article::Footer::PageFooter
 
 			// Hooks for changing the issue page 
 			HookRegistry::register('Templates::Issue::TOC::Main', array(&$this, 'extendIssueTocTemplate'));
 			HookRegistry::register('Templates::Issue::Issue::Article', array(&$this, 'extendIssueTocArticleTemplate'));
+			HookRegistry::register('Templates::Common::Navigation::Item', array(&$this, 'extendNavigationMenuTemplate'));
 
 			// Hook for adding a tab to the publication phase
 			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendPublicationTab'));
@@ -73,9 +73,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
-
-			$request = Application::get()->getRequest();
-			$contextId = $this->getCurrentContextId();
 
 			// jQuery is already loaded via ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
 			$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.css';
@@ -96,9 +93,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->addStyleSheet("leafletDrawCSS", $urlLeafletDrawCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("leafletDrawJS", $urlLeafletDrawJS, array('contexts' => array('frontend', 'backend')));
 
-			// loading the daterangepicker scripts, source: https://www.daterangepicker.com/#example2 
-			//$templateMgr->addJavaScript("jqueryJS", $urlJqueryJS, array('contexts' => array('frontend', 'backend')));
-			// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
+			// loading the daterangepicker scripts, source: https://www.daterangepicker.com/#example2
 			$templateMgr->addJavaScript("momentJS", $urlMomentJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("daterangepickerJS", $urlDaterangepickerJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("daterangepickerCSS", $urlDaterangepickerCSS, array('contexts' => array('frontend', 'backend')));
@@ -122,9 +117,10 @@ class OptimetaGeoPlugin extends GenericPlugin
 	 * @param hookName
 	 * @param params
 	 */
-	public function setPageHandler($hookName, $params) {
+	public function setPageHandler($hookName, $params)
+	{
 		$page = $params[0];
-		if ($page === 'map') {
+		if ($page === MAP_URL_PATH) {
 			$this->import('classes/handler/JournalMapHandler');
 			define('HANDLER_CLASS', 'JournalMapHandler');
 			return true;
@@ -283,6 +279,22 @@ class OptimetaGeoPlugin extends GenericPlugin
 	}
 
 	/**
+	 * Function which extends the navigation menu with a map link
+	 * @param hook Templates::Common::Navigation::Item
+	 */
+	public function extendNavigationMenuTemplate($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		$templateMgr->assign($this->templateParameters);
+		$templateMgr->assign('optimetageo_mapUrlPath', MAP_URL_PATH);
+
+		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/nav_item.tpl'));
+		return false;
+	}
+
+	/**
 	 * Function which extends each article in an issue TOC with hidden fields with geospatial data
 	 * @param hook Templates::Issue::Issue::Article
 	 */
@@ -302,13 +314,13 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$spatialProperties = 'no data';
 		}
 		$templateMgr->assign('spatialProperties', $spatialProperties);
-		
+
 		//$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
 		//if ($temporalProperties === null || $temporalProperties === '') {
 		//	$temporalProperties = 'no data';
 		//}
 		//$templateMgr->assign('temporalProperties', $temporalProperties);
-		
+
 		//$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
 		//if ($administrativeUnit === null || $administrativeUnit === '') {
 		//	$administrativeUnit = 'no data';
@@ -355,7 +367,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		$publicationDao = DAORegistry::getDAO('PublicationDAO');
 		$publication = $publicationDao->getById($submissionId);
-		
+
 		$this->templateParameters['submissionId'] = $submissionId;
 		//$this->templateParameters['citationsParsed'] = $citationsParsed;
 		//$this->templateParameters['citationsRaw'] = $citationsRaw;
@@ -462,7 +474,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 				'label' => 'My Field Name',
 				'description' => '<p>Add any HTML code that you want.</p>
 				<div id="mapdiv" style="width: 1116px; height: 400px; float: left;  z-index: 0;"></div>
-				<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
+				<script src="{$optimetageo_submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
 			]));*/
 		}
 	}
