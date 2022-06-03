@@ -63,4 +63,4 @@ const optimetageo_adminLayerName = '{translate key="plugins.generic.optimetaGeo.
 </div>
 
 {*main js script, needs to be loaded last*}
-<script src="{$optimeta_article_detailsJS}" type="text/javascript" defer></script>
+<script src="{$optimetageo_article_detailsJS}" type="text/javascript" defer></script>

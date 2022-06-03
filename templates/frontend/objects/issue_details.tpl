@@ -10,26 +10,6 @@
  * The main template is here extended using the hook 'Templates::Issue::Issue::Article'.
  *}
 
-<link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
-
-<script type="text/javascript">
-const optimetageo_mapLayerStyle = {
-    weight: 5,
-    color: '#1E6292',
-    dashArray: '',
-    fillOpacity: 0.7
-};
-
-const optimetageo_mapLayerStyleHighlight = {
-    weight: 5,
-    color: 'red',
-    dashArray: '',
-    fillOpacity: 0.7
-};
-
-const optimetageo_layerName = '{translate key="plugins.generic.optimetaGeo.map.articleLayerName"}';
-</script>
-
 <input type="text" class="optimeta_data articleId" name="spatialProperties"
     style="height: 0px; width: 0px; visibility: hidden;" value='article-{$article->getId()}'>
 <input type="text" class="optimeta_data spatial" name="spatialProperties"

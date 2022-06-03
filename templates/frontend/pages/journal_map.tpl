@@ -21,12 +21,10 @@ const optimetageo_mapLayerStyle = {
 };
 
 const optimetageo_layerName = '{translate key="plugins.generic.optimetaGeo.map.articleLayerName"}';
-
 const optimetageo_articleBaseUrl = '{if $journal}{url journal=$journal->getPath() page="article" op="view" path=""}{else}{url page="article" op="view" path=""}{/if}';
-
 </script>
 
-<link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
+<link rel="stylesheet" href="{$pluginStylesheetURL}optimetaGeo.css" type="text/css" />
 
 <input type="text" class="optimeta_data publications" name="publications"
     style="height: 0px; width: 0px; visibility: hidden;" value='{$publications}'>
@@ -41,6 +39,6 @@ const optimetageo_articleBaseUrl = '{if $journal}{url journal=$journal->getPath(
 </div><!-- .page -->
 
 {*main js script, needs to be loaded last*}
-<script src="{$optimeta_journalJS}" type="text/javascript" defer></script>
+<script src="{$optimetagep_journalJS}" type="text/javascript" defer></script>
 
 {include file="frontend/components/footer.tpl"}

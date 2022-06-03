@@ -86,7 +86,15 @@ $libraries = [
     [
         'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js',
         'Control.Geocoder.js'
-    ]
+    ],
+    [
+        'https://github.com/pointhi/leaflet-color-markers/archive/refs/tags/v1.0.0.zip',
+        [
+            'leaflet-color-markers-1.0.0/img/marker-icon-2x-red.png',
+            'leaflet-color-markers-1.0.0/img/marker-icon-2x-blue.png',
+            'leaflet-color-markers-1.0.0/img/marker-shadow.png'
+        ]
+    ],
     // $urlJqueryJS = 'https://code.jquery.com/jquery-3.2.1.js';
     // jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
 ];

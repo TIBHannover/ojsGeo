@@ -107,10 +107,11 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->addJavaScript("leafletControlGeocodeJS", $urlLeafletControlGeocodeJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("leafletControlGeocodeCSS", $urlLeafletControlGeocodeCSS, array('contexts' => array('frontend', 'backend')));
 
-			// plugins JS scripts
-			$templateMgr->assign('optimeta_submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
-			$templateMgr->assign('optimeta_article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
-			$templateMgr->assign('optimeta_issueJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
+			// plugins JS scripts and CSS
+			$templateMgr->assign('optimetageo_submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
+			$templateMgr->assign('optimetageo_article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
+			$templateMgr->assign('optimetageo_issueJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
+			$templateMgr->assign('optimetageo_markerBaseUrl', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers-1.0.0/img/');
 
 			// publication tab
 		}

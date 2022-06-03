@@ -40,12 +40,24 @@ var overlayMaps = {
 // add layerControl to the map to the map 
 L.control.layers(baseLayers, overlayMaps).addTo(map);
 
-// highlighting features based on https://leafletjs.com/examples/choropleth/
-function highlightFeature(layer) {
-    layer.setStyle(optimetageo_mapLayerStyleHighlight);
+const iconStyle = L.icon({
+    iconUrl: optimetageo_markerBaseUrl + 'marker-icon-2x-blue.png',
+    shadowUrl: optimetageo_markerBaseUrl + 'marker-shadow.png'
+});
+const iconStyleHighlight = L.icon({
+    iconUrl: optimetageo_markerBaseUrl + 'marker-icon-2x-red.png',
+    shadowUrl: optimetageo_markerBaseUrl + 'marker-shadow.png'
+});
 
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront();
+// highlighting features based on https://leafletjs.com/examples/choropleth/
+function highlightFeature(layer, feature) {
+    if (feature && feature.geometry.type === "Point" && layer.options.icon) { // only setIcon on a layer that already has one
+        layer.setIcon(iconStyleHighlight);
+    } else {
+        layer.setStyle(optimetageo_mapLayerStyleHighlight);
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
     }
 }
 
@@ -53,16 +65,21 @@ function highlightArticle(id) {
     $('#' + id).parent().closest('div').addClass('optimetageo_title_hover');
 }
 
-function resetHighlightFeature(layer) {
-    // layer.resetStyle(); // e's layers is a geoJSON layer, so maybe access that function here somehow?
-    layer.setStyle(optimetageo_mapLayerStyle);
+function resetHighlightFeature(layer, feature) {
+    if (feature && feature.geometry.type === "Point" && layer.options.icon) {
+        layer.setIcon(iconStyle);
+    } else {
+        layer.setStyle(optimetageo_mapLayerStyleHighlight);
+        // layer.resetStyle(); // e's layers is a geoJSON layer, so maybe access that function here somehow?
+        layer.setStyle(optimetageo_mapLayerStyle);
+    }
 }
 
 function resetHighlightArticle(id) {
     $('#' + id).parent().closest('div').removeClass('optimetageo_title_hover');
 }
 
-var articleLayerMap = new Map();
+var articleFeaturesMap = new Map();
 
 // load spatial data
 $(function () {
@@ -83,58 +100,47 @@ $(function () {
 
     spatialInputs.forEach((spatialProperty, index) => {
         let articleId = articleIdInputs[index];
+        var features = [];
         let layer = L.geoJSON(spatialProperty, {
             onEachFeature: (feature, layer) => {
                 layer.bindPopup(popupInputs[index]);
                 //layer.bindTooltip(tooltipInputs[index]);
                 layer.on({
-                    mouseover: function(e) {
-                        highlightFeature(e.target);
-                        highlightArticle(e.target.options.articleId);
+                    mouseover: (e) => {
+                        highlightFeature(e.target, feature);
+                        highlightArticle(feature.properties.articleId);
                     },
-                    mouseout: function(e) {
-                        resetHighlightFeature(e.target);
-                        resetHighlightArticle(e.target.options.articleId);
+                    mouseout: (e) => {
+                        resetHighlightFeature(e.target, feature);
+                        resetHighlightArticle(feature.properties.articleId);
                     }
                 });
+                feature.properties['articleId'] = articleId;
+                features.push(feature);
             },
-            style: optimetageo_mapLayerStyle,
-            articleId: articleId
+            style: optimetageo_mapLayerStyle
         });
+
         articleLocations.addLayer(layer);
         map.fitBounds(articleLocations.getBounds());
 
         // add event listener to article div for highlighting the related layer
-        articleLayerMap.set(articleId, layer);
-        let articleDiv = $('#' + layer.options.articleId).parent().closest('div');
+        articleFeaturesMap.set(articleId, features);
+        let articleDiv = $('#' + articleId).parent().closest('div');
         articleDiv.hover(
-            () => {
-                let layer = articleLayerMap.get(articleId);
-                highlightFeature(layer);
-                console.log(articleId + ' enter');
+            (e) => {
+                let features = articleFeaturesMap.get(articleId);
+                features.forEach(f => {
+                    highlightFeature(layer, f);
+                })
             },
-            () => {
-                let layer = articleLayerMap.get(articleId);
-                resetHighlightFeature(layer);
-                console.log(articleId + ' leave');
+            (e) => {
+                let features = articleFeaturesMap.get(articleId);
+                features.forEach(f => {
+                    resetHighlightFeature(layer, f);
+                })
             });
     });
-
-    /*
-    var administrativeUnitDecoded = document.getElementById("optimeta_administrativeUnit").value;
-    var administrativeUnitEncoded = JSON.parse(administrativeUnitDecoded);
-
-    var administrativeUnitsNameList = [];
-
-    for (var i = 0; i < administrativeUnitEncoded.length; i++) {
-        administrativeUnitsNameList.push(administrativeUnitEncoded[i].name);
-    }
-
-    document.getElementById("administrativeUnit").innerHTML = administrativeUnitsNameList.join(', ');
-
-    var spatialPropertiesEncoded = JSON.parse(spatialPropertiesDecoded);
-    displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesEncoded);
-    */
 });
 
 /*
