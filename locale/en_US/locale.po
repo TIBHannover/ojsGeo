@@ -101,6 +101,9 @@ msgstr "Times & locations of all articles in"
 msgid "plugins.generic.optimetaGeo.journal.breadcrump"
 msgstr "Map"
 
+msgid "plugins.generic.optimetaGeo.journal.mapMenu"
+msgstr "Map"
+
 msgid "plugins.generic.optimetaGeo.journal.text"
 msgstr "Click on any geometry to see information about the article and follow the link to the article page."
 
