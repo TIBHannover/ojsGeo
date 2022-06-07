@@ -27,9 +27,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 	protected $templateParameters = [
 		'pluginStylesheetURL' => '',
 		'pluginJavaScriptURL' => '',
-		//'pluginImagesURL' => '',
-		//'citationsKeyForm' => '',
-		'pluginApiUrl' => ''
 	];
 
 	public function register($category, $path, $mainContextId = NULL)
@@ -62,8 +59,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			// Hooks for changing the issue page 
 			HookRegistry::register('Templates::Issue::TOC::Main', array(&$this, 'extendIssueTocTemplate'));
 			HookRegistry::register('Templates::Issue::Issue::Article', array(&$this, 'extendIssueTocArticleTemplate'));
-			HookRegistry::register('Templates::Common::Navigation::Item', array(&$this, 'extendNavigationMenuTemplate'));
-
+			
 			// Hook for adding a tab to the publication phase
 			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendPublicationTab'));
 
@@ -108,7 +104,10 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->assign('optimetageo_issueJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
 			$templateMgr->assign('optimetageo_markerBaseUrl', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers-1.0.0/img/');
 
+			$templateMgr->assign('optimetageo_mapUrlPath', MAP_URL_PATH);
+
 			// publication tab
+			// ...
 		}
 		return $success;
 	}
@@ -279,22 +278,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 	}
 
 	/**
-	 * Function which extends the navigation menu with a map link
-	 * @param hook Templates::Common::Navigation::Item
-	 */
-	public function extendNavigationMenuTemplate($hookName, $params)
-	{
-		$templateMgr = &$params[1];
-		$output = &$params[2];
-
-		$templateMgr->assign($this->templateParameters);
-		$templateMgr->assign('optimetageo_mapUrlPath', MAP_URL_PATH);
-
-		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/nav_item.tpl'));
-		return false;
-	}
-
-	/**
 	 * Function which extends each article in an issue TOC with hidden fields with geospatial data
 	 * @param hook Templates::Issue::Issue::Article
 	 */
@@ -306,9 +289,18 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$templateMgr->assign($this->templateParameters);
 
 		$publication = $templateMgr->getTemplateVars('publication');
-		$submission = $templateMgr->getTemplateVars('article');
-		$submissionId = $submission->getId();
+		if($publication === null) {
+			// pragma theme
+			$articlePath = $templateMgr->getTemplateVars('articlePath');
 
+			if($articlePath === null) {
+				return false;
+			} else {
+				$publicationDao = DAORegistry::getDAO('PublicationDAO');
+				$publication = $publicationDao->getById($articlePath);
+			}
+		}
+		
 		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
 		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}')) {
 			$spatialProperties = 'no data';

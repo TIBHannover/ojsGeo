@@ -14,8 +14,13 @@
     style="height: 0px; width: 0px; visibility: hidden;" value='article-{$article->getId()}'>
 <input type="text" class="optimeta_data spatial" name="spatialProperties"
     style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialProperties}'>
+
+
+{if $activeTheme->getOption('parentName') == 'defaultthemeplugin'}
+
 <input type="text" class="optimeta_data popup" name="mapPopup"
-    style="height: 0px; width: 0px; visibility: hidden;" value='<{$heading} class="title">
+    style="height: 0px; width: 0px; visibility: hidden;" value='
+		<{$heading} class="title">
 		<a id="article-{$article->getId()}" class="optimetageo_issue_maplink" {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if}>
 			{$article->getLocalizedTitle()|strip_unsafe_html}
 			{if $article->getLocalizedSubtitle()}
@@ -24,13 +29,33 @@
 				</span>
 			{/if}
 		</a>
-	</{$heading}>
-    <br/>
-    {if $showAuthor}
-		<div class="authors">
-			{$article->getAuthorString()|escape}
-		</div>
-    {/if}'>
+		</{$heading}>
+		<br/>
+		{if $showAuthor}
+			<div class="authors">
+				{$article->getAuthorString()|escape}
+			</div>
+		{/if}
+	'>
+
+{/if} {* defaultthemeplugin *}
+
+{* Based on https://github.com/pkp/pragma/blob/main/templates/frontend/objects/article_summary.tpl *}
+{if $activeTheme->getOption('parentName') == 'pragmathemeplugin'}
+
+<input type="text" class="optimeta_data popup" name="mapPopup"
+    style="height: 0px; width: 0px; visibility: hidden;" value='
+		<h4 class="article__title">
+			<a {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if}>
+				{$article->getLocalizedFullTitle()|escape}
+			</a>
+		</h4>
+		{if $showAuthor}
+			<p class="metadata">{$article->getAuthorString()|escape}</p>
+		{/if}
+	'>
+
+{/if} {* pragmathemeplugin *}
 
 {* <input type="text" class="optimeta_data temporal" name="temporalProperties"
     style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalProperties}' /> *}
