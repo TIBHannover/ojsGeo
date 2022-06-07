@@ -24,21 +24,21 @@ class JournalMapHandler extends Handler
         $templateMgr->assign('optimetagep_journalJS', $request->getBaseUrl() . '/' . $plugin->getPluginPath() . '/js/journal.js');
         $templateMgr->assign('pluginStylesheetURL', $request->getBaseUrl() . '/' . $plugin->getPluginPath() . '/css/');
         
-        $journal = $request->getContext();
-        if (!$journal) return false;
+        $context = $request->getContext();
+        if (!$context) return false;
 
         // Get limit settings?
         //$displayItems = $this->_parentPlugin->getSetting($journal->getId(), 'displayItems');
 
         $publicationsGeodata = [];
         $publications = Services::get('publication')->getMany([
-            'contextId' => $journal->getId(),
+            'contextIds' => $context->getId(),
             'status' => STATUS_PUBLISHED, // FIXME
             'count' => 9999, // large upper limit - make configurable?
         ]);
 
         $userGroupDao = DAORegistry::getDAO('UserGroupDAO');
-		$userGroups = $userGroupDao->getByContextId($journal->getId())->toArray();	
+		$userGroups = $userGroupDao->getByContextId($context->getId())->toArray();	
 
         foreach ($publications as $publication) {
             $id = $publication->getData('id');
@@ -71,7 +71,7 @@ class JournalMapHandler extends Handler
 
         $templateMgr->assign(array(
             'publications' => json_encode($publicationsGeodata),
-            'context' => $journal->getLocalizedName(),
+            'context' => $context->getLocalizedName(),
         ));
 
         return $templateMgr->display($plugin->getTemplateResource('frontend/pages/journal_map.tpl'));
