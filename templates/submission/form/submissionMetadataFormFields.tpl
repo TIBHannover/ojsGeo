@@ -14,6 +14,10 @@
 <div style="clear:both;">
     {fbvFormArea id="tagitFields"
     title="plugins.generic.optimetaGeo.article.metadata.long"}
+
+    <input type="text" id="optimetageo_coverageDisabledHover" name="coverageDisabledHover"
+        style="height: 0px; width: 0px; visibility: hidden;"
+        value="{translate key="plugins.generic.optimetaGeo.submission.coverageDisabledHover"}">
     
     {*temporal*}
     {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal" for="period" inline=true}
@@ -50,10 +54,10 @@
     <input type="text" id="administrativeUnit" name="administrativeUnit" size="30" style="visibility: hidden;">
     <input type="text" id="administrativeUnitFromDb" name="administrativeUnitFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnitFromDb}' />
-    <input type="text" id="optimeta_usernameGeonames" name="usernameGeonames"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$usernameGeonames}' />
-    <input type="text" id="optimeta_baseurlGeonames" name="baseurlGeonames"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$baseurlGeonames}' />
+    <input type="text" id="optimetageo_usernameGeonames" name="usernameGeonames"
+        style="height: 0px; width: 0px; visibility: hidden;" value="{$usernameGeonames}" />
+    <input type="text" id="optimetageo_baseurlGeonames" name="baseurlGeonames"
+        style="height: 0px; width: 0px; visibility: hidden;" value="{$baseurlGeonames}" />
     {/fbvFormSection}
     {/fbvFormArea}
 </div>

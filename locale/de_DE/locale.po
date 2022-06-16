@@ -112,3 +112,6 @@ msgstr "Articles"
 
 msgid "plugins.generic.optimetaGeo.map.administrativeLayerName"
 msgstr "Administrative Areas"
+
+msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
+msgstr "This field has been disabled. Information will be filled automatically based on the geospatial information entered below."

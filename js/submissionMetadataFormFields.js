@@ -10,8 +10,8 @@
  */
 
 // Check if a corresponding username for the geonames API has been entered in the plugin settings, otherwise trigger an alert with corresponding information.
-var usernameGeonames = document.getElementById("optimeta_usernameGeonames").value;
-var baseurlGeonames =  document.getElementById("optimeta_baseurlGeonames").value;
+var usernameGeonames = document.getElementById("optimetageo_usernameGeonames").value;
+var baseurlGeonames = document.getElementById("optimetageo_baseurlGeonames").value;
 
 if (usernameGeonames === "") {
     alert("You have to enter a valid usernames for the Geonames API. Visit https://www.geonames.org/login, register and enter the username in the plug-in settings.");
@@ -182,8 +182,7 @@ function createInitialGeojson() {
  * Function enables tags for the administrative units.
  * source: https://github.com/aehlke/tag-it
  */
-$(document).ready(function () {
-
+ $(function () {
     $("#administrativeUnitInput").tagit({
         allowSpaces: true,
         readOnly: false
@@ -1137,33 +1136,6 @@ var geocoder = L.Control.geocoder({
     .addTo(map);
 
 
-
-// Functions that allow the specification of time and space
-/**
- * Function which changes hour system from 24 hours to 12 hours.
- * @param {*} hour
- */
-function changeHourSystemFrom24To12(hour) {
-    if (hour >= 12) {
-        hour = hour - 12;
-    }
-    return hour;
-}
-
-/**
- * Function which records am and pm for the corresponding times.
- * @param {*} amPm
- */
-function calculateAmPmFor24Time(amPm) {
-    if (1 <= amPm && amPm <= 12) {
-        amPm = 'AM';
-    }
-    else {
-        amPm = 'PM';
-    }
-    return amPm;
-}
-
 /**
  * Function to load the daterangepicker and store the date in the db.
  * Furthermore data from db is loaded and displayed if available.
@@ -1214,8 +1186,8 @@ $(function () {
 
     $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
         $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-        
-        var unixTimestampMillisecondStart =  Date.UTC(picker.startDate.year(), picker.startDate.month(), picker.startDate.date(), 0, 0, 0);
+
+        var unixTimestampMillisecondStart = Date.UTC(picker.startDate.year(), picker.startDate.month(), picker.startDate.date(), 0, 0, 0);
         var unixTimestampMillisecondEnd = Date.UTC(picker.endDate.year(), picker.endDate.month(), picker.endDate.date(), 23, 59, 59);
 
         var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
@@ -1244,3 +1216,13 @@ $(function () {
 
     });
 });
+
+$(function () {
+    // Disable the input field for Coverage Information, if it is present
+    let coverageInput = $('input[id^=coverage]');
+    if (coverageInput.length > 0) {
+        coverageInput.attr('disabled', 'disabled');
+        coverageInput.attr('title', document.getElementById("optimetageo_coverageDisabledHover").value);
+    }
+});
+
