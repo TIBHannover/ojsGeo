@@ -29,8 +29,8 @@ const optimetageo_adminLayerName = '{translate key="plugins.generic.optimetaGeo.
 
         {*temporal*}
         <p id="item temporal" class="description">
-            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"} <span id="start"  class="optimetageo_timestamp"></span>
-            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"} <span id="end" class="optimetageo_timestamp"></span>.&nbsp;<span class="fa fa-question-circle tooltip">
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"} <span id="optimetageo_start"  class="optimetageo_timestamp"></span>
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"} <span id="optimetageo_end" class="optimetageo_timestamp"></span>.&nbsp;<span class="fa fa-question-circle tooltip">
                 <span class="tooltiptext">{translate
                 key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"}</span>
             </span>

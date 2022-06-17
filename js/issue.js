@@ -145,7 +145,7 @@ $(function () {
 
 /*
 $(function () {
-    // load temporal properties from article_details.tpl 
+    // load time periods from article_details.tpl 
     var temporalPropertiesDecoded = document.getElementById("optimeta_temporal").value;
 
 });

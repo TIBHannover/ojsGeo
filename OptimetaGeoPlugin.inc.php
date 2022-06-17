@@ -21,6 +21,7 @@ const MAP_URL_PATH = 'map';
 
 const DB_FIELD_TIMESTAMPS = 'optimetaGeo::temporalProperties';
 const DB_FIELD_SPATIAL = 'optimetaGeo::spatialProperties';
+const DB_FIELD_TIME_PERIODS = 'optimetaGeo::timePeriods';
 const DB_FIELD_ADMINUNIT = 'optimetaGeo::administrativeUnit';
 
 class OptimetaGeoPlugin extends GenericPlugin
@@ -71,7 +72,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			// Hooks for changing the issue page 
 			HookRegistry::register('Templates::Issue::TOC::Main', array(&$this, 'extendIssueTocTemplate'));
 			HookRegistry::register('Templates::Issue::Issue::Article', array(&$this, 'extendIssueTocArticleTemplate'));
-			
+
 			// Hook for adding a tab to the publication phase
 			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendPublicationTab'));
 
@@ -476,6 +477,16 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}';
 		$schema->properties->{DB_FIELD_TIMESTAMPS} = json_decode($timestamp);
 
+		// save timestamp as text in ISO8601 time interval as described in RFC3339 appendix, https://datatracker.ietf.org/doc/html/rfc3339#appendix-A, see also https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+		$timePeriods = '{
+			"type": "string",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		}';
+		$schema->properties->{DB_FIELD_TIME_PERIODS} = json_decode($timePeriods);
 
 		$spatialProperties = '{
 			"type": "string",
@@ -514,6 +525,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$temporalProperties = $_POST['temporalProperties'];
 		$spatialProperties = $_POST['spatialProperties'];
 		$administrativeUnit = $_POST['administrativeUnit'];
+		$timePeriods = $_POST['timePeriods'];
 
 		// null if there is no possibility to input data (metadata input before Schedule for Publication)
 		if ($spatialProperties !== null) {
@@ -524,6 +536,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$newPublication->setData(DB_FIELD_TIMESTAMPS, $temporalProperties);
 		}
 
+		if ($timePeriods !== null && $timePeriods !== "") {
+			$newPublication->setData(DB_FIELD_TIME_PERIODS, $timePeriods);
 		}
 
 		if ($administrativeUnit !== null) {

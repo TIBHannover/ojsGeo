@@ -181,6 +181,7 @@ function createInitialGeojson() {
 /**
  * Function enables tags for the administrative units.
  * source: https://github.com/aehlke/tag-it
+ * tag-it.js is available with the default theme plugin
  */
  $(function () {
     $("#administrativeUnitInput").tagit({
@@ -294,7 +295,7 @@ $("#administrativeUnitInput").tagit({
                     'name': administrativeUnitRawAuthorInput.geonames[0].asciiName,
                     'geonameId': administrativeUnitRawAuthorInput.geonames[0].geonameId,
                     'provenance': {
-                        'description': 'administrative unit created by user (acceppting the suggestion of the geonames API, which was created on basis of a textual input)',
+                        'description': 'Administrative unit created by user (accepting the suggestion of the Geonames API, which was created on basis of a textual input).',
                         'id': 21
                     }
                 }
@@ -363,7 +364,7 @@ $("#administrativeUnitInput").tagit({
                     'name': input,
                     'geonameId': 'not available',
                     'provenance': {
-                        'description': 'administrative unit created by user (textual input, without suggestion of the geonames API)',
+                        'description': 'Administrative unit created by user (textual input, without suggestion of the Geonames API).',
                         'id': 22
                     },
                     'administrativeUnitSuborder': 'not available',
@@ -466,16 +467,18 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
 
     // creation of the corresponding leaflet layer
     if (bboxAdministrativeUnitLowestCommonDenominator !== undefined) {
+        // TODO handle crossing dateline
+
         var layer = L.polygon([
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
             [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.east],
             [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.east],
+            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
+            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
         ]);
 
         layer.setStyle({
             color: 'black',
-            fillOpacity: 0.5
+            fillOpacity: 0.15
         })
 
         // to ensure that only the lowest layer is displayed, the previous layers are deleted
@@ -595,7 +598,6 @@ if (administrativeUnitFromDbDecoded !== 'no data') {
 
     // A corresponding tag is created for each entry in the database.
     for (var i = 0; i < administrativeUnitFromDb.length; i++) {
-
         $("#administrativeUnitInput").tagit("createTag", administrativeUnitFromDb[i].name);
     }
 }
@@ -717,7 +719,7 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
     }
 
     /*
-    if there is a geojson object with features, the unix date range is stored in the geojson,
+    if there is a geojson object with features, the time periods are stored in the geojson,
     if it is available either from the current edit or from the database.
     */
     var temporalProperties = document.getElementById("temporalProperties").value;
@@ -1043,10 +1045,16 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
             geojson.administrativeUnits = administrativeUnitForAllFeatures;
             document.getElementById("spatialProperties").value = JSON.stringify(geojson);
 
+            let names = [];
+
             for (var i = 0; i < administrativeUnitForAllFeatures.length; i++) {
                 // create for each administrativeUnit a tag
                 $("#administrativeUnitInput").tagit("createTag", administrativeUnitForAllFeatures[i].name);
+                names.push(administrativeUnitForAllFeatures[i].name);
             }
+
+            // update the disabled coverage field
+            $('input[id^=coverage]').val(names.join(', '));
         }
     }
     else {
