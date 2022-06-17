@@ -72,4 +72,4 @@
 </style>
 
 {*main js script, needs to be loaded last*}
-<script src="{$optimetageo_submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>
+<script src="{$optimetageo_submissionMetadataFormFieldsJS}" type="text/javascript"></script>
