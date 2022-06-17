@@ -1,9 +1,9 @@
 /**
  * @file plugins/generic/optimetaGeo/css/optimetaCitations.css
  *
- * Copyright (c) 2021+ WWU Münster
- * Copyright (c) 2021+ Daniel Nüst
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Copyright (c) 2021-2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *
  * @style optimetaGeo
  * @ingroup plugins_generic_optimetageo
@@ -66,4 +66,19 @@
 	border-width: 5px;
 	border-style: solid;
 	border-color: transparent transparent black transparent;
+}
+
+.optimetageo_issue_maplink {
+	text-decoration: none;
+}
+
+.optimetageo_journal_maplink {
+	text-decoration: none;
+}
+
+.optimetageo_title_hover {
+	border-left: 5px solid red;
+	padding-left: 5px;
+	margin-left: -10px;
+	background-color: rgba(255, 0, 0, 0.15);
 }

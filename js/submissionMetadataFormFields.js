@@ -1,11 +1,17 @@
 /**
- * Script submissionMetadataFormFields.js which gets called in the plugin PHP file.
- * Is used to enable input of geospatial metadata during article submission.
+ * 
+ * js/submissionMetadataFormFields.js
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ * 
+ * @brief Enable input of geospatial metadata during article submission.
  */
 
 // Check if a corresponding username for the geonames API has been entered in the plugin settings, otherwise trigger an alert with corresponding information.
-var usernameGeonames = document.getElementById("optimeta_usernameGeonames").value;
-var baseurlGeonames =  document.getElementById("optimeta_baseurlGeonames").value;
+var usernameGeonames = document.getElementById("optimetageo_usernameGeonames").value;
+var baseurlGeonames = document.getElementById("optimetageo_baseurlGeonames").value;
 
 if (usernameGeonames === "") {
     alert("You have to enter a valid usernames for the Geonames API. Visit https://www.geonames.org/login, register and enter the username in the plug-in settings.");
@@ -175,9 +181,9 @@ function createInitialGeojson() {
 /**
  * Function enables tags for the administrative units.
  * source: https://github.com/aehlke/tag-it
+ * tag-it.js is available with the default theme plugin
  */
-$(document).ready(function () {
-
+ $(function () {
     $("#administrativeUnitInput").tagit({
         allowSpaces: true,
         readOnly: false
@@ -289,7 +295,7 @@ $("#administrativeUnitInput").tagit({
                     'name': administrativeUnitRawAuthorInput.geonames[0].asciiName,
                     'geonameId': administrativeUnitRawAuthorInput.geonames[0].geonameId,
                     'provenance': {
-                        'description': 'administrative unit created by user (acceppting the suggestion of the geonames API, which was created on basis of a textual input)',
+                        'description': 'Administrative unit created by user (accepting the suggestion of the Geonames API, which was created on basis of a textual input).',
                         'id': 21
                     }
                 }
@@ -358,7 +364,7 @@ $("#administrativeUnitInput").tagit({
                     'name': input,
                     'geonameId': 'not available',
                     'provenance': {
-                        'description': 'administrative unit created by user (textual input, without suggestion of the geonames API)',
+                        'description': 'Administrative unit created by user (textual input, without suggestion of the Geonames API).',
                         'id': 22
                     },
                     'administrativeUnitSuborder': 'not available',
@@ -461,16 +467,18 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
 
     // creation of the corresponding leaflet layer
     if (bboxAdministrativeUnitLowestCommonDenominator !== undefined) {
+        // TODO handle crossing dateline
+
         var layer = L.polygon([
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
             [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.east],
             [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.east],
+            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
+            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
         ]);
 
         layer.setStyle({
             color: 'black',
-            fillOpacity: 0.5
+            fillOpacity: 0.15
         })
 
         // to ensure that only the lowest layer is displayed, the previous layers are deleted
@@ -590,7 +598,6 @@ if (administrativeUnitFromDbDecoded !== 'no data') {
 
     // A corresponding tag is created for each entry in the database.
     for (var i = 0; i < administrativeUnitFromDb.length; i++) {
-
         $("#administrativeUnitInput").tagit("createTag", administrativeUnitFromDb[i].name);
     }
 }
@@ -712,7 +719,7 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
     }
 
     /*
-    if there is a geojson object with features, the unix date range is stored in the geojson,
+    if there is a geojson object with features, the time periods are stored in the geojson,
     if it is available either from the current edit or from the database.
     */
     var temporalProperties = document.getElementById("temporalProperties").value;
@@ -1038,10 +1045,16 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
             geojson.administrativeUnits = administrativeUnitForAllFeatures;
             document.getElementById("spatialProperties").value = JSON.stringify(geojson);
 
+            let names = [];
+
             for (var i = 0; i < administrativeUnitForAllFeatures.length; i++) {
                 // create for each administrativeUnit a tag
                 $("#administrativeUnitInput").tagit("createTag", administrativeUnitForAllFeatures[i].name);
+                names.push(administrativeUnitForAllFeatures[i].name);
             }
+
+            // update the disabled coverage field
+            $('input[id^=coverage]').val(names.join(', '));
         }
     }
     else {
@@ -1131,33 +1144,6 @@ var geocoder = L.Control.geocoder({
     .addTo(map);
 
 
-
-// Functions that allow the specification of time and space
-/**
- * Function which changes hour system from 24 hours to 12 hours.
- * @param {*} hour
- */
-function changeHourSystemFrom24To12(hour) {
-    if (hour >= 12) {
-        hour = hour - 12;
-    }
-    return hour;
-}
-
-/**
- * Function which records am and pm for the corresponding times.
- * @param {*} amPm
- */
-function calculateAmPmFor24Time(amPm) {
-    if (1 <= amPm && amPm <= 12) {
-        amPm = 'AM';
-    }
-    else {
-        amPm = 'PM';
-    }
-    return amPm;
-}
-
 /**
  * Function to load the daterangepicker and store the date in the db.
  * Furthermore data from db is loaded and displayed if available.
@@ -1208,8 +1194,8 @@ $(function () {
 
     $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
         $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-        
-        var unixTimestampMillisecondStart =  Date.UTC(picker.startDate.year(), picker.startDate.month(), picker.startDate.date(), 0, 0, 0);
+
+        var unixTimestampMillisecondStart = Date.UTC(picker.startDate.year(), picker.startDate.month(), picker.startDate.date(), 0, 0, 0);
         var unixTimestampMillisecondEnd = Date.UTC(picker.endDate.year(), picker.endDate.month(), picker.endDate.date(), 23, 59, 59);
 
         var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
@@ -1238,3 +1224,13 @@ $(function () {
 
     });
 });
+
+$(function () {
+    // Disable the input field for Coverage Information, if it is present
+    let coverageInput = $('input[id^=coverage]');
+    if (coverageInput.length > 0) {
+        coverageInput.attr('disabled', 'disabled');
+        coverageInput.attr('title', document.getElementById("optimetageo_coverageDisabledHover").value);
+    }
+});
+
