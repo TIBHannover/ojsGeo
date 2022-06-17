@@ -126,7 +126,7 @@ $(function () {
     /*
     administrative unit
     The administrative unit is requested from the OJS database. 
-    The available elements are displayed. If there is a corresponding bbox available, the bbox for the lowest level is displayed in the map. 
+    The available elements are displayed. If there is a corresponding bbox available, the bbox for the lowest level is displayed in the map
     */
     if (administrativeUnitDecoded === "no data") {
         document.getElementById("item administrativeUnit").remove();
@@ -144,29 +144,6 @@ $(function () {
 
         var spatialPropertiesEncoded = JSON.parse(spatialPropertiesDecoded);
         displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesEncoded);
-
-        /*
-        store administrative unit standarized in metadata of the article html head  
-        */ 
-
-        // store lowest administrative unit in metadata in the head of the html (https://dohmaindesigns.com/adding-geo-meta-tags-to-your-website/)
-        $('head').append('<meta name="geo.placename" content="' + administrativeUnitsNameList[administrativeUnitsNameList.length - 1] + '">');
-
-        var lowestAdministrativeUnit; 
-        for (var i = 0; i < administrativeUnitEncoded.length; i++) {
-            if (administrativeUnitEncoded[i].bbox !== 'not available') {
-                lowestAdministrativeUnit = {
-                    'name' : administrativeUnitEncoded[i].name,
-                    'bbox' : administrativeUnitEncoded[i].bbox
-                }
-            }
-        }
-
-        // DCMI Box Encoding Scheme - https://www.dublincore.org/specifications/dublin-core/dcmi-box/2005-07-25/
-        $('head').append('<meta name="DC.box" content=' +  '"name=' + lowestAdministrativeUnit.name + '; northlimit=' + lowestAdministrativeUnit.bbox.north + '; southlimit=' + lowestAdministrativeUnit.bbox.south + '; westlimit=' + lowestAdministrativeUnit.bbox.west + '; eastlimit=' + lowestAdministrativeUnit.bbox.east + '; projection=EPSG3857"/>');
-
-        // ISO 19139 - https://boundingbox.klokantech.com/
-        $('head').append('<meta name="ISO 19139" content="<gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>' + lowestAdministrativeUnit.bbox.west + '</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>' + lowestAdministrativeUnit.bbox.east + '</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>'+ lowestAdministrativeUnit.bbox.south + '</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>' + lowestAdministrativeUnit.bbox.north + '</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox>"/>');    
     }
 });
 
@@ -185,10 +162,8 @@ $(function () {
         var isoStart = (new Date(temporalProperties[0])).toISOString().split('T')[0];
         var isoEnd = (new Date(temporalProperties[1])).toISOString().split('T')[0];
 
-        document.getElementById("start").innerHTML = isoStart;
-        document.getElementById("end").innerHTML = isoEnd;
-        // ISO 8601 - https://www.iso.org/iso-8601-date-and-time-format.html 
-        $('head').append('<meta name="ISO 8601" content="' + isoStart + '/' + isoEnd + '">');    
+        document.getElementById("optimetageo_start").innerHTML = isoStart;
+        document.getElementById("optimetageo_end").innerHTML = isoEnd;
     }
 });
 

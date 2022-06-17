@@ -51,6 +51,7 @@ $(function () {
         let articleTitle = publication['title'];
         let articleAuthors = publication['authors'];
         let articleIssue = publication['issue'];
+        let articleCoverage = publication['coverage'];
         // popup content roughly based on issue_details.tpl
         const popupTemplate = `<h2 class="title">
             <a id="article-${articleId}" class="optimetageo_journal_maplink" href="${optimetageo_articleBaseUrl}/${articleId}">${articleTitle}</a>
@@ -61,6 +62,9 @@ $(function () {
             </div>
             <div class="authors">
                 ${articleIssue}
+            </div>
+            <div class="authors">
+                ${articleCoverage}
             </div>`
 
         let layer = L.geoJSON(spatialParsed, {

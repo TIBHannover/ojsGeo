@@ -36,6 +36,7 @@
 				{$article->getAuthorString()|escape}
 			</div>
 		{/if}
+		<p class="metadata">{$article->getCoverage($journal->getPrimaryLocale())|escape}</p>
 	'>
 
 {/if} {* defaultthemeplugin *}
@@ -53,6 +54,7 @@
 		{if $showAuthor}
 			<p class="metadata">{$article->getAuthorString()|escape}</p>
 		{/if}
+		<p class="metadata">{$article->getCoverage($journal->getPrimaryLocale())|escape}</p>
 	'>
 
 {/if} {* pragmathemeplugin *}

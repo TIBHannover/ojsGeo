@@ -19,6 +19,7 @@ class JournalMapHandler extends Handler
     public function index($args, $request)
     {
         $plugin = PluginRegistry::getPlugin('generic', 'optimetageoplugin');
+
         $templateMgr = TemplateManager::getManager($request);
 
         $templateMgr->assign('optimetagep_journalJS', $request->getBaseUrl() . '/' . $plugin->getPluginPath() . '/js/journal.js');
@@ -57,8 +58,8 @@ class JournalMapHandler extends Handler
             $publicationsGeodata[$id] = [
                 'id' => $publication->getData('id'),
                 'title' => strip_tags($publication->getLocalizedData('title')),
-                'spatial' => $publication->getData('optimetaGeo::spatialProperties'),
-                'temporal' => $publication->getData('optimetaGeo::temporalProperties'),
+                'spatial' => $publication->getData($plugin->dbFields['spatial']),
+                'temporal' => $publication->getData($plugin->dbFields['temporal']),
                 'coverage' => $publication->getLocalizedData('coverage', 'en_US'),
                 'abstract' => strip_tags($publication->getLocalizedData('abstract')),
                 'authors' => $publication->getAuthorString($userGroups),
