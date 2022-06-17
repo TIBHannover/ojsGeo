@@ -17,7 +17,7 @@ const optimetageo_mapLayerStyle = {
     weight: 5,
     color: '#1E6292',
     dashArray: '',
-    fillOpacity: 0.7
+    fillOpacity: 0.6
 };
 
 const optimetageo_layerName = '{translate key="plugins.generic.optimetaGeo.map.articleLayerName"}';
