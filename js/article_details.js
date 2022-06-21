@@ -9,15 +9,6 @@
  * @brief Display spatio-temporal metadata in the article view.
  */
 
-// load spatial properties from article_details.tpl 
-var spatialPropertiesDecoded = document.getElementById("optimeta_spatial").value;
-
-// load temporal properties from article_details.tpl 
-var temporalPropertiesDecoded = document.getElementById("optimeta_temporal").value;
-
-// load temporal properties from article_details.tpl 
-var administrativeUnitDecoded = document.getElementById("optimeta_administrativeUnit").value;
-
 // create map 
 var map = L.map('mapdiv');
 
@@ -71,29 +62,39 @@ var geocoder = L.Control.geocoder({
     })
     .addTo(map);
 
-/*
-If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
-and no geospatial metadata are displayed also the download of the geojson is not provided, because there is no data for the geojson. 
-Otherwise, the display of the elements is initiated. 
-*/
-if (spatialPropertiesDecoded === "no data" && temporalPropertiesDecoded === "no data" && administrativeUnitDecoded === "no data") {
-    document.getElementById("item geospatialmetadata").remove();
-}
 
 $(function () {
+    // load spatial properties from article_details.tpl 
+    var spatialProperties = document.getElementById("optimeta_spatial").value;
+
+    // load temporal properties from article_details.tpl 
+    var temporalProperties = document.getElementById("optimeta_temporal").value;
+
+    // load temporal properties from article_details.tpl 
+    var administrativeUnit = document.getElementById("optimeta_administrativeUnit").value;
+
+    /*
+    If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
+    and no geospatial metadata are displayed also the download of the geojson is not provided, because there is no data for the geojson. 
+    Otherwise, the display of the elements is initiated. 
+    */
+    if (spatialProperties === "no data" && temporalProperties === "no data" && administrativeUnit === "no data") {
+        document.getElementById("item geospatialmetadata").remove();
+    }
+
     /*
     spatial properties
     If no spatial properties are available, the corresponding elements in the article_details.tpl are deleted 
     and no spatial metadata are displayed. Otherwise the map is created and the spatial properties are displayed. 
     */
-    if (spatialPropertiesDecoded === "no data") {
+    if (spatialProperties === "no data") {
         document.getElementById("item spatial").remove();
         document.getElementById("item geospatialmetadatadownload").remove();
     }
     else {
-        var spatialProperties = JSON.parse(spatialPropertiesDecoded);
+        let spatialPropertiesParsed = JSON.parse(spatialProperties);
 
-        if (spatialProperties.features.length === 0) {
+        if (spatialPropertiesParsed.features.length === 0) {
             document.getElementById("item spatial").remove();
         }
         else {
@@ -101,38 +102,36 @@ $(function () {
             Depending on the object type, the geoJSON object is structured slightly differently, 
             so that the coordinates are at different locations and must be queried differently. 
             */
-            if (spatialProperties.features[0].geometry.type === 'Polygon') {
-                lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0][0];
-                latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0][1];
+            if (spatialPropertiesParsed.features[0].geometry.type === 'Polygon') {
+                lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0][0];
+                latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0][1];
             }
-            else if (spatialProperties.features[0].geometry.type === 'LineString') {
-                lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][0];
-                latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0][1];
+            else if (spatialPropertiesParsed.features[0].geometry.type === 'LineString') {
+                lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0];
+                latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][1];
             }
-            else if (spatialProperties.features[0].geometry.type === 'Point') {
-                lngFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[0];
-                latFirstCoordinateGeojson = spatialProperties.features[0].geometry.coordinates[1];
+            else if (spatialPropertiesParsed.features[0].geometry.type === 'Point') {
+                lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0];
+                latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[1];
             }
 
-            let layer = L.geoJSON(spatialProperties);
+            let layer = L.geoJSON(spatialPropertiesParsed);
             layer.setStyle(optimetageo_mapLayerStyle);
             drawnItems.addLayer(layer);
             map.fitBounds(drawnItems.getBounds());
         }
     }
-});
 
-$(function () {
     /*
     administrative unit
     The administrative unit is requested from the OJS database. 
     The available elements are displayed. If there is a corresponding bbox available, the bbox for the lowest level is displayed in the map
     */
-    if (administrativeUnitDecoded === "no data") {
+    if (administrativeUnit === "no data") {
         document.getElementById("item administrativeUnit").remove();
     }
     else {
-        var administrativeUnitEncoded = JSON.parse(administrativeUnitDecoded);
+        var administrativeUnitEncoded = JSON.parse(administrativeUnit);
 
         var administrativeUnitsNameList = [];
 
@@ -142,28 +141,24 @@ $(function () {
 
         document.getElementById("administrativeUnit").innerHTML = administrativeUnitsNameList.join(', ');
 
-        var spatialPropertiesEncoded = JSON.parse(spatialPropertiesDecoded);
-        displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesEncoded);
+        let spatialPropertiesParsed = JSON.parse(spatialProperties);
+        displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesParsed);
     }
-});
 
-$(function () {
     /*
     temporal properties
     If no temporal properties are available, the corresponding elements in the article_details.tpl are deleted 
     and no temporal metadata are displayed. Otherwise the map is created and the temporal properties are displayed. 
     */
-    if (temporalPropertiesDecoded === "no data") {
+    if (temporalProperties === "no data") {
         document.getElementById("item temporal").remove();
     }
     else {
-        // display temporal properties in utc
-        var temporalProperties = JSON.parse(temporalPropertiesDecoded);
-        var isoStart = (new Date(temporalProperties[0])).toISOString().split('T')[0];
-        var isoEnd = (new Date(temporalProperties[1])).toISOString().split('T')[0];
+        let startFromDb = temporalProperties.split('{')[1].split('..')[0];
+        let endFromDb = temporalProperties.split('{')[1].split('..')[1].split('}')[0];
 
-        document.getElementById("optimetageo_start").innerHTML = isoStart;
-        document.getElementById("optimetageo_end").innerHTML = isoEnd;
+        document.getElementById("optimetageo_start").innerHTML = startFromDb;
+        document.getElementById("optimetageo_end").innerHTML = endFromDb;
     }
 });
 
@@ -229,8 +224,7 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
  * If pressed, the geojson with the geospatial metadata gets downloaded, as long the geojson is available. 
  */
 function downloadGeospatialMetadataAsGeoJSON() {
-    var spatialProperties = JSON.parse(spatialPropertiesDecoded);
-    downloadObjectAsJson(spatialProperties, "geospatialMetadata");
+    downloadObjectAsJson(JSON.parse(spatialProperties), "geospatialMetadata");
 }
 
 /**
