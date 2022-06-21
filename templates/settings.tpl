@@ -1,11 +1,11 @@
 {*template settings for the geo plugin.'*}
 <script>
     $(function() {ldelim}
-    $('#tutorialExampleSettings').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
+    $('#optimetaGeoSettings').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
     {rdelim});
 </script>
 
-<form class="pkp_form" id="tutorialExampleSettings" method="POST"
+<form class="pkp_form" id="optimetaGeoSettings" method="POST"
     action="{url router=$smarty.const.ROUTE_COMPONENT op="manage" category="generic" plugin=$pluginName verb="settings" save=true}">
     <!-- Always add the csrf token to secure your form -->
     {csrf}

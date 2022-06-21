@@ -52,6 +52,24 @@ By participating in this project you agree to abide by its terms.
 
 - accuracy +/- 2 m (via https://twitter.com/nyalldawson/status/1393050257554956289?s=09) is sufficient for discovery
 
+# Testing
+
+Relies on Cypress configuration in the respective main PKP application, e.g., OJS.
+See the configuration file there, e.g., <https://github.com/pkp/ojs/blob/main/cypress.json>.
+That is why you cannot just run `cypress` in this project directly.
+Instead, you can use [`act`](https://github.com/nektos/act) to run the tests as if they were running as a GitHub action.
+
+```bash
+# curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash 
+# https://lindevs.com/install-act-on-ubuntu/
+
+# list actions
+act -l
+
+# use 'medium' image when asked, and override used image - see https://github.com/shivammathur/setup-php#local-testing-setup
+act -P ubuntu-latest=shivammathur/node:latest
+```
+
 # License
 
 This project is published under GNU General Public License, Version 3.
