@@ -1,5 +1,5 @@
 /**
- * @file cypress/tests/integration/html_head.spec.js
+ * @file cypress/tests/integration/html_head.cy.js
  *
  * Copyright (c) 2022 OPTIMETA project
  * Copyright (c) 2022 Daniel Nüst

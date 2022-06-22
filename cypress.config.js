@@ -18,5 +18,16 @@ module.exports = defineConfig({
     DBUSERNAME: process.env.OJS_DB_USER,
     DBPASSWORD: process.env.OJS_DB_PASSWORD,
     DBHOST: process.env.OJS_DB_HOST,
+    "contextTitles": {
+      "en_US": "Journal of Geolocations",
+    },
+    "contextDescriptions": {
+      "en_US": "The Journal of Geolocations is a very spatial journal.",
+    },
+    "contextAcronyms": {
+      "en_US": "JGL"
+    },
+    "defaultGenre": "Article Text",
+    "contextPath": "geolocation",
   },
 });

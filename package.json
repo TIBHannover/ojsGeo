@@ -8,6 +8,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@foreachbe/cypress-tinymce": "^1.0.0",
     "cypress": "^10.2.0",
     "cypress-failed-log": "^2.9.5",
     "cypress-file-upload": "^5.0.8",

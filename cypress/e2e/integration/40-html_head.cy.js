@@ -1,5 +1,5 @@
 /**
- * @file cypress/tests/integration/html_head.spec.js
+ * @file cypress/tests/integration/html_head.cy.js
  *
  * Copyright (c) 2022 OPTIMETA project
  * Copyright (c) 2022 Daniel Nüst
@@ -8,10 +8,10 @@
  */
 
 describe('OPTIMETA Geoplugin HTML geospatial head metadata', function () {
-
+  
   it('has DC.Coverage with correct text string', function () {
     // TODO visit article page
-    cy.request('http://localhost:8080/').as('response').then((resp) => {
+    cy.request('http://localhost:8/').as('response').then((resp) => {
       expect(resp.status).to.eq(200);
 
       // TODO

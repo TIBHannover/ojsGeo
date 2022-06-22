@@ -65,7 +65,7 @@ jobs:
           chmod -R 777 .
           docker-compose --file cypress/docker-compose-${{ matrix.dbs }}.yml up -d
 
-      #- name: Run Cypress in container
+      #- name: Run Cypress in container, see https://github.com/cypress-io/cypress-example-docker-compose/blob/master/docker-compose.yml and 
       #  run: |
       #    docker run -v $PWD:/optimetaGeo  -w /optimetaGeo --entrypoint=cypress --network="cypress_inside" --name cypress-docker cypress/included:10.2.0 run
       - name: Run Cypress
@@ -82,13 +82,13 @@ jobs:
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
         with:
-          name: screenshots ${{ matrix.pkp-application }} $${{ matrix.php-versions }} $${{ matrix.dbs }}
+          name: screenshots ${{ matrix.pkp-application }} ${{ matrix.php-versions }} ${{ matrix.dbs }}
           path: |
             ${{ github.workspace }}/cypress/screenshots
 
       - name: Upload videos
         uses: actions/upload-artifact@v2
         with:
-          name: screenshots ${{ matrix.pkp-application }} $${{ matrix.php-versions }} $${{ matrix.dbs }}
+          name: screenshots ${{ matrix.pkp-application }} ${{ matrix.php-versions }} ${{ matrix.dbs }}
           path: |
             ${{ github.workspace }}/cypress/videos

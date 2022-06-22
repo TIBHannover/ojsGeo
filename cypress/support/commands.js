@@ -52,6 +52,32 @@ Cypress.Commands.add('install', function () {
     cy.get('p:contains("has completed successfully.")');
 });
 
+// from https://github.com/pkp/ojs/blob/stable-3_3_0/cypress/tests/data/20-CreateContext.spec.js
+Cypress.Commands.add('createContext', () => {
+    cy.login('admin', 'admin');
+
+    // Create a new context
+    cy.get('div[id=contextGridContainer]').find('a').contains('Create').click();
+
+    // Fill in various details
+    cy.wait(1000); // https://github.com/tinymce/tinymce/issues/4355
+    
+    cy.get('input[name="name-en_US"]').type(Cypress.env('contextTitles')['en_US'], {delay: 0});
+    cy.get('input[name=acronym-en_US]').type(Cypress.env('contextAcronyms')['en_US'], {delay: 0});
+    cy.get('span').contains('Enable this journal').siblings('input').check();
+    cy.get('input[name="supportedLocales"][value="en_US').check();
+    cy.get('input[name="primaryLocale"][value="en_US').check();
+
+    cy.get('input[name=urlPath]').clear().type(Cypress.env('contextPath'), {delay: 0});
+
+    // Context descriptions
+    cy.setTinyMceContent('context-description-control-en_US', Cypress.env('contextDescriptions')['en_US']);
+    cy.get('button').contains('Save').click();
+
+    // Wait for it to finish up before moving on
+    cy.contains('Settings Wizard', {timeout: 30000});
+});
+
 Cypress.Commands.add('login', (username, password, context) => {
     context = context || 'index';
     password = password || (username + username);
@@ -89,7 +115,7 @@ Cypress.Commands.add('register', data => {
     cy.get('button').contains('Register').click();
 });
 
-Cypress.Commands.add('createSubmission', (data, context) => {
+Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     // Initialize some data defaults before starting
     if (data.type == 'editedVolume' && !('files' in data)) {
         data.files = [];
@@ -283,6 +309,13 @@ Cypress.Commands.add('createSubmission', (data, context) => {
 
         cy.get('div[id^="component-grid-users-chapter-chaptergrid-"] a.pkp_linkaction_editChapter:contains("' + Cypress.$.escapeSelector(chapter.title) + '")');
     });
+
+    // geospatial metadata
+    // TODO use information handed over within data object to create time period
+
+    // TODO use information handed over within data object to create geospatial properties
+
+
     cy.waitJQuery();
     cy.get('form[id=submitStep3Form]').find('button').contains('Save and continue').click();
 
@@ -292,6 +325,11 @@ Cypress.Commands.add('createSubmission', (data, context) => {
     cy.get('button.pkpModalConfirmButton').click();
     cy.waitJQuery();
     cy.get('h2:contains("Submission complete")');
+
+    // === Jump through review and publication  ===
+    cy.logout();
+    cy.login('admin');
+
 });
 
 Cypress.Commands.add('findSubmissionAsEditor', (username, password, familyName, context) => {

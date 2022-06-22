@@ -1,5 +1,5 @@
 /**
- * @file cypress/tests/integration/configuration.spec.js
+ * @file cypress/tests/integration/configuration.cy.js
  *
  * Copyright (c) 2022 OPTIMETA project
  * Copyright (c) 2022 Daniel Nüst
@@ -10,7 +10,7 @@
 describe('OPTIMETA Geoplugin tests', function () {
 
   it('Disable Geoplugin', function () {
-    cy.login('admin', 'admin', 'publicknowledge');
+    cy.login('admin', 'admin', Cypress.env('contextPath'));
     cy.get('nav[class="app__nav"] a:contains("Website")').click();
     cy.get('button[id="plugins-button"]').click();
     // disable plugin if enabled
@@ -25,31 +25,22 @@ describe('OPTIMETA Geoplugin tests', function () {
   });
 
   it('Enable Geoplugin', function () {
-    cy.login('admin', 'admin', 'publicknowledge');
+    cy.login('admin', 'admin', Cypress.env('contextPath'));
     cy.get('nav[class="app__nav"] a:contains("Website")').click();
     cy.get('button[id="plugins-button"]').click();
     // Find and enable the plugin
     cy.get('input[id^="select-cell-optimetageoplugin-enabled"]').click();
     cy.get('div:contains(\'The plugin "OPTIMETA Geo Plugin" has been enabled.\')');
-    cy.waitJQuery();
-
-    // submit settings form
-    cy.get('form[id="optimetaGeoSettings"] button[id^="submitFormButton"]').click();
-    cy.waitJQuery();
-
-    // go to journal index
-    cy.get('a[class="app__contextTitle"]').click();
-    cy.get('div[class*="page_index_journal"]:contains("Times & locations")');
   });
 
   it('Configure Geoplugin - Geonames', function () {
-    cy.login('admin', 'admin', 'publicknowledge');
+    cy.login('admin', 'admin', Cypress.env('contextPath'));
     cy.get('nav[class="app__nav"] a:contains("Website")').click();
     cy.get('button[id="plugins-button"]').click();
 
     // Open the settings form
     cy.get('tr[id="component-grid-settings-plugins-settingsplugingrid-category-generic-row-optimetageoplugin"] a[class="show_extras"]').click();
-    cy.get('a[id^="component-grid-settings-plugins-settingsplugingrid-category-category-generic-row-optimetageoplugin-settings-button"]').click();
+    cy.get('a[id^="component-grid-settings-plugins-settingsplugingrid-category-generic-row-optimetageoplugin-settings-button"]').click();
 
     // Fill out settings form
     cy.get('form[id="optimetaGeoSettings"] input[name="optimetaGeo_geonames_username"]')
@@ -60,15 +51,13 @@ describe('OPTIMETA Geoplugin tests', function () {
       .type('http://api.geonames.org');
 
     // submit settings form
-    cy.get('form[id="twitterSettings"] button[id^="submitFormButton"]').click();
+    cy.get('form[id="optimetaGeoSettings"] button[id^="submitFormButton"]').click();
     cy.waitJQuery();
-
-    // TODO go to submission page and draw on the map, check if both coverage fields change
   });
 
   it('Configure Geoplugin - Map colors', function () {
-    // TODO
-    
+    // TODO implement
+
     //cy.get('form[id="optimetaGeoSettings"] input[name="optimetaGeo_mapLayerStyle_color"]')
     //  .clear()
     //  .type('#00ff00');
@@ -78,6 +67,6 @@ describe('OPTIMETA Geoplugin tests', function () {
   });
 
   it('Configure Geoplugin - Download sidebar', function () {
-    // TODO
+    // TODO implement
   });
 });

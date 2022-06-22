@@ -17,7 +17,12 @@
  */
 
 describe('OPTIMETA Geoplugin Tests', function () {
+
   it('Installs the software', function () {
     cy.install();
-  })
+  });
+
+  it('Adds a journal', function () {
+    cy.createContext();
+  });
 });
