@@ -5,25 +5,23 @@
 # Copyright (c) 2022 Daniel Nüst
 # Distributed under the GNU GPL v3. For full terms see the file LICENSE.
 #
-# Based on https://github.com/RBoelter/twitterBlock/blob/stable-3_2_1/.github/workflows/twitter_ci_tests.yml
+# Based on https://github.com/o2r-project/ojs-erc-plugin/blob/master/.github/workflows/cypress_test.yml
 #
 name: OPTIMETA Geoplugin CI Test
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  full_ci:
-    name: ${{ matrix.pkp-application }}(BRANCH=${{ matrix.pkp-branch }} ;PHP=${{ matrix.php-versions }}; DB=${{ matrix.dbs }})
-    runs-on: ubuntu-latest
+  geoplugin:
+    name: ${{ matrix.pkp-application }} version ${{ matrix.pkp-version }} with ${{ matrix.dbs }}
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [
-            #'7.3',
-            "7.4",
-            #'8.0'
-          ]
+        # php-versions: ['7.3',"7.4",'8.0'] # relies on PHP version from OJS image
         dbs: [
             #'pgsql',
             "mysql",
@@ -31,124 +29,66 @@ jobs:
         pkp-application: ["ojs"]
         #'omp',
         #'ops'
-        pkp-branch: [
-            'stable-3_2_1',
-            "stable-3_3_0",
+        pkp-version: [
+            #"stable-3_2_1",
+            "3_3_0-11",
           ]
-    services:
-      mysql:
-        image: bitnami/mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: ojs-ci
-          MYSQL_PASSWORD: ojs-ci
-          MYSQL_DATABASE: ojs-ci
-          MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: ojs-ci
-          POSTGRES_PASSWORD: ojs-ci
-          POSTGRES_DB: ojs-ci
-        ports:
-          - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=5
     env:
-      CYPRESS_BASE_URL: http://127.0.0.1:8000
-      CYPRESS_DBTYPE: ${{ matrix.dbs  == 'pgsql' && 'PostgreSQL' || 'MySQLi' }}
-      CYPRESS_DBNAME: ojs-ci
-      CYPRESS_DBUSERNAME: ojs-ci
-      CYPRESS_DBPASSWORD: ojs-ci
-      CYPRESS_DBHOST: 127.0.0.1
-      CYPRESS_FILESDIR: files
+      OJS_VERSION: ${{ matrix.pkp-version }}
+    
     steps:
-      - name: Setup PHP, extensions and composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, pgsql, mysql, mysqli, pdo_mysql, mysqlnd
-        env:
-          update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/shivammathur/setup-php#composer-github-oauthenv:
-          runner: self-hosted # https://github.com/shivammathur/setup-php/issues/494
-
-      - name: Download PKP application
+      - name: Pre-pull images
         run: |
-          git clone -b ${{ matrix.pkp-branch }} https://github.com/pkp/${{ matrix.pkp-application }} ~/${{ matrix.pkp-application }}
-          cd ~/${{ matrix.pkp-application }}
-          git submodule update --init --recursive
+          docker pull pkpofficial/ojs:${{ matrix.pkp-version }}
+          docker pull mariadb:10.2
+          docker pull cypress/included:10.2.0
 
-      - name: Prepare tests
+      - name: Install docker-compose
         run: |
-          cd ~/${{ matrix.pkp-application }}
-          cp config.TEMPLATE.inc.php config.inc.php
-          sed -i -e "s/enable_cdn = On/enable_cdn = Off/" config.inc.php
-          mkdir --parents files
-          
-      - name: Extra dependencies for act (using 'medium' image) to run cypress
-        if: ${{ env.ACT }}
-        run: |
-          apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+          sudo apt-get -qq update
+          sudo apt-get -qq install docker-compose
 
-      - name: Install composer dependencies
-        run: |
-          cd ~/${{ matrix.pkp-application }}
-          lib/pkp/tools/travis/install-composer-dependencies.sh
-
-      # need to --force here to get old cypress version working, enable extensive logging with --loglevel verbose 
-      - name: Install with npm and build app
-        run: |
-          cd ~/${{ matrix.pkp-application }}
-          npm i g -npm && npm install --force && npm run build
-
-      - name: Checkout plugin
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Link plugin folder
+      - name: Install test dependencies
         run: |
-          cd ${{ github.workspace }}
-          ln -s ${{ github.workspace }} ~/${{ matrix.pkp-application }}/plugins/generic/optimetaGeo
+          npm install
 
       - name: Checkout theme plugin
         run: |
-          cd ${{ github.workspace }}
+          cd ${{ github.workspace }}/..
           git clone https://github.com/ifgi/optimetaGeoTheme
 
-      - name: Link theme plugin folder
+      - name: Start OJS and database
         run: |
-          cd ${{ github.workspace }}
-          ln -s ${{ github.workspace }}/optimetaGeoTheme ~/${{ matrix.pkp-application }}/plugins/themes/optimetaGeoTheme
+          chmod -R 777 .
+          docker-compose --file cypress/docker-compose-${{ matrix.dbs }}.yml up -d
 
-      - name: Run server
+      #- name: Run Cypress in container
+      #  run: |
+      #    docker run -v $PWD:/optimetaGeo  -w /optimetaGeo --entrypoint=cypress --network="cypress_inside" --name cypress-docker cypress/included:10.2.0 run
+      - name: Run Cypress
         run: |
-          cd ~/${{ matrix.pkp-application }}
-          php -S 127.0.0.1:8000 -t . >& access.log &
+          npx cypress run
 
-      # re-use test setup from tested application
-      - name: Create Content (${{ matrix.dbs }})
-        run: |
-          cd ~/${{ matrix.pkp-application }}
-          npx cypress run --spec "cypress/tests/data/10-Installation.spec.js,cypress/tests/data/20-CreateContext.spec.js"
-
-      # create content from tested application - OJS only so far!
-
-      - name: Run tests for plugin
-        run: |
-          cd ~/${{ matrix.pkp-application }}
-          npx cypress run --config integrationFolder=plugins/generic/optimetaGeo/cypress/tests
-
-      - name: Show log
+      - name: Show logs
         if: ${{ failure() }}
         run: |
-          cd ~/${{ matrix.pkp-application }}
-          cat access.log
+          docker logs db
+          docker logs ojs
+          cat cypress/logs/*.log
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
         with:
           name: screenshots ${{ matrix.pkp-application }} $${{ matrix.php-versions }} $${{ matrix.dbs }}
           path: |
-            ${{ github.workspace }}/${{ matrix.pkp-application }}/cypress/screenshots
+            ${{ github.workspace }}/cypress/screenshots
+
+      - name: Upload videos
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots ${{ matrix.pkp-application }} $${{ matrix.php-versions }} $${{ matrix.dbs }}
+          path: |
+            ${{ github.workspace }}/cypress/videos

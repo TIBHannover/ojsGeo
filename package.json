@@ -1,0 +1,41 @@
+{
+  "name": "optimetageo",
+  "version": "1.0.0",
+  "description": "OJS plugin enabling geospatial metadata for scientific publications",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cypress": "^10.2.0",
+    "cypress-failed-log": "^2.9.5",
+    "cypress-file-upload": "^5.0.8",
+    "cypress-wait-until": "^1.7.2",
+    "dotenv": "^16.0.1"
+  },
+  "scripts": {
+    "cy_open": "npx cypress open",
+    "cy_run": "npx cypress run",
+    "test_ci": "npx cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TIBHannover/optimetaGeo.git"
+  },
+  "keywords": [
+    "OJS",
+    "publishing",
+    "metadata",
+    "research",
+    "communication",
+    "open",
+    "science"
+  ],
+  "author": "Daniel Nüst",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/TIBHannover/optimetaGeo/issues"
+  },
+  "homepage": "https://github.com/TIBHannover/optimetaGeo#readme"
+}

@@ -54,10 +54,25 @@ By participating in this project you agree to abide by its terms.
 
 # Testing
 
-Relies on Cypress configuration in the respective main PKP application, e.g., OJS.
-See the configuration file there, e.g., <https://github.com/pkp/ojs/blob/main/cypress.json>.
-That is why you cannot just run `cypress` in this project directly.
-Instead, you can use [`act`](https://github.com/nektos/act) to run the tests as if they were running as a GitHub action.
+## Running Cypress
+
+```bash
+# see also Cypress' system dependencies at https://docs.cypress.io/guides/getting-started/installing-cypress#Advanced-Installation
+npm install
+
+npx cypress open
+
+# start compose configuration for desired OJS version, which run on ports 9xxx where "xxx" is the version string of OJS, e.g., 9330
+docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up
+
+# open/run Cypress tests with a given OJS version
+npm run cy_open
+npm run cy_run
+```
+
+## Running CI action locally
+
+You can use [`act`](https://github.com/nektos/act) to run the tests as if they were running as a GitHub action.
 
 ```bash
 # curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash 
