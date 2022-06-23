@@ -1,9 +1,23 @@
-{*the main template is here extended using the hook
-'Templates::Submission::SubmissionMetadataForm::AdditionalMetadata'*}
+{**
+ * templates/submission/formsubmissionMetadataFormFields.tpl
+ *
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Copyright (c) 2021 Tom Niers
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ *
+ * @brief Add forms to enter geospatial metadata during the submission.
+ * 
+ * The main template is here extended using the hook 'Templates::Submission::SubmissionMetadataForm::AdditionalMetadata'
+ *}
 
 <div style="clear:both;">
     {fbvFormArea id="tagitFields"
     title="plugins.generic.optimetaGeo.article.metadata.long"}
+
+    <input type="text" id="optimetageo_coverageDisabledHover" name="coverageDisabledHover"
+        style="height: 0px; width: 0px; visibility: hidden;"
+        value="{translate key="plugins.generic.optimetaGeo.submission.coverageDisabledHover"}">
     
     {*temporal*}
     {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal" for="period" inline=true}
@@ -40,10 +54,10 @@
     <input type="text" id="administrativeUnit" name="administrativeUnit" size="30" style="visibility: hidden;">
     <input type="text" id="administrativeUnitFromDb" name="administrativeUnitFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnitFromDb}' />
-    <input type="text" id="optimeta_usernameGeonames" name="usernameGeonames"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$usernameGeonames}' />
-    <input type="text" id="optimeta_baseurlGeonames" name="baseurlGeonames"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$baseurlGeonames}' />
+    <input type="text" id="optimetageo_usernameGeonames" name="usernameGeonames"
+        style="height: 0px; width: 0px; visibility: hidden;" value="{$usernameGeonames}" />
+    <input type="text" id="optimetageo_baseurlGeonames" name="baseurlGeonames"
+        style="height: 0px; width: 0px; visibility: hidden;" value="{$baseurlGeonames}" />
     {/fbvFormSection}
     {/fbvFormArea}
 </div>
@@ -58,4 +72,4 @@
 </style>
 
 {*main js script, needs to be loaded last*}
-<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>
+<script src="{$optimetageo_submissionMetadataFormFieldsJS}" type="text/javascript"></script>

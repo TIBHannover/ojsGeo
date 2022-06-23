@@ -81,10 +81,37 @@ msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames"
 msgstr "Base URL of Geonames, use to switch between 'http' and 'https'."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames.description"
-msgstr "Use one of <code>https://secure.geonames.org</code> or <code>http://api.geonames.org</code> depending whether your OJS server is published on http or https."
+msgstr "Use one of <code>https://www.geonames.org</code> or <code>http://www.geonames.org</code> depending whether your OJS server is published on http or https."
 
 msgid "plugins.generic.optimetaGeo.name"
 msgstr "OPTIMETA Geo Plugin"
 
 msgid "plugins.generic.optimetaGeo.description"
 msgstr "Collect and expose geospatial metadata for enhanced discovery of articles."
+
+msgid "plugins.generic.optimetaGeo.issue.title"
+msgstr "Times & locations"
+
+msgid "plugins.generic.optimetaGeo.journal.pageTitle"
+msgstr "Times & locations of all articles"
+
+msgid "plugins.generic.optimetaGeo.journal.title"
+msgstr "Times & locations of all articles in"
+
+msgid "plugins.generic.optimetaGeo.journal.breadcrump"
+msgstr "Map"
+
+msgid "plugins.generic.optimetaGeo.journal.mapMenu"
+msgstr "Map"
+
+msgid "plugins.generic.optimetaGeo.journal.text"
+msgstr "Click on any geometry to see information about the article and follow the link to the article page."
+
+msgid "plugins.generic.optimetaGeo.map.articleLayerName"
+msgstr "Articles"
+
+msgid "plugins.generic.optimetaGeo.map.administrativeLayerName"
+msgstr "Administrative Areas"
+
+msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
+msgstr "This field has been disabled. Information will be filled automatically based on the geospatial information entered below."

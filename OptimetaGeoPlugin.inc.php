@@ -3,9 +3,9 @@
 /**
  * @file OptimetaGeoPlugin.inc.php
  *
- * Copyright (c) 2017-2021 Simon Fraser University
- * Copyright (c) 2017-2021 John Willinsky
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Copyright (c) 2022 OPTIMETA project
+ * Copyright (c) 2022 Daniel Nüst
+ * Distributed under the GNU GPL v3. For full terms see the file dLICENSE.
  *
  * @class OptimetaGeoPlugin
  * @brief Plugin class for the OPTIMETA project's geo plugin.
@@ -19,6 +19,13 @@ use \PKP\components\forms\FormComponent;
 use \PKP\components\forms\FieldHTML; // needed for function extendScheduleForPublication
 use Optimeta\Geo\SettingsForm;
 
+const MAP_URL_PATH = 'map';
+
+const DB_FIELD_TIMESTAMPS = 'optimetaGeo::temporalProperties';
+const DB_FIELD_SPATIAL = 'optimetaGeo::spatialProperties';
+const DB_FIELD_TIME_PERIODS = 'optimetaGeo::timePeriods';
+const DB_FIELD_ADMINUNIT = 'optimetaGeo::administrativeUnit';
+
 class OptimetaGeoPlugin extends GenericPlugin
 {
 
@@ -27,9 +34,13 @@ class OptimetaGeoPlugin extends GenericPlugin
 	protected $templateParameters = [
 		'pluginStylesheetURL' => '',
 		'pluginJavaScriptURL' => '',
-		//'pluginImagesURL' => '',
-		//'citationsKeyForm' => '',
-		'pluginApiUrl' => ''
+	];
+
+	public $dbFields = [
+		'spatial' => DB_FIELD_SPATIAL,
+		'temporal' => DB_FIELD_TIMESTAMPS,
+		'admin' => DB_FIELD_ADMINUNIT,
+		'period' => DB_FIELD_TIME_PERIODS,
 	];
 
 	public function register($category, $path, $mainContextId = NULL)
@@ -46,24 +57,23 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		// important to check if plugin is enabled before registering the hook, cause otherwise plugin will always run no matter enabled or disabled! 
 		if ($success && $this->getEnabled()) {
-
-			/*
-			Hooks are the possibility to intervene the application. By the corresponding function which is named in the HookRegistery, the application
-			can be changed. Further information here: https://docs.pkp.sfu.ca/dev/plugin-guide/en/categories#generic 
-			*/
+			// custom page handler, see https://docs.pkp.sfu.ca/dev/plugin-guide/en/examples-custom-page
+			HookRegistry::register('LoadHandler', array($this, 'setPageHandler'));
 
 			// Hooks for changing the frontent Submit an Article 3. Enter Metadata 
 			HookRegistry::register('Templates::Submission::SubmissionMetadataForm::AdditionalMetadata', array($this, 'extendSubmissionMetadataFormTemplate'));
 
 			// Hooks for changing the Metadata right before Schedule for Publication (not working yet)
 			//HookRegistry::register('Form::config::before', array($this, 'extendScheduleForPublication'));
-			
-			// Hook for changing the article page 
+
+			// Hooks for changing the article page 
 			HookRegistry::register('Templates::Article::Main', array(&$this, 'extendArticleMainTemplate'));
 			HookRegistry::register('Templates::Article::Details', array(&$this, 'extendArticleDetailsTemplate'));
-			// Templates::Article::Main 
-			// Templates::Article::Details
-			// Templates::Article::Footer::PageFooter
+			HookRegistry::register('ArticleHandler::view', array(&$this, 'extendArticleView')); //
+
+			// Hooks for changing the issue page 
+			HookRegistry::register('Templates::Issue::TOC::Main', array(&$this, 'extendIssueTocTemplate'));
+			HookRegistry::register('Templates::Issue::Issue::Article', array(&$this, 'extendIssueTocArticleTemplate'));
 
 			// Hook for adding a tab to the publication phase
 			HookRegistry::register('Template::Workflow::Publication', array($this, 'extendPublicationTab'));
@@ -74,9 +84,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			$request = Application::get()->getRequest();
 			$templateMgr = TemplateManager::getManager($request);
-
-			$request = Application::get()->getRequest();
-			$contextId = $this->getCurrentContextId();
 
 			// jQuery is already loaded via ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
 			$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.css';
@@ -97,9 +104,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->addStyleSheet("leafletDrawCSS", $urlLeafletDrawCSS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("leafletDrawJS", $urlLeafletDrawJS, array('contexts' => array('frontend', 'backend')));
 
-			// loading the daterangepicker scripts, source: https://www.daterangepicker.com/#example2 
-			//$templateMgr->addJavaScript("jqueryJS", $urlJqueryJS, array('contexts' => array('frontend', 'backend')));
-			// jquery no need to load, already loaded here: ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
+			// loading the daterangepicker scripts, source: https://www.daterangepicker.com/#example2
 			$templateMgr->addJavaScript("momentJS", $urlMomentJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addJavaScript("daterangepickerJS", $urlDaterangepickerJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("daterangepickerCSS", $urlDaterangepickerCSS, array('contexts' => array('frontend', 'backend')));
@@ -108,13 +113,104 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->addJavaScript("leafletControlGeocodeJS", $urlLeafletControlGeocodeJS, array('contexts' => array('frontend', 'backend')));
 			$templateMgr->addStyleSheet("leafletControlGeocodeCSS", $urlLeafletControlGeocodeCSS, array('contexts' => array('frontend', 'backend')));
 
-			// main js scripts
-			$templateMgr->assign('submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
-			$templateMgr->assign('article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
+			// plugins JS scripts and CSS
+			$templateMgr->assign('optimetageo_submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
+			$templateMgr->assign('optimetageo_article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
+			$templateMgr->assign('optimetageo_issueJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
+			$templateMgr->assign('optimetageo_markerBaseUrl', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers-1.0.0/img/');
+
+			$templateMgr->assign('optimetageo_mapUrlPath', MAP_URL_PATH);
 
 			// publication tab
+			// ...
 		}
 		return $success;
+	}
+
+	/**
+	 * @param hookName
+	 * @param params
+	 */
+	public function setPageHandler($hookName, $params)
+	{
+		$page = $params[0];
+		if ($page === MAP_URL_PATH) {
+			$this->import('classes/handler/JournalMapHandler');
+			define('HANDLER_CLASS', 'JournalMapHandler');
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Inject metadata into article HTML head
+	 * @param $hookName string
+	 * @param $args array
+	 * @return boolean
+	 */
+	function extendArticleView($hookName, $args)
+	{
+		$request = $args[0];
+		$article = $args[2];
+		$publication = $article->getCurrentPublication();
+		$journal = $request->getContext();
+
+		$templateMgr = TemplateManager::getManager($request);
+
+		$templateMgr->addHeader('dublinCoreTemporal', '<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />');
+
+		// https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/spatial/
+		if ($spatial = $publication->getData(DB_FIELD_SPATIAL)) {
+			$templateMgr->addHeader('dublinCoreSpatialCoverage', '<meta name="DC.SpatialCoverage" scheme="GeoJSON" content="' . htmlspecialchars(strip_tags($spatial)) . '" />');
+		}
+
+		if ($administrativeUnit = $publication->getData(DB_FIELD_ADMINUNIT)) {
+			$administrativeUnitNames = array_map(function ($unit) {
+				return $unit->name;
+			}, json_decode($administrativeUnit));
+			$administrativeUnitNames = implode(', ', $administrativeUnitNames);
+
+			$lowestAdministrativeUnitName = null;
+			$lowestAdministrativeUnitBBox = null;
+			foreach (json_decode($administrativeUnit) as $unit) {
+				if ($unit->bbox != 'not available') {
+					$lowestAdministrativeUnitName = $unit->name;
+					$lowestAdministrativeUnitBBox = $unit->bbox;
+				}
+			}
+
+			if ($lowestAdministrativeUnitName) {
+				// https://dohmaindesigns.com/adding-geo-meta-tags-to-your-website/
+				$templateMgr->addHeader('geoPlacename', '<meta name="geo.placename" content="' . htmlspecialchars(strip_tags($lowestAdministrativeUnitName)) . '" />');
+			}
+
+			if ($lowestAdministrativeUnitName && $lowestAdministrativeUnitBBox) {
+				// DCMI Box Encoding Scheme - https://www.dublincore.org/specifications/dublin-core/dcmi-box/
+				$templateMgr->addHeader('dublincCoreBox', '<meta name="DC.box" content="name=' .
+					$lowestAdministrativeUnitName .
+					'; northlimit=' . $lowestAdministrativeUnitBBox->north .
+					'; southlimit=' . $lowestAdministrativeUnitBBox->south .
+					'; westlimit='  . $lowestAdministrativeUnitBBox->west  .
+					'; eastlimit='  . $lowestAdministrativeUnitBBox->east  .
+					'; projection=EPSG3857" />');
+
+				// ISO 19139 - https://boundingbox.klokantech.com/
+				$templateMgr->addHeader('isoGeographicBoundingBox', '<meta name="ISO 19139" content="' .
+					'<gmd:EX_GeographicBoundingBox>' .
+					'<gmd:westBoundLongitude><gco:Decimal>' . $lowestAdministrativeUnitBBox->west . '</gco:Decimal></gmd:westBoundLongitude>' .
+					'<gmd:eastBoundLongitude><gco:Decimal>' . $lowestAdministrativeUnitBBox->east . '</gco:Decimal></gmd:eastBoundLongitude>' .
+					'<gmd:southBoundLatitude><gco:Decimal>' . $lowestAdministrativeUnitBBox->south . '</gco:Decimal></gmd:southBoundLatitude>' .
+					'<gmd:northBoundLatitude><gco:Decimal>' . $lowestAdministrativeUnitBBox->north . '</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox>" />');
+			}
+		}
+
+		if ($timePeriods = $publication->getData(DB_FIELD_TIME_PERIODS)) {
+			$templateMgr->addHeader('dublinCoreTemporal', '<meta name="DC.temporal" scheme="ISO8601" content="' . 'FIXME' . '"/>');
+
+			$templateMgr->addHeader('dublinCorePeriodOfTime', '<meta name="DC.PeriodOfTime" scheme="ISO8601" content="' . 'FIXME' . '"/>');
+		}
+
+		return false;
 	}
 
 	/**
@@ -164,9 +260,10 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$publication = $publicationDao->getById($submissionId);
 		// TODO check if the submission really belongs to the journal
 
-		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
-		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
-		$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
+		$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
+		$timePeriods = $publication->getData(DB_FIELD_TIME_PERIODS);
+		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
+		$administrativeUnit = $publication->getData(DB_FIELD_ADMINUNIT);
 
 		// for the case that no data is available 
 		if ($temporalProperties === null) {
@@ -185,6 +282,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$templateMgr->assign('temporalPropertiesFromDb', $temporalProperties);
 		$templateMgr->assign('spatialPropertiesFromDb', $spatialProperties);
 		$templateMgr->assign('administrativeUnitFromDb', $administrativeUnit);
+		$templateMgr->assign('timePeriodsFromDb', $timePeriods);
 
 		// here the original template is extended by the additional template for entering geospatial metadata  
 		$output .= $templateMgr->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));
@@ -204,13 +302,13 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$output = &$params[2];
 
 		$publication = $templateMgr->getTemplateVars('publication');
-		$submission = $templateMgr->getTemplateVars('article');
-		$submissionId = $submission->getId();
+		$journal = Application::get()->getRequest()->getJournal();
 
 		// get data from database 
-		$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
-		$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
-		$administrativeUnit = $publication->getLocalizedData('coverage', 'en_US');
+		$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
+		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
+		$administrativeUnit = $publication->getData(DB_FIELD_ADMINUNIT);
+		//$publication->getLocalizedData('coverage', $journal->getPrimaryLocale());
 
 		// for the case that no data is available 
 		if ($temporalProperties === null || $temporalProperties === '') {
@@ -252,6 +350,71 @@ class OptimetaGeoPlugin extends GenericPlugin
 	}
 
 	/**
+	 * Function which extends the issue TOC with a timeline and map view - needs the optimetaGeoTheme plugin!
+	 * @param hook Templates::Issue::TOC::Main
+	 */
+	public function extendIssueTocTemplate($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		$templateMgr->assign($this->templateParameters);
+
+		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/issue_map.tpl'));
+
+		return false;
+	}
+
+	/**
+	 * Function which extends each article in an issue TOC with hidden fields with geospatial data
+	 * @param hook Templates::Issue::Issue::Article
+	 */
+	public function extendIssueTocArticleTemplate($hookName, $params)
+	{
+		$templateMgr = &$params[1];
+		$output = &$params[2];
+
+		$templateMgr->assign($this->templateParameters);
+
+		$publication = $templateMgr->getTemplateVars('publication');
+		if ($publication === null) {
+			// pragma theme
+			$articlePath = $templateMgr->getTemplateVars('articlePath');
+
+			if ($articlePath === null) {
+				return false;
+			} else {
+				$publicationDao = DAORegistry::getDAO('PublicationDAO');
+				$publication = $publicationDao->getById($articlePath);
+			}
+		}
+
+		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
+		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}')) {
+			$spatialProperties = 'no data';
+		}
+		$templateMgr->assign('spatialProperties', $spatialProperties);
+
+		$templateMgr->assign('journal', Application::get()->getRequest()->getJournal()); // access primary locale
+
+		//$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
+		//if ($temporalProperties === null || $temporalProperties === '') {
+		//	$temporalProperties = 'no data';
+		//}
+		//$templateMgr->assign('temporalProperties', $temporalProperties);
+
+		//$administrativeUnit = $publication->getLocalizedData('coverage', $journal->getPrimaryLocale());
+		//if ($administrativeUnit === null || $administrativeUnit === '') {
+		//	$administrativeUnit = 'no data';
+		//}
+		//$templateMgr->assign('administrativeUnit', $administrativeUnit);
+
+		$output .= $templateMgr->fetch($this->getTemplateResource('frontend/objects/issue_details.tpl'));
+
+		return false;
+	}
+
+	/**
 	 * @param string $hookname
 	 * @param array $args [string, TemplateManager]
 	 * @brief Show tab under Publications
@@ -286,7 +449,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		$publicationDao = DAORegistry::getDAO('PublicationDAO');
 		$publication = $publicationDao->getById($submissionId);
-		
+
 		$this->templateParameters['submissionId'] = $submissionId;
 		//$this->templateParameters['citationsParsed'] = $citationsParsed;
 		//$this->templateParameters['citationsRaw'] = $citationsRaw;
@@ -305,6 +468,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		// possible types: integer, string, text 
 		$schema = $params[0];
 
+		// save timestamp as unix epoch
 		$timestamp = '{
 			"type": "string",
 			"multilingual": false,
@@ -313,8 +477,18 @@ class OptimetaGeoPlugin extends GenericPlugin
 				"nullable"
 			]
 		}';
-		$timestampDecoded = json_decode($timestamp);
-		$schema->properties->{'optimetaGeo::temporalProperties'} = $timestampDecoded;
+		$schema->properties->{DB_FIELD_TIMESTAMPS} = json_decode($timestamp);
+
+		// save timestamp as text in ISO8601 time interval as described in RFC3339 appendix, https://datatracker.ietf.org/doc/html/rfc3339#appendix-A, see also https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+		$timePeriods = '{
+			"type": "string",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		}';
+		$schema->properties->{DB_FIELD_TIME_PERIODS} = json_decode($timePeriods);
 
 		$spatialProperties = '{
 			"type": "string",
@@ -324,8 +498,17 @@ class OptimetaGeoPlugin extends GenericPlugin
 				"nullable"
 			]
 		}';
-		$spatialPropertiesDecoded = json_decode($spatialProperties);
-		$schema->properties->{'optimetaGeo::spatialProperties'} = $spatialPropertiesDecoded;
+		$schema->properties->{DB_FIELD_SPATIAL} = json_decode($spatialProperties);
+
+		$administrativeUnits = '{
+			"type": "string",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		}';
+		$schema->properties->{DB_FIELD_ADMINUNIT} = json_decode($administrativeUnits);
 
 		return false;
 	}
@@ -344,52 +527,33 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$temporalProperties = $_POST['temporalProperties'];
 		$spatialProperties = $_POST['spatialProperties'];
 		$administrativeUnit = $_POST['administrativeUnit'];
-
-		/*
-		If the element to store in the database is an element which is different in different languages 
-		the property "multilingual" in the function addToSchema has to be true, and you have to use a loop like this 
-
-		$localePare = $params['title'];
-
-		foreach ($localePare as $localeKey => $fileId) {
-			$newPublication->setData('jatsParser::fullText', $htmlDocument->saveAsHTML(), $localeKey);
-		}
-
-		further information: https://github.com/Vitaliy-1/JATSParserPlugin/blob/21425c486f0f157cd8dc6b829322cd32159dd408/JatsParserPlugin.inc.php#L619 
-
-		For elements which are not multilangual you can skip the parameter $localeKey and just do it like this: 
-			$newPublication->setData('optimetaGeo::spatialProperties', $spatialProperties);
-
-		Take care, function is called twice, first during Submission Workflow and also before Schedule for Publication in the Review Workflow!!!
-		*/
+		$timePeriods = $_POST['timePeriods'];
 
 		// null if there is no possibility to input data (metadata input before Schedule for Publication)
 		if ($spatialProperties !== null) {
-			$newPublication->setData('optimetaGeo::spatialProperties', $spatialProperties);
+			$newPublication->setData(DB_FIELD_SPATIAL, $spatialProperties);
 		}
 
 		if ($temporalProperties !== null && $temporalProperties !== "") {
-			$newPublication->setData('optimetaGeo::temporalProperties', $temporalProperties);
+			$newPublication->setData(DB_FIELD_TIMESTAMPS, $temporalProperties);
+		}
+
+		if ($timePeriods !== null && $timePeriods !== "") {
+			$newPublication->setData(DB_FIELD_TIME_PERIODS, $timePeriods);
 		}
 
 		if ($administrativeUnit !== null) {
-			$newPublication->setData('coverage', $administrativeUnit, 'en_US'); // we don't use locale for the field
-		}
+			$newPublication->setData(DB_FIELD_ADMINUNIT, $administrativeUnit);
 
-		/*
-		The following lines are probably needed if you want to store text in a certain language to set the local key,
-		further information can be found here:
-		https://github.com/Vitaliy-1/JATSParserPlugin/blob/21425c486f0f157cd8dc6b829322cd32159dd408/JatsParserPlugin.inc.php#L619 
-		
-		$yourdata = 100;
-		$yourdata2 = '00:00:00';
-		$yourdata3 = 'TesTestTest';
-		$localePare = $params['title'];
-		foreach ($localePare as $localeKey => $fileId) {
-			continue;
+			// turn admin units into string then save in Coverage field
+			$administrativeUnitNames = array_map(function ($unit) {
+				return $unit->name;
+			}, json_decode($administrativeUnit));
+			$administrativeUnitNames = implode(', ', $administrativeUnitNames);
+
+			$journal = Application::get()->getRequest()->getJournal();
+			$newPublication->setData('coverage', $administrativeUnitNames, $journal->getPrimaryLocale());
 		}
-		$newPublication->setData('Textfeld', $yourdata3, $localeKey);
-		*/
 	}
 
 	/**
@@ -409,8 +573,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			/*
 			$publication = Services::get('publication');
-			$temporalProperties = $publication->getData('optimetaGeo::temporalProperties');
-			$spatialProperties = $publication->getData('optimetaGeo::spatialProperties');
+			$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
+			$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
 			*/
 
 			/*$form->addField(new \PKP\components\forms\FieldOptions('jatsParser::references', [
@@ -424,9 +588,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			// Add a plain HTML field to the form
 			/*$form->addField(new FieldHTML('myFieldName', [
 				'label' => 'My Field Name',
-				'description' => '<p>Add any HTML code that you want.</p>
-				<div id="mapdiv" style="width: 1116px; height: 400px; float: left;  z-index: 0;"></div>
-				<script src="{$submissionMetadataFormFieldsJS}" type="text/javascript" defer></script>',
+				'description' => '<p>Add any HTML code that you want.</p>',
 			]));*/
 		}
 	}
