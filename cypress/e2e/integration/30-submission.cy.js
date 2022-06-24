@@ -55,4 +55,12 @@ describe('OPTIMETA Geoplugin tests', function () {
     // TODO
   });
 
+  it('Shows the published paper on the journal map', function () {
+    // TODO
+  });
+
+  it('Does not show an article from an unpublished issue on the journal map', function () {
+    // TODO
+  });
+
 });
