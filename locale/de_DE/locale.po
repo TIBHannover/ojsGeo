@@ -14,10 +14,10 @@ msgstr ""
 msgid "plugins.generic.optimetaGeo.article.metadata.short"
 msgstr "Zeit & Ort"
 
-msgid "plugins.generic.optimetaGeo.artikel.metadaten.lang"
+msgid "plugins.generic.optimetaGeo.article.metadata.short"
 msgstr "Zeit und Ort"
 
-msgid "plugins.generic.optimetaGeo.publikation.label"
+msgid "plugins.generic.optimetaGeo.publication.label"
 msgstr "Zeit & Ort"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.article"
@@ -65,7 +65,7 @@ msgstr "Verwaltungseinheiten"
 msgid "plugins.generic.optimetaGeo.article.details.download"
 msgstr "Räumliche Metadaten herunterladen"
 
-msgid "plugins.generic.optimetaGeo.artikel.details.geoJSON.about"
+msgid "plugins.generic.optimetaGeo.article.details.geoJSON.about"
 msgstr "Über GeoJSON"
 
 msgid "plugins.generic.optimetaGeo.description"

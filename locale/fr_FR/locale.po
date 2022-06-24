@@ -24,7 +24,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.article"
 msgstr "Ici sont illustrées les propriétés du contenu des articles en termes de temps et de lieu."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"
-msgstr "Propriétés temporelles
+msgstr "Propriétés temporelles"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"
 msgstr "Définit les propriétés temporelles du contenu des articles en spécifiant les dates de début et de fin. La saisie est possible via le champ de texte ainsi que via la vue calendrier. Cliquez sur le champ de saisie situé sous ce texte pour ouvrir le calendrier. Appuyez sur "Appliquer" pour enregistrer les paramètres du calendrier. Appuyez sur "Effacer" pour supprimer les données actuelles. La saisie de texte doit respecter le format suivant et être confirmée en cliquant sur "Appliquer" (et non sur Entrée !) : le début et la fin sont séparés par un tiret entouré d'espaces ; les dates sont indiquées sous la forme "AAAA-MM-JJ", où "AAAA" correspond aux années, "M" aux mois (avec un zéro en tête) et "J" aux jours (avec un zéro en tête)."
@@ -104,7 +104,7 @@ msgstr "Carte"
 msgid "plugins.generic.optimetaGeo.journal.mapMenu"
 msgstr "Carte"
 
-msgid "plugins.generic.optimetaGeo.journal.text" (en anglais)
+msgid "plugins.generic.optimetaGeo.journal.text"
 msgstr "Cliquez sur une géométrie pour voir des informations sur l'article et suivez le lien vers la page de l'article".
 
 msgid "plugins.generic.optimetaGeo.map.articleLayerName"

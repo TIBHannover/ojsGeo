@@ -14,7 +14,7 @@ msgstr ""
 msgid "plugins.generic.optimetaGeo.article.metadata.short"
 msgstr "Time & location"
 
-msgid "plugins.generic.optimetaGeo.article.metadata.long"
+msgid "plugins.generic.optimetaGeo.article.metadata.short"
 msgstr "Time and location"
 
 msgid "plugins.generic.optimetaGeo.publication.label"
