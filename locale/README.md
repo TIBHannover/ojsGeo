@@ -7,6 +7,8 @@ Get an API key (sign up for free) at <https://www.deepl.com/pro-api?cta=header-p
 Automated translations (unchecked) were added for
 
 - Spanish 🇪🇸🇲🇽🇦🇷🇨🇴🇪🇨🇧🇴🇨🇷🇨🇺🇩🇴🇸🇻🇬🇶🇬🇹🇭🇳🇳🇮🇵🇦🇵🇾🇵🇪🇵🇷🇺🇾🇻🇪
+- French 🇫🇷
+
 ## Installation (once)
 
 ```bash
