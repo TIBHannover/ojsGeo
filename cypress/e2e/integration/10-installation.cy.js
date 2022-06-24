@@ -25,4 +25,9 @@ describe('OPTIMETA Geoplugin Tests', function () {
   it('Adds a journal', function () {
     cy.createContext();
   });
+
+  it('Adds issues to the journal', function () {
+    cy.createIssues();
+  });
+
 });

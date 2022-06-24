@@ -55,6 +55,23 @@ describe('OPTIMETA Geoplugin tests', function () {
     cy.waitJQuery();
   });
 
+  it('Has a map in the third submissions step', function () {
+    cy.login('admin', 'admin', Cypress.env('contextPath'));
+
+    cy.get('a:contains("Submissions")').click();
+    cy.get('div#myQueue a:contains("New Submission")').click();
+    cy.get('input[id^="checklist-"]').click({ multiple: true });
+    cy.get('input[id="privacyConsent"]').click();
+    cy.get('button.submitFormButton').click();
+    cy.wait(2000);
+    cy.get('button.submitFormButton').click();
+    cy.get('#mapdiv').should('exist');
+  });
+
+  it('Has a map in the final metadata check before publication', function () {
+    // TODO implement test
+  });
+
   it('Configure Geoplugin - Map colors', function () {
     // TODO implement
 
