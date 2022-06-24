@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2020-09-02T07:48:21+00:00\n"
 "PO-Revision-Date: 2020-09-02T07:48:21+00:00\n"
-"Language: \n"
+"Language: English (US)\n"
 
 msgid "plugins.generic.optimetaGeo.article.metadata.short"
 msgstr "Time & location"
