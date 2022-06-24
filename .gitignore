@@ -22,3 +22,5 @@ cypress/screenshots/
 cypress/videos/
 
 cypress/logs/
+
+locale/python-auto-translate-gettext/
