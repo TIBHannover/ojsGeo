@@ -14,11 +14,12 @@ describe('OPTIMETA Geoplugin tests', function () {
   before(function () {
     submission = {
       id: 0,
-      section: 'Articles',
+      //section: 'Articles',
       prefix: '',
       title: 'Hanover is nice',
       subtitle: 'It really is',
-      abstract: 'The city of Hanover is really nice, because it is home of the TIB.'
+      abstract: 'The city of Hanover is really nice, because it is home of the TIB.',
+      timePeriod: '2022-01-01 - 2022-12-31',
     };
 
     cy.register({
@@ -30,16 +31,27 @@ describe('OPTIMETA Geoplugin tests', function () {
     });
   });
 
-  it('Has a map on the current issue page and the issue page after publishing a paper', function () {
+  it('Has no map on the empty current issue page', function () {
+    cy.visit('/');
+    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Current")').click();
+    cy.get('.pkp_structure_main').should('not.contain', 'Times & locations');
+  });
+
+  it('Has a map on the current issue page after publishing a paper', function () {
+    cy.login('aauthor');
+    cy.get('a:contains("aauthor")').click();
+    cy.get('a:contains("Dashboard")').click();
+
     cy.createSubmissionAndPublish(submission);
 
     // go to journal index and check if there is an empty map
-    cy.get('a[class="app__contextTitle"]').click();
-    cy.get('div[class*="page_index_journal"]:contains("Times & locations")');
+    cy.visit('/');
+    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Current")').click();
+    cy.get('.pkp_structure_main').should('contain', 'Times & locations');
 
     // TODO check there is a map!
 
-    // go to issue page and repeat
+    // go to issue page and repeat map check
     // TODO
   });
 

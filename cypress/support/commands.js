@@ -61,21 +61,21 @@ Cypress.Commands.add('createContext', () => {
 
     // Fill in various details
     cy.wait(1000); // https://github.com/tinymce/tinymce/issues/4355
-    
-    cy.get('input[name="name-en_US"]').type(Cypress.env('contextTitles')['en_US'], {delay: 0});
-    cy.get('input[name=acronym-en_US]').type(Cypress.env('contextAcronyms')['en_US'], {delay: 0});
+
+    cy.get('input[name="name-en_US"]').type(Cypress.env('contextTitles')['en_US'], { delay: 0 });
+    cy.get('input[name=acronym-en_US]').type(Cypress.env('contextAcronyms')['en_US'], { delay: 0 });
     cy.get('span').contains('Enable this journal').siblings('input').check();
     cy.get('input[name="supportedLocales"][value="en_US').check();
     cy.get('input[name="primaryLocale"][value="en_US').check();
 
-    cy.get('input[name=urlPath]').clear().type(Cypress.env('contextPath'), {delay: 0});
+    cy.get('input[name=urlPath]').clear().type(Cypress.env('contextPath'), { delay: 0 });
 
     // Context descriptions
     cy.setTinyMceContent('context-description-control-en_US', Cypress.env('contextDescriptions')['en_US']);
     cy.get('button').contains('Save').click();
 
     // Wait for it to finish up before moving on
-    cy.contains('Settings Wizard', {timeout: 30000});
+    cy.contains('Settings Wizard', { timeout: 30000 });
 });
 
 Cypress.Commands.add('login', (username, password, context) => {
@@ -145,7 +145,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
         data.files = data.files.concat(data.additionalFiles);
     }
 
-    cy.get('a:contains("Make a New Submission"), div#myQueue a:contains("New Submission")').click();
+    cy.get('a:contains("Make a New Submission"), div#myQueue a:contains("New Submission"), a:contains("Back to New Submission")').click();
 
     // === Submission Step 1 ===
     if ('section' in data) cy.get('select[id="sectionId"],select[id="seriesId"]').select(data.section);
@@ -161,7 +161,13 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.get('input[id=privacyConsent]').click();
     if ('submitterRole' in data) {
         cy.get('input[name=userGroupId]').parent().contains(data.submitterRole).click();
-    } else cy.get('input[id=userGroupId]').click();
+    } else {
+        cy.get("body").then($body => {
+            if ($body.find('input[id=userGroupId]').length > 0) {   
+                cy.get('input[id=userGroupId]').click();
+            }
+        });
+    }
     cy.get('button.submitFormButton').click();
 
     // === Submission Step 2 ===
@@ -181,7 +187,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
             });
             cy.get('select[id=genreId]').select(file.genre);
             cy.fixture(file.file, 'base64').then(fileContent => {
-                cy.get('input[type=file]').upload(
+                cy.get('input[type=file]').attachFile(
                     { fileContent, 'fileName': file.fileName, 'mimeType': 'application/pdf', 'encoding': 'base64' }
                 );
             });
@@ -217,7 +223,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
         const primaryFileGenres = ['Article Text', 'Book Manuscript', 'Chapter Manuscript'];
         data.files.forEach(file => {
             cy.fixture(file.file, 'base64').then(fileContent => {
-                cy.get('input[type=file]').upload(
+                cy.get('input[type=file]').attachFile(
                     { fileContent, 'fileName': file.fileName, 'mimeType': 'application/pdf', 'encoding': 'base64' }
                 );
                 var $row = cy.get('a:contains("' + file.fileName + '")').parents('.listPanel__item');
@@ -247,15 +253,18 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
         });
 
     cy.get('button').contains('Save and continue').click();
+    cy.wait(2000); // Avoid occasional failure due to form init taking time
 
     // === Submission Step 3 ===
     // Metadata fields
-    cy.get('input[id^="title-en_US-"').type(data.title, { delay: 0 });
+    let locale = '' // 'en_US';
+    cy.get('input[id^="title-' + locale + '"').type(data.title, { delay: 0 });
     cy.get('label').contains('Title').click(); // Close multilingual popover
-    cy.get('textarea[id^="abstract-en_US"]').then(node => {
+    cy.get('textarea[id^="abstract-' + locale + '"]').then(node => {
         cy.setTinyMceContent(node.attr('id'), data.abstract);
     });
-    cy.get('ul[id^="en_US-keywords-"]').then(node => {
+    let seperator = locale === '' ? '' : '-';
+    cy.get('ul[id^="' + locale + seperator + 'keywords-"]').then(node => {
         data.keywords.forEach(keyword => {
             node.tagit('createTag', keyword);
         });
@@ -264,11 +273,11 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
         if (!('role' in author)) author.role = 'Author';
         cy.get('a[id^="component-grid-users-author-authorgrid-addAuthor-button-"]').click();
         cy.wait(250);
-        cy.get('input[id^="givenName-en_US-"]').type(author.givenName, { delay: 0 });
-        cy.get('input[id^="familyName-en_US-"]').type(author.familyName, { delay: 0 });
+        cy.get('input[id^="givenName-' + locale + '"]').type(author.givenName, { delay: 0 });
+        cy.get('input[id^="familyName-' + locale + '"]').type(author.familyName, { delay: 0 });
         cy.get('select[id=country]').select(author.country);
         cy.get('input[id^="email"]').type(author.email, { delay: 0 });
-        if ('affiliation' in author) cy.get('input[id^="affiliation-en_US-"]').type(author.affiliation, { delay: 0 });
+        if ('affiliation' in author) cy.get('input[id^="affiliation-' + locale + '"]').type(author.affiliation, { delay: 0 });
         cy.get('label').contains(author.role).click();
         cy.get('form#editAuthor').find('button:contains("Save")').click();
         cy.get('div[id^="component-grid-users-author-authorgrid-"] span.label:contains("' + Cypress.$.escapeSelector(author.givenName + ' ' + author.familyName) + '")');
@@ -285,9 +294,9 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
         });
 
         // Title/subtitle
-        cy.get('form[id="editChapterForm"] input[id^="title-en_US-"]').type(chapter.title, { delay: 0 });
+        cy.get('form[id="editChapterForm"] input[id^="title-' + locale + '"]').type(chapter.title, { delay: 0 });
         if ('subtitle' in chapter) {
-            cy.get('form[id="editChapterForm"] input[id^="subtitle-en_US-"]').type(chapter.subtitle, { delay: 0 });
+            cy.get('form[id="editChapterForm"] input[id^="subtitle-' + locale + '"]').type(chapter.subtitle, { delay: 0 });
         }
         cy.get('div.pkp_modal_panel div:contains("Add Chapter")').click(); // FIXME: Resolve focus problem on title field
 
@@ -311,10 +320,20 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     });
 
     // geospatial metadata
-    // TODO use information handed over within data object to create time period
+    cy.get('input[name=datetimes]').type(data.timePeriod);
+    cy.get('.applyBtn').click();
 
-    // TODO use information handed over within data object to create geospatial properties
+    // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
+    cy.toolbarButton('polygon').click();
 
+    cy.get('#mapdiv')
+        .click(390, 250)
+        .click(400, 50)
+        .click(450, 50)
+        .click(450, 150)
+        .click(390, 250);
+
+    debugger;
 
     cy.waitJQuery();
     cy.get('form[id=submitStep3Form]').find('button').contains('Save and continue').click();
@@ -454,4 +473,9 @@ Cypress.Commands.add('waitJQuery', function () {
 
 Cypress.Commands.add('consoleLog', message => {
     cy.task('consoleLog', message);
+});
+
+// leaflet map interaction, see https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
+Cypress.Commands.add('toolbarButton', name => {
+    cy.get(`.leaflet-pm-icon-${name}`)
 });

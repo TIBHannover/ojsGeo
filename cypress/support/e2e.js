@@ -20,3 +20,11 @@ import '@foreachbe/cypress-tinymce'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+Cypress.config('defaultCommandTimeout', 10000);
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+    cy.log(`Uncaught Exception: ${JSON.stringify(err)}`);
+
+    return false;
+});
