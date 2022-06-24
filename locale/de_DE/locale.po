@@ -27,13 +27,13 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"
 msgstr "Zeitliche Eigenschaften"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Definieren Sie die zeitlichen Eigenschaften des Artikelinhalts durch Angabe von Anfangs- und Enddatum. Die Eingabe ist sowohl über das Textfeld als auch über die Kalenderansicht möglich. Klicken Sie auf das Eingabefeld unter diesem Text, um die Kalenderansicht zu öffnen. Drücken Sie \"Übernehmen\", um die Kalendereinstellung zu speichern. Drücken Sie \"Löschen\", um die aktuellen Daten zu entfernen. Texteingaben müssen dem folgenden Format entsprechen und durch Klicken auf \"Anwenden\" bestätigt werden. Nutzen sie bitte nicht die Enter-Taste. Bei manuellen eingaben werden Anfang und Ende durch einen Bindestrich getrennt, der von Leerzeichen umgeben ist; Datumsangaben sind im Format \"JJJJ-MM-TT\" einzugeben, wobei \"JJJJ\" für Jahre, \"M\" für Monate (mit einer führenden Null) und \"D\" für Tage (mit einer führenden Null) steht."
+msgstr "Definieren Sie die zeitlichen Eigenschaften des Artikelinhalts durch Angabe von Anfangs- und Enddatum. Die Eingabe ist sowohl über das Textfeld als auch über die Kalenderansicht möglich. Klicken Sie auf das Eingabefeld unter diesem Text, um die Kalenderansicht zu öffnen. Drücken Sie \"Übernehmen\", um die Kalendereinstellung zu speichern. Drücken Sie \"Löschen\", um die aktuellen Daten zu entfernen. Texteingaben müssen dem folgenden Format entsprechen und durch Klicken auf \"Anwenden\" bestätigt werden. Nutzen Sie bitte nicht die Enter-Taste. Bei manuellen Eingaben werden Anfang und Ende durch einen Bindestrich getrennt, der von Leerzeichen umgeben ist; Datumsangaben sind im Format \"JJJJ-MM-TT\" einzugeben, wobei \"JJJJ\" für Jahre, \"M\" für Monate (mit einer führenden Null) und \"D\" für Tage (mit einer führenden Null) steht."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"
-msgstr "Zeitliche Eigenschaften des Artikelinhalts, angegeben mit einer Auflösung von Tagen."
+msgstr "Zeitliche Eigenschaften des Artikelinhalts, angegeben in Tagen."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"
-msgstr "Dieser Artikel umfasst einen Zeitraum von "
+msgstr "Dieser Artikel umfasst einen Zeitraum von"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"
 msgstr "bis"
@@ -42,19 +42,24 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"
 msgstr "Dieser Artikel deckt Ort(e) oder Gebiet(e) ab, die auf der untenstehenden Karte gezeigt werden."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"
-msgstr "Die Verwaltungseinheiten, welche die zum Artikel zugehörigen Orte umschließen, sind: "
+msgstr "Die Verwaltungseinheiten, welche die zum Artikel zugehörigen Orte umschließen, sind:"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.submission"
-msgstr "Definieren Sie die Orte und Gebiete des Artikelinhalts durch eine oder mehrere geometrische Form(en). Sie können in der Steuerung auf der linken Seite zwischen Polylinie, Polygon, Rechteck und Punkt-Geometrie wählen. Über die Icons darunter können Sie die erstellte(n) geometrische(n) Form(en) bearbeiten oder löschen. Mit den Symbolen \"-\" und \"+\" in der oberen linken Ecke können Sie die Ansicht vergrößern und verkleinern. In der oberen rechten Ecke können Sie die Hinterrundkarten wechseln. Sie können zwischen einer Strassenkarte (\"OpenStreetMap\"-Ebene) und Luftbildern (\"Esri World Imagery\"-Ebene) wählen. Sie können auch einstellen, ob die geometrische(n) Form(en) und die Verwaltungseinheit angezeigt werden sollen oder nicht. Für die Verwaltungseinheiten finden Sie eine genauere Beschreibung im nächsten Abschnitt dieses Formulars. Unterhalb der Ebenensteuerung finden Sie eine Suchfunktion für die Karte. Sie können nach Orten suchen und durch Drücken von \"Enter\" werden Ihnen verschiedene Orte angeboten, die Ihren Eingaben entsprechen. Wenn Sie auf einen Vorschlag klicken, wird er akzeptiert und ein passendes Rechteck, das die Grenzen des Ortes beschreibt, wird auf der Karte angezeigt. Dieses Rechteck kann auch gelöscht/bearbeitet werden, indem Sie auf das Lösch-/Bearbeitungssymbol auf der linken Seite klicken. Sie können einen gröberen Detaillierungsgrad wählen, um sensible Orte zu schützen."
+msgstr "Definieren Sie die Orte und Gebiete des Artikelinhalts durch eine oder mehrere geometrische Form(en). Sie können in der Steuerung auf der linken Seite zwischen Polylinie, Polygon, Rechteck und Punkt-Geometrie wählen. Über die Icons darunter können Sie die erstellte(n) geometrische(n) Form(en) bearbeiten oder löschen. Mit den Symbolen \"-\" und \"+\" in der oberen linken Ecke können Sie die Ansicht vergrößern und verkleinern. In der oberen rechten Ecke können Sie die Hintergrundkarten wechseln. Sie können zwischen einer Straßenkarte (\"OpenStreetMap\"-Ebene) und Luftbildern (\"Esri World Imagery\"-Ebene) wählen. Sie können auch einstellen, ob die geometrische(n) Form(en) und die Verwaltungseinheit angezeigt werden sollen oder nicht. Für die Verwaltungseinheiten finden Sie eine genauere Beschreibung im nächsten Abschnitt dieses Formulars. Unterhalb der Ebenensteuerung finden Sie eine Suchfunktion für die Karte. Sie können nach Orten suchen und durch Drücken von \"Enter\" werden Ihnen verschiedene Orte angeboten, die Ihren Eingaben entsprechen. Wenn Sie auf einen Vorschlag klicken, wird er akzeptiert und ein passendes Rechteck, das die Grenzen des Ortes beschreibt, wird auf der Karte angezeigt. Dieses Rechteck kann auch gelöscht/bearbeitet werden, indem Sie auf das Lösch-/Bearbeitungssymbol auf der linken Seite klicken. Sie können einen gröberen Detaillierungsgrad wählen, um sensible Orte zu schützen."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"
-msgstr "Die blaue(n) geometrische(n) Form(en) stellen die Orte oder Gebiete des Artikelinhalts dar, wie sie von den Autoren angegeben wurden. Die in einem schwarzen Rechteck dargestellte Verwaltungseinheiten stellt die kleinste Verwaltungseinheiten dar, welche alle Orte und Gebiete umschließt, mit denen sich der Artikel befasst."
+msgstr "Die blaue(n) geometrische(n) Form(en) stellen die Orte oder Gebiete des Artikelinhalts dar, wie sie von den 
+
+
+
+
+:innen angegeben wurden. Die in einem schwarzen Rechteck dargestellte Verwaltungseinheit stellt die kleinste Verwaltungseinheit dar, welche alle Orte und Gebiete umschließt, mit denen sich der Artikel befasst."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit"
 msgstr "Adiministrative Region"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
-msgstr "Auf Basis Ihrer Eingaben in der Karte werden Verwaltungseinheiten vorgeschlagen, die entsprechend Ihrer Eingaben in der Karte ausgewählt wurden. Jedes Mal, wenn Sie die Eingaben aktualisieren, werden die Erfassungsinformationen neu berechnet und entsprechend aktualisiert. Mit dem roten \"x\" können Sie die Verwaltungseinheit(en) löschen. Wenn Sie den Mauszeiger über die Verwaltungseinheit(en) bewegen, wird die übergeordnete Hierarchie der Verwaltungseinheit(en) angezeigt, sofern vorhanden. Außerdem können Sie weitere Verwaltungseinheiten hinzufügen. Sie können nur dann eine weitere Verwaltungseinheit einfügen, wenn diese zu der bereits vorgegebenen Hierarchie der Verwaltungseinheiten und der vorgegebenen geometrischen Form in der Karte passt. Wenn Sie mit dem Einfügen beginnen, gibt es einige Vorschläge, die Sie durch Anklicken akzeptieren können, aber Sie können trotzdem Ihre eigene Verwaltungseinheit eingeben, indem Sie "Enter" drücken. Die Verwaltungseinheit (in schwarz), die den kleinsten gemeinsamen Nenner für alle geometrischen Formen darstellt, wird in der Karte angezeigt. Die Verwaltungseinheit ist nicht direkt in der Karte, sondern über das Eingabefeld editierbar oder löschbar."
+msgstr "Auf Basis Ihrer Eingaben in der Karte werden Verwaltungseinheiten vorgeschlagen, die entsprechend Ihrer Eingaben in der Karte ausgewählt wurden. Jedes Mal, wenn Sie die Eingaben aktualisieren, werden die Erfassungsinformationen neu berechnet und entsprechend aktualisiert. Mit dem roten \"x\" können Sie die Verwaltungseinheit(en) löschen. Wenn Sie den Mauszeiger über die Verwaltungseinheit(en) bewegen, wird die übergeordnete Hierarchie der Verwaltungseinheit(en) angezeigt, sofern vorhanden. Außerdem können Sie weitere Verwaltungseinheiten hinzufügen. Sie können nur dann eine weitere Verwaltungseinheit einfügen, wenn diese zu der bereits vorgegebenen Hierarchie der Verwaltungseinheiten und der vorgegebenen geometrischen Form in der Karte passt. Wenn Sie mit dem Einfügen beginnen, gibt es einige Vorschläge, die Sie durch Anklicken akzeptieren können, aber Sie können trotzdem Ihre eigene Verwaltungseinheit eingeben, indem Sie "Enter" drücken. Die Verwaltungseinheit (in Schwarz), die den kleinsten gemeinsamen Nenner für alle geometrischen Formen darstellt, wird in der Karte angezeigt. Die Verwaltungseinheit ist nicht direkt in der Karte, sondern über das Eingabefeld editierbar oder löschbar."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit.description.article"
 msgstr "Hier werden die administrativen Einheiten aufgelistet, die dem Ort bzw. den Orten übergeordnet sind, um die es in dem Artikel geht, wobei die höchste Ebene links und die niedrigste rechts steht."
@@ -72,7 +77,7 @@ msgid "plugins.generic.optimetaGeo.description"
 msgstr "Dieses Plugin ermöglicht das Auffinden von Artikeln auf der Basis von geografischen Metadaten."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
-msgstr "Erstellen sie einen Benutzernamen unter https://www.geonames.org/login; der Benutzername muss einmalig aktiviert werden, um den kostenlosen Webservice zu nutzen, siehe https://www.geonames.org/manageaccount."
+msgstr "Erstellen Sie einen Benutzernamen unter https://www.geonames.org/login; der Benutzername muss einmalig aktiviert werden, um den kostenlosen Webservice zu nutzen, siehe https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames.description"
 msgstr "Sie müssen Ihren Benutzernamen für die GeoNames API angeben, damit ein Abruf der Verwaltungseinheiten möglich ist: <a href="https://www.geonames.org/login">https://www.geonames.org/login</a>."
@@ -81,13 +86,13 @@ msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames"
 msgstr "Basis-URL von Geonames, um zwischen 'http' und 'https' zu wechseln."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames.description"
-msgstr "Geben sie hier entweder <code>https://www.geonames.org</code> oder <code>http://www.geonames.org</code> ein in Abhängigkeit davon, ob ihr OJS-Server unter HTTP oder HTTPS veröffentlicht ist."
+msgstr "Geben Sie hier entweder <code>https://www.geonames.org</code> oder <code>http://www.geonames.org</code> ein in Abhängigkeit davon, ob Ihr OJS-Server unter HTTP oder HTTPS veröffentlicht ist."
 
 msgid "plugins.generic.optimetaGeo.name"
 msgstr "OPTIMETA Geo Plugin"
 
 msgid "plugins.generic.optimetaGeo.description"
-msgstr "Sammeln und bereitstellen von räumlichen Metadaten für verbesserte Artikelsuche."
+msgstr "Sammeln und Bereitstellen von räumlichen Metadaten für verbesserte Artikelsuche."
 
 msgid "plugins.generic.optimetaGeo.issue.title"
 msgstr "Zeiten & Orte"
