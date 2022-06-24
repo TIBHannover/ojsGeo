@@ -45,7 +45,10 @@ Cypress.Commands.add('install', function () {
 
     // Locale configuration
     cy.get('input[id=additionalLocales-en_US').check();
-    cy.get('input[id=additionalLocales-fr_CA').check();
+    cy.get('input[id=additionalLocales-de_DE').check();
+    cy.get('input[id=additionalLocales-fr_FR').check();
+    cy.get('input[id=additionalLocales-es_ES').check();
+    cy.get('input[id=additionalLocales-sv_SE').check();
 
     // Complete the installation
     cy.get('button[id^=submitFormButton-]').click();
@@ -113,6 +116,36 @@ Cypress.Commands.add('register', data => {
 
     cy.get('input[name=privacyConsent]').click();
     cy.get('button').contains('Register').click();
+});
+
+Cypress.Commands.add('createIssues', (data, context) => {
+    // create and publish issue
+    cy.login('admin', 'admin');
+    cy.get('a').contains('admin').click();
+    cy.get('a').contains('Dashboard').click();
+    cy.get('.app__nav a').contains('Issues').click();
+    cy.get('a[id^=component-grid-issues-futureissuegrid-addIssue-button-]').click();
+    cy.wait(1000); // Avoid occasional failure due to form init taking time
+    cy.get('input[name="volume"]').type('1', { delay: 0 });
+    cy.get('input[name="number"]').type('2', { delay: 0 });
+    cy.get('input[name="year"]').type('2022', { delay: 0 });
+    cy.get('input[id=showTitle]').click();
+    cy.get('button[id^=submitFormButton]').click();
+
+    cy.get('a.show_extras').click();
+    cy.contains('Publish Issue').click();
+    cy.get('input[id="sendIssueNotification"]').click();
+    cy.get('button[id^=submitFormButton]').click();
+
+    // create a future issue
+    cy.wait(1000);
+    cy.get('a[id^=component-grid-issues-futureissuegrid-addIssue-button-]').click();
+    cy.wait(1000); // Avoid occasional failure due to form init taking time
+    cy.get('input[name="volume"]').type('3', { delay: 0 });
+    cy.get('input[name="number"]').type('4', { delay: 0 });
+    cy.get('input[name="year"]').type('2023', { delay: 0 });
+    cy.get('input[id=showTitle]').click();
+    cy.get('button[id^=submitFormButton]').click();
 });
 
 Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {

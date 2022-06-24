@@ -24,7 +24,7 @@ import '@foreachbe/cypress-tinymce'
 Cypress.config('defaultCommandTimeout', 10000);
 
 Cypress.on('uncaught:exception', (err, runnable) => {
-    cy.log(`Uncaught Exception: ${JSON.stringify(err)}`);
+    console.log(`********* Uncaught Exception: ${JSON.stringify(err)}`);
 
     return false;
 });

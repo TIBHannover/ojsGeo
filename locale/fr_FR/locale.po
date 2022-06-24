@@ -93,7 +93,7 @@ msgid "plugins.generic.optimetaGeo.issue.title"
 msgstr "Heures et lieux de publication"
 
 msgid "plugins.generic.optimetaGeo.journal.pageTitle"
-msgstr "Heures et lieux de tous les articles".
+msgstr "Heures et lieux de tous les articles."
 
 msgid "plugins.generic.optimetaGeo.journal.title"
 msgstr "Heures et emplacements de tous les articles dans"
@@ -105,7 +105,7 @@ msgid "plugins.generic.optimetaGeo.journal.mapMenu"
 msgstr "Carte"
 
 msgid "plugins.generic.optimetaGeo.journal.text"
-msgstr "Cliquez sur une géométrie pour voir des informations sur l'article et suivez le lien vers la page de l'article".
+msgstr "Cliquez sur une géométrie pour voir des informations sur l'article et suivez le lien vers la page de l'article."
 
 msgid "plugins.generic.optimetaGeo.map.articleLayerName"
 msgstr "Des articles"
