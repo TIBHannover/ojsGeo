@@ -23,4 +23,30 @@ describe('OPTIMETA Geoplugin Tests', function () {
     cy.createIssues();
   });
 
+  it('Adds test users', function () {
+    cy.register({
+      'username': 'aauthor',
+      'givenName': 'Augusta',
+      'familyName': 'Author',
+      'affiliation': 'University of Research',
+      'country': 'Germany',
+    });
+    cy.logout();
+
+    let editor = {
+      'username': 'eeditor',
+      'givenName': 'Edd',
+      'familyName': 'Editor',
+      'country': 'Germany',
+      'affiliation': 'University of Science',
+      'roles': ['Journal editor']
+    }
+
+    cy.login('admin', 'admin');
+    cy.get('a:contains("admin"):visible').click();
+    cy.get('a:contains("Dashboard")').click({ force: true });
+    cy.get('a:contains("Users & Roles")').click();
+    cy.createUser(editor);
+  });
+
 });

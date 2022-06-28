@@ -9,19 +9,65 @@
 
 describe('OPTIMETA Geoplugin map pages', function () {
 
-  it('has a map for the journal showing all articles of the journal', function () {    
-		cy.visit('index.php');
-
-    // TODO visit article page
+  const checkFeatures = (features => {
+    expect(features[0].geometry.type).to.equal('LineString');
+    expect(features[0].geometry.coordinates.length).to.equal(2);
+    expect(features[0].geometry.coordinates[0][0] - 8.43).to.be.lessThan(0.01);
+    expect(features[0].geometry.coordinates[0][1] - 53.33).to.be.lessThan(0.01);
   });
 
-  it('has a map page for the issue showing geometries of the issue', function () {
-    // TODO cy.get('h1').should('contain', 'Times & locations')
-    // get mapdiv and inspect it
+  it('The map on the current issue page has the paper\'s geometry', function () {
+    cy.visit('/');
+    cy.mapHasFeatures(1);
+    cy.window().wait(2000).then(({ map }) => {
+      var features = [];
+      map.eachLayer(function (layer) {
+        if (layer.hasOwnProperty('feature')) {
+          features.push(layer.feature);
+        }
+      });
+      checkFeatures(features);
+    });
   });
 
-  it('has a map page for the article with the geometry of the article', function () {
-    // TODO https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
+  it('The map on the issue page has the paper\'s geometry', function () {
+    cy.visit('/');
+    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
+    cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
+
+    cy.get('.pkp_structure_main').should('contain', 'Times & locations');
+    cy.get('#mapdiv').should('exist');
+
+    cy.mapHasFeatures(1);
+    cy.window().wait(2000).then(({ map }) => {
+      var features = [];
+      map.eachLayer(function (layer) {
+        if (layer.hasOwnProperty('feature')) {
+          features.push(layer.feature);
+        }
+      });
+      checkFeatures(features);
+    });
   });
 
+  it('Shows the published paper on the journal map', function () {
+    this.skip(); // TODO fix journal map in tests
+
+    cy.visit('/');
+    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Map")').click();
+    cy.get('.pkp_structure_main').should('contain', 'Times & locations');
+    cy.get('#mapdiv').should('exist');
+  });
+
+  it('Does not show an article from an unpublished issue on the journal map', function () {
+    this.skip(); // TODO fix journal map in tests
+
+    cy.login('aauthor');
+    cy.get('a:contains("aauthor")').click();
+    cy.get('a:contains("Dashboard")').click({ force: true });
+
+    cy.createSubmissionAndPublish(submission2);
+
+    // TODO
+  });
 });

@@ -121,8 +121,8 @@ Cypress.Commands.add('register', data => {
 Cypress.Commands.add('createIssues', (data, context) => {
     // create and publish issue
     cy.login('admin', 'admin');
-    cy.get('a').contains('admin').click();
-    cy.get('a').contains('Dashboard').click();
+    cy.get('a:contains("admin"):visible').click();
+    cy.get('a:contains("Dashboard")').click({ force: true });
     cy.get('.app__nav a').contains('Issues').click();
     cy.get('a[id^=component-grid-issues-futureissuegrid-addIssue-button-]').click();
     cy.wait(1000); // Avoid occasional failure due to form init taking time
@@ -177,6 +177,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     if ('additionalFiles' in data) {
         data.files = data.files.concat(data.additionalFiles);
     }
+    if (!('issue' in data)) data.issue = '1';
 
     cy.get('a:contains("Make a New Submission"), div#myQueue a:contains("New Submission"), a:contains("Back to New Submission")').click();
 
@@ -196,9 +197,11 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
         cy.get('input[name=userGroupId]').parent().contains(data.submitterRole).click();
     } else {
         cy.get("body").then($body => {
-            if ($body.find('input[id=userGroupId]').length > 0) {   
-                cy.get('input[id=userGroupId]').click();
-            }
+            cy.get('input[id=userGroupId]').then($input => {
+                if ($input.is(':visible')) {
+                    cy.get('input[id=userGroupId]').click();
+                } // else: user is just an author and selection is not visible
+            });
         });
     }
     cy.get('button.submitFormButton').click();
@@ -357,18 +360,18 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.get('.applyBtn').click();
 
     // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
-    cy.toolbarButton('polygon').click();
+    cy.toolbarButton('polyline').click();
 
-    cy.get('#mapdiv')
-        .click(390, 250)
-        .click(400, 50)
-        .click(450, 50)
-        .click(450, 150)
-        .click(390, 250);
+    cy.get('#mapdiv') // too small differences dont work, min 5 pixels
+        .click(448, 110)
+        .click(453, 115)
+        .click(453, 115);
 
-    debugger;
+    cy.wait(2000);
 
-    cy.waitJQuery();
+    // TODO check if administrative unit fields are filled in
+    cy.get('#administrativeUnitInput').contains("Earth");
+
     cy.get('form[id=submitStep3Form]').find('button').contains('Save and continue').click();
 
     // === Submission Step 4 ===
@@ -378,10 +381,36 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.waitJQuery();
     cy.get('h2:contains("Submission complete")');
 
-    // === Jump through review and publication  ===
     cy.logout();
-    cy.login('admin');
 
+    // === Jump through review and publication  ===
+    cy.login('eeditor');
+    cy.get('a:contains("eeditor"):visible').click();
+    cy.get('a:contains("Dashboard")').click({ force: true });
+    // only one editor, should be only one submission under "My Assigned"
+    cy.get('a:contains("View")').click();
+    cy.get('a[id^="accept-button"]').click();
+    cy.get('input[id^="skipEmail-skip"]').click();
+    cy.get('form[id="promote"] button:contains("Next:")').click();
+    cy.get('input[id^="select"]').click();
+    cy.get('button:contains("Record Editorial Decision")').click();
+    cy.wait(4000);
+    cy.get('a:contains("Send To Production")').click();
+    cy.get('input[id="skipEmail-skip"]').click();
+    cy.get('form[id="promote"] button:contains("Next:")').click();
+    cy.get('input[id^="select"]').click();
+    cy.get('button:contains("Record Editorial Decision")').click();
+    cy.wait(4000);
+    cy.get('div[id="production"]')
+        .find('button:contains("Schedule For Publication")').click();
+    cy.get('button[id="issue-button"]').click();
+    cy.get('button:contains("Assign to Issue")').click();
+    cy.get('select[id^="assignToIssue"]').select(data.issue);
+    cy.get('div[id^="assign"]').
+        find('button:contains("Save")').click();
+    cy.wait(2000);
+    cy.get('button:contains("Schedule For Publication")');
+    cy.get('button:contains("Publish"), div[class="pkpFormPages"] button:contains("Schedule For Publication")').click();
 });
 
 Cypress.Commands.add('findSubmissionAsEditor', (username, password, familyName, context) => {
@@ -471,8 +500,8 @@ Cypress.Commands.add('createUser', user => {
     if (!('roles' in user)) user.roles = [];
     cy.get('div[id=userGridContainer] a:contains("Add User")').click();
     cy.wait(2000); // Avoid occasional glitches with given name field
-    cy.get('input[id^="givenName-en_US"]').type(user.givenName, { delay: 0 });
-    cy.get('input[id^="familyName-en_US"]').type(user.familyName, { delay: 0 });
+    cy.get('input[id^="givenName-"]').type(user.givenName, { delay: 0 });
+    cy.get('input[id^="familyName-"]').type(user.familyName, { delay: 0 });
     cy.get('input[name=email]').type(user.email, { delay: 0 });
     cy.get('input[name=username]').type(user.username, { delay: 0 });
     cy.get('input[name=password]').type(user.password, { delay: 0 });
@@ -483,7 +512,7 @@ Cypress.Commands.add('createUser', user => {
     cy.get('select[name=country]').select(user.country);
     cy.contains('More User Details').click();
     cy.get('span:contains("Less User Details"):visible');
-    cy.get('input[id^="affiliation-en_US"]').type(user.affiliation, { delay: 0 });
+    cy.get('input[id^="affiliation-"]').type(user.affiliation, { delay: 0 });
     cy.get('form[id=userDetailsForm]').find('button[id^=submitFormButton]').click();
     user.roles.forEach(role => {
         cy.get('form[id=userRoleForm]').contains(role).click();
@@ -510,5 +539,25 @@ Cypress.Commands.add('consoleLog', message => {
 
 // leaflet map interaction, see https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
 Cypress.Commands.add('toolbarButton', name => {
-    cy.get(`.leaflet-pm-icon-${name}`)
+    cy.get(`.leaflet-draw a:contains("${name}")`)
+});
+
+// https://github.com/geoman-io/leaflet-geoman (MIT license)
+Cypress.Commands.add('hasLayers', (count) => {
+    cy.window().then(({ map }) => {
+        const layerCount = Object.keys(map._layers).length;
+        cy.wrap(layerCount).should('eq', count);
+    });
+});
+
+Cypress.Commands.add('mapHasFeatures', (count) => {
+    cy.window().wait(2000).then(({ map }) => {
+        var features = [];
+        map.eachLayer(function(layer){
+            if(layer.hasOwnProperty('feature')) {
+                features.push(layer.feature);
+            }
+        });
+        expect(features).to.have.lengthOf(1);
+    });
 });

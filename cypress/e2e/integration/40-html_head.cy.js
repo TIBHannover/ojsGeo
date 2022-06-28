@@ -10,16 +10,12 @@
 describe('OPTIMETA Geoplugin HTML geospatial head metadata', function () {
   
   it('has DC.Coverage with correct text string', function () {
-    // TODO visit article page
-    cy.request('http://localhost:8/').as('response').then((resp) => {
-      expect(resp.status).to.eq(200);
-
-      // TODO
-    });
-
-    cy.request('https://www.google.com/webhp?#q=cypress.io+cors')
-      .its('body') // head?
-      .should('include', 'Testing, the way it should be')
+    cy.visit('/');
+    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
+    cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
+    cy.get('a:contains("Hanover is nice")').click();
+    
+    cy.get('meta[name="DC.Coverage"]').should('have.attr', 'content', 'Earth, Europe, Federal Republic of Germany');
   });
 
   it('has DC.SpatialCoverage with the correct scheme and content', function () {

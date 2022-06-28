@@ -28,3 +28,13 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
     return false;
 });
+
+// https://stackoverflow.com/a/55168680
+Cypress.on('before:browser:launch', (browser = {}, args) => {
+    if (browser.name === 'chrome') {
+        args.push('--remote-debugging-port=9222')
+        // whatever you return here becomes the new args
+        return args
+    }
+});
+

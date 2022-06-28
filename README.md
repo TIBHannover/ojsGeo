@@ -70,6 +70,8 @@ npm run cy_open
 npm run cy_run
 ```
 
+To debug, add `debugger;` to the code and make sure to have the developer tools open in the browser windows started by Cypress.
+
 ## Writing tests
 
 1. Start docker-compose configuration (see above)

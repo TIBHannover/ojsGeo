@@ -18,7 +18,8 @@
   "scripts": {
     "cy_open": "npx cypress open",
     "cy_run": "npx cypress run",
-    "test_ci": "npx cypress run"
+    "test_ci": "npx cypress run",
+    "test_compose": "docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up"
   },
   "repository": {
     "type": "git",

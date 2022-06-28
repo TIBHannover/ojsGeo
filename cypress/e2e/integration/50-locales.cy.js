@@ -18,7 +18,7 @@ describe('OPTIMETA Geoplugin locales', function () {
 
     cy.get('h4').should('contain', 'Languages');
     cy.get('input[id^=select-cell-de_DE-uiLocale').check();
-    cy.wait(2000);
+    cy.reload();
 
     cy.get('.pkpDropdown > .pkpButton').click();
     cy.get('a:contains("Deutsch")').click();
@@ -49,7 +49,7 @@ describe('OPTIMETA Geoplugin locales', function () {
 
     cy.get('h4').should('contain', 'Languages');
     cy.get('input[id^=select-cell-es_ES-uiLocale').check();
-    cy.wait(2000);
+    cy.reload();
 
     cy.get('.pkpDropdown > .pkpButton').click();
     cy.get('a:contains("Español")').click();
@@ -80,7 +80,7 @@ describe('OPTIMETA Geoplugin locales', function () {
 
     cy.get('h4').should('contain', 'Languages');
     cy.get('input[id^=select-cell-fr_FR-uiLocale').check();
-    cy.wait(2000);
+    cy.reload();
 
     cy.get('.pkpDropdown > .pkpButton').click();
     cy.get('a:contains("Français")').click();
