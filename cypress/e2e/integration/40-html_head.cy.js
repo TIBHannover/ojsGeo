@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin HTML geospatial head metadata', function () {
+describe('OPTIMETA Geoplugin HTML Metadata', function () {
   
   it('has DC.Coverage with correct text string', function () {
     cy.visit('/');

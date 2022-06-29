@@ -354,9 +354,10 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
 
         cy.get('div[id^="component-grid-users-chapter-chaptergrid-"] a.pkp_linkaction_editChapter:contains("' + Cypress.$.escapeSelector(chapter.title) + '")');
     });
-
+    
     // geospatial metadata
     cy.get('input[name=datetimes]').type(data.timePeriod);
+    cy.wait(1000);
     cy.get('.applyBtn').click();
 
     // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b

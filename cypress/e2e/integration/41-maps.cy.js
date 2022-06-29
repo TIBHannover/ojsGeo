@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin map pages', function () {
+describe('OPTIMETA Geoplugin Maps', function () {
 
   const checkFeatures = (features => {
     expect(features[0].geometry.type).to.equal('LineString');

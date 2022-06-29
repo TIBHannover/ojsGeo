@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin Theme tests', function () {
+describe('OPTIMETA Geoplugin Theme Configuration', function () {
 
     it('Disable theme', function () {
     cy.login('admin', 'admin', Cypress.env('contextPath'));

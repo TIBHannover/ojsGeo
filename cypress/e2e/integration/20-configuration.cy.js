@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin tests', function () {
+describe('OPTIMETA Geoplugin Configuration', function () {
 
   it('Disable Geoplugin', function () {
     cy.login('admin', 'admin', Cypress.env('contextPath'));
