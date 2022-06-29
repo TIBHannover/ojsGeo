@@ -1,0 +1,41 @@
+{
+    "require": {
+        "bower-asset/leaflet": "1.6.0",
+        "bower-asset/leaflet-draw": "1.0.4",
+        "bower-asset/leaflet-control-geocoder": "2.4.0",
+        "bower-asset/leaflet-color-markers": "v1.0.0",
+        "npm-asset/daterangepicker": "3.1",
+        "bower-asset/moment": "2.18.1",
+        "oomphinc/composer-installers-extender": "^2.0"
+    },
+    "extra": {
+        "installer-types": [
+            "bower-asset",
+            "npm-asset"
+        ],
+        "installer-paths": {
+            "js/lib/{$name}/": [
+                "type:bower-asset",
+                "type:npm-asset"
+            ]
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "oomphinc/composer-installers-extender": true
+        }
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "if [ ! -f 'js/lib/leaflet-control-geocoder/dist/Control.Geocoder.min.js' ]; then cd js/lib/leaflet-control-geocoder/ && npm install; fi",
+            "php -f js/lib/cleanup-js-lib.php"
+        ]
+    }
+}

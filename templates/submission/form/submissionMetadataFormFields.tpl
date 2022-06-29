@@ -41,6 +41,9 @@
         style="height: 0px; width: 0px; visibility: hidden;">
     <input type="text" id="spatialPropertiesFromDb" name="spatialPropertiesFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialPropertiesFromDb}' />
+    <p align="justify" class="description">{translate
+        key="plugins.generic.optimetaGeo.geospatialmetadata.license.submission"}
+    </p>
     {/fbvFormSection}
 
     {*administrativeUnit*}

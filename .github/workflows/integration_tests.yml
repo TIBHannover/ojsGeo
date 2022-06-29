@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # php-versions: ['7.3',"7.4",'8.0'] # relies on PHP version from OJS image
+        # php-versions: ["7.3","7.4","8.0"] # relies on PHP version from OJS image
         dbs: [
             #'pgsql',
             "mysql",
@@ -30,12 +30,12 @@ jobs:
         #'omp',
         #'ops'
         pkp-version: [
-            #"stable-3_2_1",
+            # "3_2_1-4" or "stable-3_2_1" # > installation does not work in Cypress, but manually it does
             "3_3_0-11",
           ]
     env:
       OJS_VERSION: ${{ matrix.pkp-version }}
-    
+
     steps:
       - name: Pre-pull images
         run: |
@@ -48,8 +48,25 @@ jobs:
           sudo apt-get -qq update
           sudo apt-get -qq install docker-compose
 
+      - name: Install npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install PHP
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "7.4"
+
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Install composer
+        uses: "ramsey/composer-install@v2"
+
+      - name: Install plugin dependencies
+        run: |
+          composer update
 
       - name: Install test dependencies
         run: |
@@ -62,10 +79,9 @@ jobs:
 
       - name: Start OJS and database
         run: |
-          chmod -R 777 .
           docker-compose --file cypress/docker-compose-${{ matrix.dbs }}.yml up -d
 
-      #- name: Run Cypress in container, see https://github.com/cypress-io/cypress-example-docker-compose/blob/master/docker-compose.yml and 
+      #- name: Run Cypress in container, see https://github.com/cypress-io/cypress-example-docker-compose/blob/master/docker-compose.yml and
       #  run: |
       #    docker run -v $PWD:/optimetaGeo  -w /optimetaGeo --entrypoint=cypress --network="cypress_inside" --name cypress-docker cypress/included:10.2.0 run
       - name: Run Cypress

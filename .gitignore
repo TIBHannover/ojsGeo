@@ -24,3 +24,17 @@ cypress/videos/
 cypress/logs/
 
 locale/python-auto-translate-gettext/
+
+vendor/
+
+js/lib/daterangepicker/
+
+js/lib/leaflet/
+
+js/lib/leaflet-color-markers/
+
+js/lib/leaflet-control-geocoder/
+
+js/lib/leaflet-draw/
+
+js/lib/moment/
