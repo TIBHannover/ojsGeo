@@ -80,6 +80,7 @@ jobs:
           cat cypress/logs/*.log
 
       - name: Upload screenshots
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: screenshots ${{ matrix.pkp-application }} ${{ matrix.php-versions }} ${{ matrix.dbs }}
@@ -87,6 +88,7 @@ jobs:
             ${{ github.workspace }}/cypress/screenshots
 
       - name: Upload videos
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: screenshots ${{ matrix.pkp-application }} ${{ matrix.php-versions }} ${{ matrix.dbs }}
