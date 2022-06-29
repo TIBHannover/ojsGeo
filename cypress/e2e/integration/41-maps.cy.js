@@ -19,7 +19,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
   it('The map on the current issue page has the paper\'s geometry', function () {
     cy.visit('/');
     cy.mapHasFeatures(1);
-    cy.window().wait(2000).then(({ map }) => {
+    cy.window().wait(200).then(({ map }) => {
       var features = [];
       map.eachLayer(function (layer) {
         if (layer.hasOwnProperty('feature')) {
@@ -39,7 +39,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
     cy.get('#mapdiv').should('exist');
 
     cy.mapHasFeatures(1);
-    cy.window().wait(2000).then(({ map }) => {
+    cy.window().wait(200).then(({ map }) => {
       var features = [];
       map.eachLayer(function (layer) {
         if (layer.hasOwnProperty('feature')) {
@@ -48,6 +48,48 @@ describe('OPTIMETA Geoplugin Maps', function () {
       });
       checkFeatures(features);
     });
+  });
+
+  it('The article page has the paper\'s geometry and the administrative units', function () {
+    cy.visit('/');
+    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
+    cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
+    cy.get('a:contains("Hanover is nice")').click();
+
+    cy.get('.pkp_structure_main').should('contain', 'Time and location');
+    cy.get('#mapdiv').should('exist');
+
+    cy.mapHasFeatures(2);
+    cy.window().wait(200).then(({ map }) => {
+      var features = [];
+      map.eachLayer(function (layer) {
+        if (layer.hasOwnProperty('feature')) {
+          features.push(layer.feature);
+        }
+      });
+      checkFeatures(features);
+    });
+
+    cy.window().wait(200).then(({ map }) => {
+      var foundAdminLayerBasedOnColor = false;
+      map.eachLayer(function (layer) {
+        if (layer.options.hasOwnProperty('color') && layer.options.color === 'black') {
+          foundAdminLayerBasedOnColor = true;
+          expect(layer.options.fillOpacity).to.equal(0.15);
+          expect(layer._latlngs[0]).to.have.lengthOf(4);
+        }
+      });
+      expect(foundAdminLayerBasedOnColor).to.be.true;
+    });
+  });
+
+  it('The article page has the admnistrative units in a text', function () {
+    cy.visit('/');
+    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
+    cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
+    cy.get('a:contains("Hanover is nice")').click();
+
+    cy.get('#administrativeUnit').should('contain', 'Earth, Europe, Federal Republic of Germany');
   });
 
   it('Shows the published paper on the journal map', function () {

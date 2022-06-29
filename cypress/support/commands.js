@@ -552,7 +552,7 @@ Cypress.Commands.add('hasLayers', (count) => {
 });
 
 Cypress.Commands.add('mapHasFeatures', (count) => {
-    cy.window().wait(2000).then(({ map }) => {
+    cy.window().wait(200).then(({ map }) => {
         var features = [];
         map.eachLayer(function(layer){
             if(layer.hasOwnProperty('feature')) {
