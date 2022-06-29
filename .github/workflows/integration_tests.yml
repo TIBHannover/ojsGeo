@@ -70,7 +70,7 @@ jobs:
       #    docker run -v $PWD:/optimetaGeo  -w /optimetaGeo --entrypoint=cypress --network="cypress_inside" --name cypress-docker cypress/included:10.2.0 run
       - name: Run Cypress
         run: |
-          npx cypress run
+          npx cypress run --headless --browser chrome
 
       - name: Show logs
         if: ${{ failure() }}
@@ -83,7 +83,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: screenshots ${{ matrix.pkp-application }} ${{ matrix.php-versions }} ${{ matrix.dbs }}
+          name: screenshots for ${{ matrix.pkp-application }} with ${{ matrix.dbs }}
           path: |
             ${{ github.workspace }}/cypress/screenshots
 
@@ -91,6 +91,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: screenshots ${{ matrix.pkp-application }} ${{ matrix.php-versions }} ${{ matrix.dbs }}
+          name: videos for ${{ matrix.pkp-application }} with ${{ matrix.dbs }}
           path: |
             ${{ github.workspace }}/cypress/videos

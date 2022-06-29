@@ -180,6 +180,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     if (!('issue' in data)) data.issue = '1';
 
     cy.get('a:contains("Make a New Submission"), div#myQueue a:contains("New Submission"), a:contains("Back to New Submission")').click();
+    cy.wait(5000); // extra wait time for GH action
 
     // === Submission Step 1 ===
     if ('section' in data) cy.get('select[id="sectionId"],select[id="seriesId"]').select(data.section);
