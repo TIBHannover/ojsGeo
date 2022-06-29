@@ -60,7 +60,7 @@ class JournalMapHandler extends Handler
                 'title' => strip_tags($publication->getLocalizedData('title')),
                 'spatial' => $publication->getData($plugin->dbFields['spatial']),
                 'temporal' => $publication->getData($plugin->dbFields['temporal']),
-                'coverage' => $publication->getLocalizedData('coverage', 'en_US'),
+                'coverage' => $publication->getLocalizedData('coverage', $context->getPrimaryLocale()),
                 'abstract' => strip_tags($publication->getLocalizedData('abstract')),
                 'authors' => $publication->getAuthorString($userGroups),
                 'issue' => $issue,

@@ -9,109 +9,109 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2020-09-02T07:48:21+00:00\n"
 "PO-Revision-Date: 2020-09-02T07:48:21+00:00\n"
-"Language: \n"
+"Language: German\n"
 
 msgid "plugins.generic.optimetaGeo.article.metadata.short"
-msgstr "Time & location"
+msgstr "Zeit & Ort"
 
 msgid "plugins.generic.optimetaGeo.article.metadata.long"
-msgstr "Time and location"
+msgstr "Zeit und Ort"
 
 msgid "plugins.generic.optimetaGeo.publication.label"
-msgstr "Time & location"
+msgstr "Zeit & Ort"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.description.article"
-msgstr "Here the properties of the articles content in terms of place and time are illustrated."
+msgstr "Hier werden die Eigenschaften des Artikelinhalts in Bezug auf Zeit und Ort dargestellt."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"
-msgstr "Temporal Properties"
+msgstr "Zeitliche Eigenschaften"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Define the temporal properties of the articles content by specifying the begin and end dates. The input is possible via the text field as well as via the calendar view. Click the input field below this text to open the calendar. Press \"Apply\" to save the calender setting. Press \"Clear\" to remove the current data. Textual input must match the following format and be confirmed by clicking \"Apply\" (not Enter!): begin and end are seperated by a hyphen surrounded by spaces; dates are given as \"YYYY-MM-DD\", whereby \"YYYY\" stands for years, \"M\" for months (with a leading zero), and \"D\" for days (with a leading zero)."
+msgstr "Definieren Sie die zeitlichen Eigenschaften des Artikelinhalts durch Angabe von Anfangs- und Enddatum. Die Eingabe ist sowohl über das Textfeld als auch über die Kalenderansicht möglich. Klicken Sie auf das Eingabefeld unter diesem Text, um die Kalenderansicht zu öffnen. Drücken Sie \"Übernehmen\", um die Kalendereinstellung zu speichern. Drücken Sie \"Löschen\", um die aktuellen Daten zu entfernen. Texteingaben müssen dem folgenden Format entsprechen und durch Klicken auf \"Anwenden\" bestätigt werden. Nutzen Sie bitte nicht die Enter-Taste. Bei manuellen Eingaben werden Anfang und Ende durch einen Bindestrich getrennt, der von Leerzeichen umgeben ist; Datumsangaben sind im Format \"JJJJ-MM-TT\" einzugeben, wobei \"JJJJ\" für Jahre, \"M\" für Monate (mit einer führenden Null) und \"D\" für Tage (mit einer führenden Null) steht."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"
-msgstr "Temporal properties of the article's content specified with a day resolution."
+msgstr "Zeitliche Eigenschaften des Artikelinhalts, angegeben in Tagen."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"
-msgstr "This article covers a time period from "
+msgstr "Dieser Artikel umfasst einen Zeitraum von"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"
-msgstr "to"
+msgstr "bis"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"
-msgstr "This article covers location(s) or area(s) shown on the map below."
+msgstr "Dieser Artikel deckt Ort(e) oder Gebiet(e) ab, die auf der untenstehenden Karte gezeigt werden."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"
-msgstr "The administrative units enclusing the coverage are: "
+msgstr "Die Verwaltungseinheiten, welche die zum Artikel zugehörigen Orte umschließen, sind:"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.submission"
-msgstr "Define the location of the articles content by one or more geometric shape(s). You can choose in the control on the left side between polyline, polygon, rectangle and point. By the icons below you can edit or delete the created geometric shape(s). With the \"–\" and \"+\" in the upper left corner it is possible to zoom in and out. In the upper right corner you can change the layers. You can choose between an \"OpenStreetMap\" layer and an \"Esri World Imagery\" layer. You can also set whether the geometric shape(s) and the administrative unit should be displayed or not. For the administrative unit you will find a more detailed description in the next paragraph (Coverage Information). Below the layer control you will find a search for the map. You can search for locations and by hitting \"Enter\" you will be offered different locations that match your input. By clicking on a suggestion it will be accepted and a matching rectangle, describing the boundaries of the location, will be displayed on the map. This rectangle can also be deleted/ edited by clicking on the trash-/ edit icon on the left side. In the lower right corner there is a scale (upper specification in kilometers, lower specification in miles). You can choose a coarser level of detail to protect sensitive locations."
+msgstr "Definieren Sie die Orte und Gebiete des Artikelinhalts durch eine oder mehrere geometrische Form(en). Sie können in der Steuerung auf der linken Seite zwischen Polylinie, Polygon, Rechteck und Punkt-Geometrie wählen. Über die Icons darunter können Sie die erstellte(n) geometrische(n) Form(en) bearbeiten oder löschen. Mit den Symbolen \"-\" und \"+\" in der oberen linken Ecke können Sie die Ansicht vergrößern und verkleinern. In der oberen rechten Ecke können Sie die Hintergrundkarten wechseln. Sie können zwischen einer Straßenkarte (\"OpenStreetMap\"-Ebene) und Luftbildern (\"Esri World Imagery\"-Ebene) wählen. Sie können auch einstellen, ob die geometrische(n) Form(en) und die Verwaltungseinheit angezeigt werden sollen oder nicht. Für die Verwaltungseinheiten finden Sie eine genauere Beschreibung im nächsten Abschnitt dieses Formulars. Unterhalb der Ebenensteuerung finden Sie eine Suchfunktion für die Karte. Sie können nach Orten suchen und durch Drücken von \"Enter\" werden Ihnen verschiedene Orte angeboten, die Ihren Eingaben entsprechen. Wenn Sie auf einen Vorschlag klicken, wird er akzeptiert und ein passendes Rechteck, das die Grenzen des Ortes beschreibt, wird auf der Karte angezeigt. Dieses Rechteck kann auch gelöscht/bearbeitet werden, indem Sie auf das Lösch-/Bearbeitungssymbol auf der linken Seite klicken. Sie können einen gröberen Detaillierungsgrad wählen, um sensible Orte zu schützen."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"
-msgstr "The geometric shape(s) in blue represent the locations or areas of the article's content as provided by the authors. The administrative unit shown in a black rectangle represents the smallest administrative unit that encloses the spatial extent that the article is dealing with."
+msgstr "Die blaue(n) geometrische(n) Form(en) stellen die Orte oder Gebiete des Artikelinhalts dar, wie sie von den Nutzer*innen angegeben wurden. Die in einem schwarzen Rechteck dargestellte Verwaltungseinheit stellt die kleinste Verwaltungseinheit dar, welche alle Orte und Gebiete umschließt, mit denen sich der Artikel befasst."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit"
-msgstr "Coverage Information"
+msgstr "Adiministrative Region"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
-msgstr "On basis of your input in the map, administrative unit(s) is/ are proposed which has/ have been selected according to your input in the map. Each time you update the map, the coverage information gets new calculated and updated correspondingly. You are able to delete administrative unit(s) by the red \"x\". If you hover over the administrative unit(s) the superior hierarchy of administrative unit(s) is displayed if available. Besides you can add further administrative units. You are only able to insert a further administrative unit if it fits to the already given hierarchy of administrative unit(s), and the given geometric shape(s) in the map. If you begin to insert, there are some suggestions you can accept by clicking, but nevertheless you can input your own administrative unit by hitting \"Enter\". The administrative unit (in black) which is the lowest common denominator for all geometric shape(s) is shown in the map. The administrative unit is not editable or deletable in the map, but here via the input field. If there are automatic changes in the map caused by changes in the coverage information and vice versa, this is indicated by a blue frame around the coverage element or the map."
+msgstr "Auf Basis Ihrer Eingaben in der Karte werden Verwaltungseinheiten vorgeschlagen, die entsprechend Ihrer Eingaben in der Karte ausgewählt wurden. Jedes Mal, wenn Sie die Eingaben aktualisieren, werden die Erfassungsinformationen neu berechnet und entsprechend aktualisiert. Mit dem roten \"x\" können Sie die Verwaltungseinheit(en) löschen. Wenn Sie den Mauszeiger über die Verwaltungseinheit(en) bewegen, wird die übergeordnete Hierarchie der Verwaltungseinheit(en) angezeigt, sofern vorhanden. Außerdem können Sie weitere Verwaltungseinheiten hinzufügen. Sie können nur dann eine weitere Verwaltungseinheit einfügen, wenn diese zu der bereits vorgegebenen Hierarchie der Verwaltungseinheiten und der vorgegebenen geometrischen Form in der Karte passt. Wenn Sie mit dem Einfügen beginnen, gibt es einige Vorschläge, die Sie durch Anklicken akzeptieren können, aber Sie können trotzdem Ihre eigene Verwaltungseinheit eingeben, indem Sie "Enter" drücken. Die Verwaltungseinheit (in Schwarz), die den kleinsten gemeinsamen Nenner für alle geometrischen Formen darstellt, wird in der Karte angezeigt. Die Verwaltungseinheit ist nicht direkt in der Karte, sondern über das Eingabefeld editierbar oder löschbar."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit.description.article"
-msgstr "Here the administrative units are listed, which are superior to the location(s) the article is dealing with, with the highest level on the left and the lowest on the right."
+msgstr "Hier werden die administrativen Einheiten aufgelistet, die dem Ort bzw. den Orten übergeordnet sind, um die es in dem Artikel geht, wobei die höchste Ebene links und die niedrigste rechts steht."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.ArticleView"
-msgstr "Coverage Information"
+msgstr "Verwaltungseinheiten"
 
 msgid "plugins.generic.optimetaGeo.article.details.download"
-msgstr "Download geospatial metadata"
+msgstr "Räumliche Metadaten herunterladen"
 
 msgid "plugins.generic.optimetaGeo.article.details.geoJSON.about"
-msgstr "About GeoJSON"
+msgstr "Über GeoJSON"
 
 msgid "plugins.generic.optimetaGeo.description"
-msgstr "This plugin enables the discovery of articles based on geospatial metadata."
+msgstr "Dieses Plugin ermöglicht das Auffinden von Artikeln auf der Basis von geografischen Metadaten."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
-msgstr "Username at https://www.geonames.org/login (username must be enabled to use the free webservice once at https://www.geonames.org/manageaccount."
+msgstr "Erstellen Sie einen Benutzernamen unter https://www.geonames.org/login; der Benutzername muss einmalig aktiviert werden, um den kostenlosen Webservice zu nutzen, siehe https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames.description"
-msgstr "You have to specify your username for the GeoNames API, so that an alignment for the administrative units is possible. Create an account on <a href="https://www.geonames.org/login">https://www.geonames.org/login</a> and insert the username here."
+msgstr "Sie müssen Ihren Benutzernamen für die GeoNames API angeben, damit ein Abruf der Verwaltungseinheiten möglich ist: <a href="https://www.geonames.org/login">https://www.geonames.org/login</a>."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames"
-msgstr "Base URL of Geonames, use to switch between 'http' and 'https'."
+msgstr "Basis-URL von Geonames, um zwischen 'http' und 'https' zu wechseln."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames.description"
-msgstr "Use one of <code>https://www.geonames.org</code> or <code>http://www.geonames.org</code> depending whether your OJS server is published on http or https."
+msgstr "Geben Sie hier entweder <code>https://www.geonames.org</code> oder <code>http://www.geonames.org</code> ein in Abhängigkeit davon, ob Ihr OJS-Server unter HTTP oder HTTPS veröffentlicht ist."
 
 msgid "plugins.generic.optimetaGeo.name"
 msgstr "OPTIMETA Geo Plugin"
 
 msgid "plugins.generic.optimetaGeo.description"
-msgstr "Collect and expose geospatial metadata for enhanced discovery of articles."
+msgstr "Sammeln und Bereitstellen von räumlichen Metadaten für verbesserte Artikelsuche."
 
 msgid "plugins.generic.optimetaGeo.issue.title"
-msgstr "Times & locations"
+msgstr "Zeiten & Orte"
 
 msgid "plugins.generic.optimetaGeo.journal.pageTitle"
-msgstr "Times & locations of all articles"
+msgstr "Zeiten & Orte aller Artikel"
 
 msgid "plugins.generic.optimetaGeo.journal.title"
-msgstr "Times & locations of all articles in"
+msgstr "Zeiten & Orte aller Artikel in"
 
 msgid "plugins.generic.optimetaGeo.journal.breadcrump"
-msgstr "Map"
+msgstr "Karte"
 
 msgid "plugins.generic.optimetaGeo.journal.mapMenu"
-msgstr "Map"
+msgstr "Karte"
 
 msgid "plugins.generic.optimetaGeo.journal.text"
-msgstr "Click on any geometry to see information about the article and follow the link to the article page."
+msgstr "Klicken Sie auf eine beliebige Geometrie, um Informationen über den Artikel zu sehen und dem Link zur Artikelseite zu folgen."
 
 msgid "plugins.generic.optimetaGeo.map.articleLayerName"
-msgstr "Articles"
+msgstr "Artikel"
 
 msgid "plugins.generic.optimetaGeo.map.administrativeLayerName"
-msgstr "Administrative Areas"
+msgstr "Verwaltungseinheiten"
 
 msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
-msgstr "This field has been disabled. Information will be filled automatically based on the geospatial information entered below."
+msgstr "Dieses Feld wurde deaktiviert. Die Informationen werden automatisch auf der Grundlage der unten eingegebenen Geodaten ausgefüllt."

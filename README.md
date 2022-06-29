@@ -52,6 +52,33 @@ By participating in this project you agree to abide by its terms.
 
 - accuracy +/- 2 m (via https://twitter.com/nyalldawson/status/1393050257554956289?s=09) is sufficient for discovery
 
+# Testing
+
+## Running Cypress locally
+
+```bash
+# see also Cypress' system dependencies at https://docs.cypress.io/guides/getting-started/installing-cypress#Advanced-Installation
+npm install
+
+npx cypress open
+
+# start compose configuration for desired OJS version, which run on ports 9xxx where "xxx" is the version string of OJS, e.g., 9330
+docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up
+
+# open/run Cypress tests with a given OJS version
+npm run cy_open
+npm run cy_run
+```
+
+To debug, add `debugger;` to the code and make sure to have the developer tools open in the browser windows started by Cypress.
+
+## Writing tests
+
+1. Start docker-compose configuration (see above)
+1. Start Cypress (see above)
+1. Write tests, run them in Cypress
+1. If you need a clean start (= empty database) for a test, stop the docker-compose configuration, delete it ('down --volume') and restart it
+
 # License
 
 This project is published under GNU General Public License, Version 3.
