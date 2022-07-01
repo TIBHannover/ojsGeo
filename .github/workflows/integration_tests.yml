@@ -43,10 +43,11 @@ jobs:
           docker pull mariadb:10.2
           docker pull cypress/included:10.2.0
 
-      - name: Install docker-compose
+      - name: Install docker-compose and msgfmt
         run: |
           sudo apt-get -qq update
           sudo apt-get -qq install docker-compose
+          sudo apt-get -qq install gettext
 
       - name: Install npm
         uses: actions/setup-node@v3

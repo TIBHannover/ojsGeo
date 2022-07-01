@@ -27,7 +27,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"
 msgstr "Zeitliche Eigenschaften"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Definieren Sie die zeitlichen Eigenschaften des Artikelinhalts durch Angabe von Anfangs- und Enddatum. Die Eingabe ist sowohl über das Textfeld als auch über die Kalenderansicht möglich. Klicken Sie auf das Eingabefeld unter diesem Text, um die Kalenderansicht zu öffnen. Drücken Sie \"Übernehmen\", um die Kalendereinstellung zu speichern. Drücken Sie \"Löschen\", um die aktuellen Daten zu entfernen. Texteingaben müssen dem folgenden Format entsprechen und durch Klicken auf \"Anwenden\" bestätigt werden. Nutzen Sie bitte nicht die Enter-Taste. Bei manuellen Eingaben werden Anfang und Ende durch einen Bindestrich getrennt, der von Leerzeichen umgeben ist; Datumsangaben sind im Format \"JJJJ-MM-TT\" einzugeben, wobei \"JJJJ\" für Jahre, \"M\" für Monate (mit einer führenden Null) und \"D\" für Tage (mit einer führenden Null) steht."
+msgstr "Definieren Sie die zeitlichen Eigenschaften des Artikelinhalts durch Angabe von Anfangs- und Enddatum. Die Eingabe ist sowohl über das Textfeld als auch über die Kalenderansicht möglich. Klicken Sie auf das Eingabefeld unter diesem Text, um die Kalenderansicht zu öffnen. Drücken Sie \"Übernehmen\", um die Kalendereinstellung zu speichern. Drücken Sie \"Löschen\", um die aktuellen Daten zu entfernen. Texteingaben müssen dem folgenden Format entsprechen und durch Klicken auf \"Anwenden\" bestätigt werden. Nutzen Sie bitte nicht die Enter-Taste. Bei manuellen Eingaben werden Anfang und Ende durch einen Bindestrich getrennt, der von Leerzeichen umgeben ist; Datumsangaben sind im Format \"JJJJ-MM-TT\" einzugeben, wobei \"JJJJ\" für Jahre, \"MM\" für Monate (mit einer führenden Null) und \"DD\" für Tage (mit einer führenden Null) steht."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"
 msgstr "Zeitliche Eigenschaften des Artikelinhalts, angegeben in Tagen."
@@ -54,7 +54,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.adminis
 msgstr "Adiministrative Region"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
-msgstr "Auf Basis Ihrer Eingaben in der Karte werden Verwaltungseinheiten vorgeschlagen, die entsprechend Ihrer Eingaben in der Karte ausgewählt wurden. Jedes Mal, wenn Sie die Eingaben aktualisieren, werden die Erfassungsinformationen neu berechnet und entsprechend aktualisiert. Mit dem roten \"x\" können Sie die Verwaltungseinheit(en) löschen. Wenn Sie den Mauszeiger über die Verwaltungseinheit(en) bewegen, wird die übergeordnete Hierarchie der Verwaltungseinheit(en) angezeigt, sofern vorhanden. Außerdem können Sie weitere Verwaltungseinheiten hinzufügen. Sie können nur dann eine weitere Verwaltungseinheit einfügen, wenn diese zu der bereits vorgegebenen Hierarchie der Verwaltungseinheiten und der vorgegebenen geometrischen Form in der Karte passt. Wenn Sie mit dem Einfügen beginnen, gibt es einige Vorschläge, die Sie durch Anklicken akzeptieren können, aber Sie können trotzdem Ihre eigene Verwaltungseinheit eingeben, indem Sie "Enter" drücken. Die Verwaltungseinheit (in Schwarz), die den kleinsten gemeinsamen Nenner für alle geometrischen Formen darstellt, wird in der Karte angezeigt. Die Verwaltungseinheit ist nicht direkt in der Karte, sondern über das Eingabefeld editierbar oder löschbar."
+msgstr "Auf Basis Ihrer Eingaben in der Karte werden Verwaltungseinheiten vorgeschlagen, die entsprechend Ihrer Eingaben in der Karte ausgewählt wurden. Jedes Mal, wenn Sie die Eingaben aktualisieren, werden die Erfassungsinformationen neu berechnet und entsprechend aktualisiert. Mit dem roten \"x\" können Sie die Verwaltungseinheit(en) löschen. Wenn Sie den Mauszeiger über die Verwaltungseinheit(en) bewegen, wird die übergeordnete Hierarchie der Verwaltungseinheit(en) angezeigt, sofern vorhanden. Außerdem können Sie weitere Verwaltungseinheiten hinzufügen. Sie können nur dann eine weitere Verwaltungseinheit einfügen, wenn diese zu der bereits vorgegebenen Hierarchie der Verwaltungseinheiten und der vorgegebenen geometrischen Form in der Karte passt. Wenn Sie mit dem Einfügen beginnen, gibt es einige Vorschläge, die Sie durch Anklicken akzeptieren können, aber Sie können trotzdem Ihre eigene Verwaltungseinheit eingeben, indem Sie \"Enter\" drücken. Die Verwaltungseinheit (in Schwarz), die den kleinsten gemeinsamen Nenner für alle geometrischen Formen darstellt, wird in der Karte angezeigt. Die Verwaltungseinheit ist nicht direkt in der Karte, sondern über das Eingabefeld editierbar oder löschbar."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit.description.article"
 msgstr "Hier werden die administrativen Einheiten aufgelistet, die dem Ort bzw. den Orten übergeordnet sind, um die es in dem Artikel geht, wobei die höchste Ebene links und die niedrigste rechts steht."
@@ -68,14 +68,11 @@ msgstr "Räumliche Metadaten herunterladen"
 msgid "plugins.generic.optimetaGeo.article.details.geoJSON.about"
 msgstr "Über GeoJSON"
 
-msgid "plugins.generic.optimetaGeo.description"
-msgstr "Dieses Plugin ermöglicht das Auffinden von Artikeln auf der Basis von geografischen Metadaten."
-
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
 msgstr "Erstellen Sie einen Benutzernamen unter https://www.geonames.org/login; der Benutzername muss einmalig aktiviert werden, um den kostenlosen Webservice zu nutzen, siehe https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames.description"
-msgstr "Sie müssen Ihren Benutzernamen für die GeoNames API angeben, damit ein Abruf der Verwaltungseinheiten möglich ist: <a href="https://www.geonames.org/login">https://www.geonames.org/login</a>."
+msgstr "Sie müssen Ihren Benutzernamen für die GeoNames API angeben, damit ein Abruf der Verwaltungseinheiten möglich ist: <a href=\"https://www.geonames.org/login\">https://www.geonames.org/login</a>."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames"
 msgstr "Basis-URL von Geonames, um zwischen 'http' und 'https' zu wechseln."

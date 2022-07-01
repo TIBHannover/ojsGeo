@@ -27,7 +27,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"
 msgstr "Temporal Properties"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Define the temporal properties of the articles content by specifying the begin and end dates. The input is possible via the text field as well as via the calendar view. Click the input field below this text to open the calendar. Press \"Apply\" to save the calender setting. Press \"Clear\" to remove the current data. Textual input must match the following format and be confirmed by clicking \"Apply\" (not Enter!): begin and end are seperated by a hyphen surrounded by spaces; dates are given as \"YYYY-MM-DD\", whereby \"YYYY\" stands for years, \"M\" for months (with a leading zero), and \"D\" for days (with a leading zero)."
+msgstr "Define the temporal properties of the articles content by specifying the begin and end dates. The input is possible via the text field as well as via the calendar view. Click the input field below this text to open the calendar. Press \"Apply\" to save the calender setting. Press \"Clear\" to remove the current data. Textual input must match the following format and be confirmed by clicking \"Apply\" (not Enter!): begin and end are seperated by a hyphen surrounded by spaces; dates are given as \"YYYY-MM-DD\", whereby \"YYYY\" stands for years, \"MM\" for months (with a leading zero), and \"DD\" for days (with a leading zero)."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"
 msgstr "Temporal properties of the article's content specified with a day resolution."
@@ -68,14 +68,11 @@ msgstr "Download geospatial metadata"
 msgid "plugins.generic.optimetaGeo.article.details.geoJSON.about"
 msgstr "About GeoJSON"
 
-msgid "plugins.generic.optimetaGeo.description"
-msgstr "This plugin enables the discovery of articles based on geospatial metadata."
-
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
 msgstr "Get your username at https://www.geonames.org/login; the username must be enabled once to use the free webservice, see https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames.description"
-msgstr "You have to specify your username for the GeoNames API, so that an alignment for the administrative units is possible. Create an account on <a href="https://www.geonames.org/login">https://www.geonames.org/login</a> and insert the username here."
+msgstr "You have to specify your username for the GeoNames API, so that an alignment for the administrative units is possible. Create an account on <a href=\"https://www.geonames.org/login\">https://www.geonames.org/login</a> and insert the username here."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames"
 msgstr "Base URL of Geonames, use to switch between 'http' and 'https'."

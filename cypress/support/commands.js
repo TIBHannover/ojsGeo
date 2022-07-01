@@ -19,7 +19,6 @@
  * For more comprehensive examples of custom commands please read more here: https://on.cypress.io/custom-commands
  */
 
-
 import 'cypress-file-upload';
 import 'cypress-wait-until';
 

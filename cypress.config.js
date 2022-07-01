@@ -2,6 +2,7 @@ const { defineConfig } = require("cypress");
 const { dotenv } = require("dotenv").config({
   path: 'cypress/.env'
 });
+const fs = require("fs");
 
 console.log(process.env);
 
@@ -9,6 +10,13 @@ module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
+      on('task', {
+        readdir({ path }) {
+          return fs.readdirSync(path, { withFileTypes: true })
+            .filter((item) => item.isDirectory())
+            .map((item) => item.name);
+        }
+      });
     },
     baseUrl: "http://localhost:" + process.env.OJS_PORT,
   },
