@@ -32,7 +32,7 @@ else {
 }
 
 //load temporal properties which got already stored in database from submissionMetadataFormFields.tpl
-var temporalPropertiesFromDb = document.getElementById("temporalPropertiesFromDb").value;
+var timePeriodsFromDb = document.getElementById("timePeriodsFromDb").value;
 
 //load spatial properties which got already stored in database from submissionMetadataFormFields.tpl
 var spatialPropertiesFromDbDecoded = document.getElementById("spatialPropertiesFromDb").value;
@@ -1158,12 +1158,12 @@ $(function () {
     the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly.
     Otherwise, the field is empty.
     */
-    if (temporalPropertiesFromDb !== 'no data') { 
+    if (timePeriodsFromDb !== 'no data') { 
         // the temporal properties loaded from db are stored in the HTML element again
-        document.getElementById("temporalProperties").value = temporalPropertiesFromDbM
+        document.getElementById("temporalProperties").value = timePeriodsFromDb;
 
-        let startFromDb = temporalPropertiesFromDb.split('{')[1].split('..')[0];
-        let endFromDb   = temporalPropertiesFromDb.split('{')[1].split('..')[1].split('}')[0];
+        let startFromDb = timePeriodsFromDb.split('{')[1].split('..')[0];
+        let endFromDb   = timePeriodsFromDb.split('{')[1].split('..')[1].split('}')[0];
 
         $('input[name="datetimes"]').daterangepicker({
             startDate: startFromDb,

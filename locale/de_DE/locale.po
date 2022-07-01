@@ -112,3 +112,12 @@ msgstr "Verwaltungseinheiten"
 
 msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
 msgstr "Dieses Feld wurde deaktiviert. Die Informationen werden automatisch auf der Grundlage der unten eingegebenen Geodaten ausgefüllt."
+
+msgid "plugins.generic.optimetaGeo.license.submission"
+msgstr "Die zeitlichen und räumlichen Metadaten werden unter der folgenden Lizenz veröffentlicht:"
+
+msgid "plugins.generic.optimetaGeo.license.download"
+msgstr "Geodaten-Lizenz:"
+
+msgid "plugins.generic.optimetaGeo.license.frontend"
+msgstr "Die zeitlichen und räumlichen Metadaten sind unter der folgenden Lizenz veröffentlicht:"

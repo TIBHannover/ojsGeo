@@ -112,3 +112,12 @@ msgstr "Administrative Units"
 
 msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
 msgstr "This field has been disabled. Information will be filled automatically based on the geospatial information entered below."
+
+msgid "plugins.generic.optimetaGeo.license.submission"
+msgstr "Note that the temporal and spatial metadata will be published under the following license:"
+
+msgid "plugins.generic.optimetaGeo.license.download"
+msgstr "Geodata license:"
+
+msgid "plugins.generic.optimetaGeo.license.frontend"
+msgstr "Temporal and spatial metadata are published under the following license:"

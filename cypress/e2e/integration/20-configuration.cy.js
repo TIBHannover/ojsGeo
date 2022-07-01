@@ -44,7 +44,7 @@ describe('OPTIMETA Geoplugin Configuration', function () {
 
     // Fill out settings form
     cy.get('form[id="optimetaGeoSettings"] input[name="optimetaGeo_geonames_username"]')
-      .clear()
+      .clear().invoke('val', '') // https://stackoverflow.com/a/61101054
       .type('optimeta_geo');
     cy.get('form[id="optimetaGeoSettings"] input[name="optimetaGeo_geonames_baseurl"]')
       .clear()
@@ -69,11 +69,11 @@ describe('OPTIMETA Geoplugin Configuration', function () {
   });
 
   it('Has a map in the final metadata check before publication', function () {
-    // TODO implement test
+    this.skip(); // TODO implement test
   });
 
   it('Configure Geoplugin - Map colors', function () {
-    // TODO implement
+    this.skip(); // TODO implement
 
     //cy.get('form[id="optimetaGeoSettings"] input[name="optimetaGeo_mapLayerStyle_color"]')
     //  .clear()
@@ -84,6 +84,6 @@ describe('OPTIMETA Geoplugin Configuration', function () {
   });
 
   it('Configure Geoplugin - Download sidebar', function () {
-    // TODO implement
+    this.skip(); // TODO implement
   });
 });

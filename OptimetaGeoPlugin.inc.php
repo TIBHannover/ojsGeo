@@ -116,6 +116,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->assign('optimetageo_markerBaseUrl',                  $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers/img/');
 
 			$templateMgr->assign('optimetageo_mapUrlPath', MAP_URL_PATH);
+			$templateMgr->assign('optimetageo_metadataLicense', '<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0</a>'); // TODO make configurable
 
 			// publication tab
 			// ...
@@ -265,13 +266,13 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$publication = $publicationDao->getById($submissionId);
 		// TODO check if the submission really belongs to the journal
 
-		$temporalProperties = $publication->getData(DB_FIELD_TIME_PERIODS);
+		$timePeriods = $publication->getData(DB_FIELD_TIME_PERIODS);
 		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
 		$administrativeUnit = $publication->getData(DB_FIELD_ADMINUNIT);
 
 		// for the case that no data is available 
-		if ($temporalProperties === null) {
-			$temporalProperties = 'no data';
+		if ($timePeriods === null) {
+			$timePeriods = 'no data';
 		}
 
 		if ($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"timePeriods":[],"provenance":{"description":"not available","id":"not available"}}}') {
@@ -283,10 +284,9 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}
 
 		//assign data as variables to the template 
-		$templateMgr->assign('temporalPropertiesFromDb', $temporalProperties);
+		$templateMgr->assign('timePeriodsFromDb', $timePeriods);
 		$templateMgr->assign('spatialPropertiesFromDb', $spatialProperties);
 		$templateMgr->assign('administrativeUnitFromDb', $administrativeUnit);
-		$templateMgr->assign('timePeriodsFromDb', $timePeriods);
 
 		// here the original template is extended by the additional template for entering geospatial metadata  
 		$output .= $templateMgr->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));

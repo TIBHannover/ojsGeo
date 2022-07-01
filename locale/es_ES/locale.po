@@ -112,3 +112,12 @@ msgstr "Unidades administrativas"
 
 msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
 msgstr "Este campo ha sido deshabilitado. La información se rellenará automáticamente basándose en la información geoespacial introducida a continuación."
+
+msgid "plugins.generic.optimetaGeo.license.submission"
+msgstr "Tenga en cuenta que los metadatos temporales y espaciales se publicarán bajo la siguiente licencia:"
+
+msgid "plugins.generic.optimetaGeo.license.download"
+msgstr "Licencia metadatos espaciales:"
+
+msgid "plugins.generic.optimetaGeo.license.frontend"
+msgstr "Los metadatos temporales y espaciales se publican bajo la siguiente licencia:"

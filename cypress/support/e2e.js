@@ -21,7 +21,7 @@ import '@foreachbe/cypress-tinymce'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-Cypress.config('defaultCommandTimeout', 20000); // OJS 3.2.1 installation takes long!
+Cypress.config('defaultCommandTimeout', 10000);
 
 Cypress.on('uncaught:exception', (err, runnable) => {
     console.log(`********* Uncaught Exception: ${JSON.stringify(err)}`);
