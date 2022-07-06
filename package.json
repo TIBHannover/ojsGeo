@@ -1,7 +1,7 @@
 {
   "name": "optimetageo",
   "version": "1.0.0",
-  "description": "OJS plugin enabling geospatial metadata for scientific publications",
+  "description": "Testing environment for OJS plugin",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -18,7 +18,7 @@
   "scripts": {
     "cy_open": "npx cypress open",
     "cy_run": "npx cypress run",
-    "test_ci": "npx cypress run",
+    "test_ci": "npx cypress run --headless --browser chrome",
     "test_compose": "docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up"
   },
   "repository": {
