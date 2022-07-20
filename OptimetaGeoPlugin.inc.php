@@ -21,7 +21,6 @@ use Optimeta\Geo\SettingsForm;
 
 const MAP_URL_PATH = 'map';
 
-const DB_FIELD_TIMESTAMPS = 'optimetaGeo::temporalProperties';
 const DB_FIELD_SPATIAL = 'optimetaGeo::spatialProperties';
 const DB_FIELD_TIME_PERIODS = 'optimetaGeo::timePeriods';
 const DB_FIELD_ADMINUNIT = 'optimetaGeo::administrativeUnit';
@@ -38,9 +37,8 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 	public $dbFields = [
 		'spatial' => DB_FIELD_SPATIAL,
-		'temporal' => DB_FIELD_TIMESTAMPS,
+		'temporal' => DB_FIELD_TIME_PERIODS,
 		'admin' => DB_FIELD_ADMINUNIT,
-		'period' => DB_FIELD_TIME_PERIODS,
 	];
 
 	public function register($category, $path, $mainContextId = NULL)
@@ -205,9 +203,18 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}
 
 		if ($timePeriods = $publication->getData(DB_FIELD_TIME_PERIODS)) {
-			$templateMgr->addHeader('dublinCoreTemporal', '<meta name="DC.temporal" scheme="ISO8601" content="' . 'FIXME' . '"/>');
+			// FIXME crazy use of explode makes more sense when we support multiple periods
+			$begin = explode('..', explode('{', $timePeriods)[1])[0];
+			$end = explode('}', explode('..', explode('{', $timePeriods)[1])[1])[0];
 
-			$templateMgr->addHeader('dublinCorePeriodOfTime', '<meta name="DC.PeriodOfTime" scheme="ISO8601" content="' . 'FIXME' . '"/>');
+			// / is the ISO8601 time interval separator, see https://en.wikipedia.org/wiki/ISO_8601
+			$templateMgr->addHeader('dublinCoreTemporal', '<meta name="DC.temporal" scheme="ISO8601" content="' .  
+				$begin. '/' . $end .
+				'"/>');
+
+			$templateMgr->addHeader('dublinCorePeriodOfTime', '<meta name="DC.PeriodOfTime" scheme="ISO8601" content="' . 
+			$begin. '/' . $end .
+			'"/>');
 		}
 
 		return false;
@@ -260,8 +267,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$publication = $publicationDao->getById($submissionId);
 		// TODO check if the submission really belongs to the journal
 
-		$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
-		$timePeriods = $publication->getData(DB_FIELD_TIME_PERIODS);
+		$temporalProperties = $publication->getData(DB_FIELD_TIME_PERIODS);
 		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
 		$administrativeUnit = $publication->getData(DB_FIELD_ADMINUNIT);
 
@@ -270,7 +276,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$temporalProperties = 'no data';
 		}
 
-		if ($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":{"description":"not available","id":"not available"}}}') {
+		if ($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"timePeriods":[],"provenance":{"description":"not available","id":"not available"}}}') {
 			$spatialProperties = 'no data';
 		}
 
@@ -305,7 +311,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$journal = Application::get()->getRequest()->getJournal();
 
 		// get data from database 
-		$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
+		$temporalProperties = $publication->getData(DB_FIELD_TIME_PERIODS);
 		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
 		$administrativeUnit = $publication->getData(DB_FIELD_ADMINUNIT);
 		//$publication->getLocalizedData('coverage', $journal->getPrimaryLocale());
@@ -315,7 +321,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$temporalProperties = 'no data';
 		}
 
-		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}')) {
+		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"timePeriods":[],"provenance":"not available"}}')) {
 			$spatialProperties = 'no data';
 		}
 
@@ -390,14 +396,14 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}
 
 		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
-		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"unixDateRange":"not available","provenance":"not available"}}')) {
+		if (($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"timePeriods":[],"provenance":"not available"}}')) {
 			$spatialProperties = 'no data';
 		}
 		$templateMgr->assign('spatialProperties', $spatialProperties);
 
 		$templateMgr->assign('journal', Application::get()->getRequest()->getJournal()); // access primary locale
 
-		//$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
+		//$temporalProperties = $publication->getData(DB_FIELD_TIME_PERIODS);
 		//if ($temporalProperties === null || $temporalProperties === '') {
 		//	$temporalProperties = 'no data';
 		//}
@@ -468,18 +474,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		// possible types: integer, string, text 
 		$schema = $params[0];
 
-		// save timestamp as unix epoch
-		$timestamp = '{
-			"type": "string",
-			"multilingual": false,
-			"apiSummary": true,
-			"validation": [
-				"nullable"
-			]
-		}';
-		$schema->properties->{DB_FIELD_TIMESTAMPS} = json_decode($timestamp);
-
-		// save timestamp as text in ISO8601 time interval as described in RFC3339 appendix, https://datatracker.ietf.org/doc/html/rfc3339#appendix-A, see also https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+		// save timestamp as text in a list of ISO8601 time intervals/time periods as described in RFC3339 appendix, https://datatracker.ietf.org/doc/html/rfc3339#appendix-A, see also https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
 		$timePeriods = '{
 			"type": "string",
 			"multilingual": false,
@@ -527,19 +522,14 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$temporalProperties = $_POST['temporalProperties'];
 		$spatialProperties = $_POST['spatialProperties'];
 		$administrativeUnit = $_POST['administrativeUnit'];
-		$timePeriods = $_POST['timePeriods'];
-
+		
 		// null if there is no possibility to input data (metadata input before Schedule for Publication)
 		if ($spatialProperties !== null) {
 			$newPublication->setData(DB_FIELD_SPATIAL, $spatialProperties);
 		}
 
 		if ($temporalProperties !== null && $temporalProperties !== "") {
-			$newPublication->setData(DB_FIELD_TIMESTAMPS, $temporalProperties);
-		}
-
-		if ($timePeriods !== null && $timePeriods !== "") {
-			$newPublication->setData(DB_FIELD_TIME_PERIODS, $timePeriods);
+			$newPublication->setData(DB_FIELD_TIME_PERIODS, $temporalProperties);
 		}
 
 		if ($administrativeUnit !== null) {
@@ -573,7 +563,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			/*
 			$publication = Services::get('publication');
-			$temporalProperties = $publication->getData(DB_FIELD_TIMESTAMPS);
+			$temporalProperties = $publication->getData(DB_FIELD_TIME_PERIODS);
 			$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
 			*/
 

@@ -32,7 +32,7 @@ else {
 }
 
 //load temporal properties which got already stored in database from submissionMetadataFormFields.tpl
-var temporalPropertiesFromDbDecoded = document.getElementById("temporalPropertiesFromDb").value;
+var temporalPropertiesFromDb = document.getElementById("temporalPropertiesFromDb").value;
 
 //load spatial properties which got already stored in database from submissionMetadataFormFields.tpl
 var spatialPropertiesFromDbDecoded = document.getElementById("spatialPropertiesFromDb").value;
@@ -143,7 +143,7 @@ function createInitialGeojson() {
             "features": [],
             "administrativeUnits": {},
             "temporalProperties": {
-                "unixDateRange": "not available",
+                "timePeriods": [],
                 "provenance": {
                     "description": "not available",
                     "id": "not available"
@@ -722,15 +722,18 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
     if there is a geojson object with features, the time periods are stored in the geojson,
     if it is available either from the current edit or from the database.
     */
-    var temporalProperties = document.getElementById("temporalProperties").value;
+    var timePeriods = document.getElementById('temporalProperties').value;
 
-    if (temporalProperties === 'no data') {
-        geojson.temporalProperties.unixDateRange = 'not available';
+    if (timePeriods === 'no data') {
+        geojson.temporalProperties.timePeriods = [];
         geojson.temporalProperties.provenance.description = 'not available';
         geojson.temporalProperties.provenance.id = 'not available';
     }
-    else if (temporalProperties !== '') {
-        geojson.temporalProperties.unixDateRange = temporalProperties;
+    else if (timePeriods !== '') {
+        // TODO split up multiple periods into array
+        geojson.temporalProperties.timePeriods = [
+            temporalProperties
+        ];
         geojson.temporalProperties.provenance.description = "temporal properties created by user";
         geojson.temporalProperties.provenance.id = 31;
 
@@ -1155,28 +1158,16 @@ $(function () {
     the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly.
     Otherwise, the field is empty.
     */
-    if (temporalPropertiesFromDbDecoded !== 'no data') {
-        var temporalPropertiesFromDb = JSON.parse(temporalPropertiesFromDbDecoded);
-
+    if (temporalPropertiesFromDb !== 'no data') { 
         // the temporal properties loaded from db are stored in the HTML element again
-        document.getElementById("temporalProperties").value = temporalPropertiesFromDbDecoded;
+        document.getElementById("temporalProperties").value = temporalPropertiesFromDbM
 
-        // unix date range is converted in dates and displayed
-        var utcStart = new Date(temporalPropertiesFromDb[0]);
-        var utcStartStringified = JSON.stringify(utcStart);
-        var utcEnd = new Date(temporalPropertiesFromDb[1]);
-        var utcEndStringified = JSON.stringify(utcEnd);
-
-        var yearStart = utcStartStringified.substring(1, 5);
-        var monthStart = utcStartStringified.substring(6, 8);
-        var dayStart = utcStartStringified.substring(9, 11);
-        var yearEnd = utcEndStringified.substring(1, 5);
-        var monthEnd = utcEndStringified.substring(6, 8);
-        var dayEnd = utcEndStringified.substring(9, 11);
+        let startFromDb = temporalPropertiesFromDb.split('{')[1].split('..')[0];
+        let endFromDb   = temporalPropertiesFromDb.split('{')[1].split('..')[1].split('}')[0];
 
         $('input[name="datetimes"]').daterangepicker({
-            startDate: yearStart + '-' + monthStart + '-' + dayStart,
-            endDate: yearEnd + '-' + monthEnd + '-' + dayEnd,
+            startDate: startFromDb,
+            endDate: endFromDb,
             locale: {
                 cancelLabel: 'Clear',
                 format: 'YYYY-MM-DD'
@@ -1195,20 +1186,18 @@ $(function () {
     $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
         $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
 
-        var unixTimestampMillisecondStart = Date.UTC(picker.startDate.year(), picker.startDate.month(), picker.startDate.date(), 0, 0, 0);
-        var unixTimestampMillisecondEnd = Date.UTC(picker.endDate.year(), picker.endDate.month(), picker.endDate.date(), 23, 59, 59);
-
-        var unixDaterange = [unixTimestampMillisecondStart, unixTimestampMillisecondEnd];
-
-        document.getElementById("temporalProperties").value = JSON.stringify(unixDaterange);
+        // https://www.loc.gov/standards/datetime/ defines inclusive list of datest as {1800..1880,2000..2020}
+        var timePeriods = '{' + picker.startDate.format('YYYY-MM-DD') + '..' + picker.endDate.format('YYYY-MM-DD') + '}';
+        document.getElementById("temporalProperties").value = timePeriods;
 
         // the geojson is updated accordingly
         var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-        geojson.temporalProperties.unixDateRange = unixDaterange;
+        geojson.temporalProperties.timePeriods = [
+            picker.startDate.format('YYYY-MM-DD') + '..' + picker.endDate.format('YYYY-MM-DD')
+        ];
         geojson.temporalProperties.provenance.description = "temporal properties created by user";
         geojson.temporalProperties.provenance.id = 31;
         document.getElementById("spatialProperties").value = JSON.stringify(geojson);
-
     });
 
     $('input[name="datetimes"]').on('cancel.daterangepicker', function (ev, picker) {
@@ -1217,7 +1206,7 @@ $(function () {
 
         // the geojson is updated accordingly
         var geojson = JSON.parse(document.getElementById("spatialProperties").value);
-        geojson.temporalProperties.unixDateRange = 'not available';
+        geojson.temporalProperties.timePeriods = [];
         geojson.temporalProperties.provenance.description = 'not available';
         geojson.temporalProperties.provenance.id = 'not available';
         document.getElementById("spatialProperties").value = JSON.stringify(geojson);

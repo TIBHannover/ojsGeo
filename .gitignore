@@ -14,3 +14,13 @@ js/lib/Leaflet-1.6.0/
 js/lib/Control.Geocoder.js
 
 js/lib/leaflet-color-markers-1.0.0/
+
+node_modules/
+
+cypress/screenshots/
+
+cypress/videos/
+
+cypress/logs/
+
+locale/python-auto-translate-gettext/
