@@ -19,7 +19,6 @@
  * For more comprehensive examples of custom commands please read more here: https://on.cypress.io/custom-commands
  */
 
-
 import 'cypress-file-upload';
 import 'cypress-wait-until';
 
@@ -40,7 +39,14 @@ Cypress.Commands.add('install', function () {
     cy.get('input[id^=databaseName-]').clear().type(Cypress.env('DBNAME'), { delay: 0 });
     cy.get('select[id=connectionCharset]').select('Unicode (UTF-8)');
 
-    // Files directory
+    // for OJS 3.2.1.x, see https://github.com/pkp/pkp-lib/blob/9abc0f70f8d151f153fe36270341938216f3e5c2/cypress/support/commands.js
+    cy.get('body').then($body => {
+        if ($body.find('#createDatabase').length > 0) {   
+            cy.get('input[id=createDatabase]').uncheck();
+        }
+    });
+
+    // Files directory - keep default for containerised OJS
     //cy.get('input[id^=filesDir-]').clear().type(Cypress.env('FILESDIR'), { delay: 0 });
 
     // Locale configuration
@@ -48,11 +54,10 @@ Cypress.Commands.add('install', function () {
     cy.get('input[id=additionalLocales-de_DE').check();
     cy.get('input[id=additionalLocales-fr_FR').check();
     cy.get('input[id=additionalLocales-es_ES').check();
-    cy.get('input[id=additionalLocales-sv_SE').check();
 
     // Complete the installation
     cy.get('button[id^=submitFormButton-]').click();
-    cy.get('p:contains("has completed successfully.")');
+	cy.get('p:contains("has completed successfully.")');
 });
 
 // from https://github.com/pkp/ojs/blob/stable-3_3_0/cypress/tests/data/20-CreateContext.spec.js
@@ -355,7 +360,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
 
         cy.get('div[id^="component-grid-users-chapter-chaptergrid-"] a.pkp_linkaction_editChapter:contains("' + Cypress.$.escapeSelector(chapter.title) + '")');
     });
-    
+
     // geospatial metadata
     cy.get('input[name=datetimes]').type(data.timePeriod);
     cy.wait(1000);
@@ -555,8 +560,8 @@ Cypress.Commands.add('hasLayers', (count) => {
 Cypress.Commands.add('mapHasFeatures', (count) => {
     cy.window().wait(200).then(({ map }) => {
         var features = [];
-        map.eachLayer(function(layer){
-            if(layer.hasOwnProperty('feature')) {
+        map.eachLayer(function (layer) {
+            if (layer.hasOwnProperty('feature')) {
                 features.push(layer.feature);
             }
         });

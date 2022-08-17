@@ -28,6 +28,9 @@
                         </a>
                     </span>
                 </p>
+                <p class="optimetageo_license">
+                    {translate key="plugins.generic.optimetaGeo.license.download"} {$optimetageo_metadataLicense}
+                </p>
             </div>
         </section>
     </section>

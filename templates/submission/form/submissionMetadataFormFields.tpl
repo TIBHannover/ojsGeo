@@ -27,8 +27,8 @@
     <input type="text" name="datetimes" style="width: 100%; height: 32px; z-index: 0;" />
     <input type="text" id="temporalProperties" name="temporalProperties"
         style="height: 0px; width: 0px; z-index: 0; visibility: hidden;" />
-    <input type="text" id="temporalPropertiesFromDb" name="temporalPropertiesFromDb"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalPropertiesFromDb}' />
+    <input type="text" id="timePeriodsFromDb" name="timePeriodsFromDb"
+        style="height: 0px; width: 0px; visibility: hidden;" value='{$timePeriodsFromDb}' />
     {/fbvFormSection}
 
     {*spatial*}
@@ -41,6 +41,9 @@
         style="height: 0px; width: 0px; visibility: hidden;">
     <input type="text" id="spatialPropertiesFromDb" name="spatialPropertiesFromDb"
         style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialPropertiesFromDb}' />
+    <p align="justify" class="description">{translate
+        key="plugins.generic.optimetaGeo.license.submission"} {$optimetageo_metadataLicense}
+    </p>
     {/fbvFormSection}
 
     {*administrativeUnit*}

@@ -52,6 +52,10 @@ const optimetageo_adminLayerName = '{translate key="plugins.generic.optimetaGeo.
             </span>
         </p>
 
+        <p class="optimetageo_license">
+            {translate key="plugins.generic.optimetaGeo.license.frontend"} {$optimetageo_metadataLicense}
+        </p>
+
         <input type="text" id="optimeta_temporal" name="temporalProperties"
             style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalProperties}' />
         <input type="text" id="optimeta_spatial" name="spatialProperties"

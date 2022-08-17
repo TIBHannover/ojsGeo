@@ -27,7 +27,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal"
 msgstr "Propriétés temporelles"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Définit les propriétés temporelles du contenu des articles en spécifiant les dates de début et de fin. La saisie est possible via le champ de texte ainsi que via la vue calendrier. Cliquez sur le champ de saisie situé sous ce texte pour ouvrir le calendrier. Appuyez sur "Appliquer" pour enregistrer les paramètres du calendrier. Appuyez sur "Effacer" pour supprimer les données actuelles. La saisie de texte doit respecter le format suivant et être confirmée en cliquant sur "Appliquer" (et non sur Entrée !) : le début et la fin sont séparés par un tiret entouré d'espaces ; les dates sont indiquées sous la forme "AAAA-MM-JJ", où "AAAA" correspond aux années, "M" aux mois (avec un zéro en tête) et "J" aux jours (avec un zéro en tête)."
+msgstr "Définit les propriétés temporelles du contenu des articles en spécifiant les dates de début et de fin. La saisie est possible via le champ de texte ainsi que via la vue calendrier. Cliquez sur le champ de saisie situé sous ce texte pour ouvrir le calendrier. Appuyez sur \"Appliquer\" pour enregistrer les paramètres du calendrier. Appuyez sur \"Effacer\" pour supprimer les données actuelles. La saisie de texte doit respecter le format suivant et être confirmée en cliquant sur \"Appliquer\" (et non sur Entrée !) : le début et la fin sont séparés par un tiret entouré d'espaces ; les dates sont indiquées sous la forme \"AAAA-MM-JJ\", où \"AAAA\" correspond aux années, \"MM\" aux mois (avec un zéro en tête) et \"JJ\" aux jours (avec un zéro en tête)."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"
 msgstr "Propriétés temporelles du contenu de l'article spécifié avec une résolution en jours."
@@ -45,7 +45,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeU
 msgstr "Les unités administratives englobant les lieux de l'article sont : "
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.submission"
-msgstr "Définir l'emplacement du contenu des articles par une ou plusieurs forme(s) géométrique(s). Vous pouvez choisir dans le contrôle sur le côté gauche entre polyline, polygone, rectangle et point. Les icônes ci-dessous vous permettent de modifier ou de supprimer la ou les formes géométriques créées. Les boutons "-" et "+" situés dans le coin supérieur gauche permettent d'effectuer un zoom avant et arrière. Dans le coin supérieur droit, vous pouvez modifier les cartes d'arrière-plan. Vous pouvez choisir entre un plan des rues (couche "OpenStreetMap") et des images aériennes (couche "Esri World Imagery"). Vous pouvez également définir si la ou les formes géométriques et l'unité administrative doivent être affichées ou non. Pour l'unité administrative, vous trouverez une description plus détaillée dans le paragraphe suivant de ce formulaire. Sous le contrôle de la couche, vous trouverez une recherche pour la carte. Vous pouvez rechercher des lieux et en appuyant sur "Enter", différents lieux correspondant à votre saisie vous seront proposés. En cliquant sur une suggestion, elle sera acceptée et un rectangle correspondant, décrivant les limites de l'emplacement, sera affiché sur la carte. Ce rectangle peut également être supprimé/modifié en cliquant sur l'icône de suppression/modification sur le côté gauche. Vous pouvez choisir un niveau de détail plus grossier pour protéger les lieux sensibles."
+msgstr "Définir l'emplacement du contenu des articles par une ou plusieurs forme(s) géométrique(s). Vous pouvez choisir dans le contrôle sur le côté gauche entre polyline, polygone, rectangle et point. Les icônes ci-dessous vous permettent de modifier ou de supprimer la ou les formes géométriques créées. Les boutons - et + situés dans le coin supérieur gauche permettent d'effectuer un zoom avant et arrière. Dans le coin supérieur droit, vous pouvez modifier les cartes d'arrière-plan. Vous pouvez choisir entre un plan des rues (couche \"OpenStreetMap\") et des images aériennes (couche \"Esri World Imagery\"). Vous pouvez également définir si la ou les formes géométriques et l'unité administrative doivent être affichées ou non. Pour l'unité administrative, vous trouverez une description plus détaillée dans le paragraphe suivant de ce formulaire. Sous le contrôle de la couche, vous trouverez une recherche pour la carte. Vous pouvez rechercher des lieux et en appuyant sur \"Enter\", différents lieux correspondant à votre saisie vous seront proposés. En cliquant sur une suggestion, elle sera acceptée et un rectangle correspondant, décrivant les limites de l'emplacement, sera affiché sur la carte. Ce rectangle peut également être supprimé/modifié en cliquant sur l'icône de suppression/modification sur le côté gauche. Vous pouvez choisir un niveau de détail plus grossier pour protéger les lieux sensibles."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"
 msgstr "La ou les formes géométriques en bleu représentent les emplacements ou les zones du contenu de l'article tel que fourni par les auteurs. L'unité administrative représentée dans un rectangle noir représente la plus petite unité administrative qui englobe l'étendue spatiale dont traite l'article."
@@ -54,7 +54,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.adminis
 msgstr "Unité administrative"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
-msgstr "Sur la base de votre saisie dans la carte, des unités administratives sont proposées en fonction de votre saisie sur la carte. Chaque fois que vous mettez à jour les entrées, les informations de couverture sont calculées et mises à jour en conséquence. Vous pouvez supprimer une ou plusieurs unités administratives en cliquant sur le bouton rouge "x". Si vous survolez la ou les unités administratives, la hiérarchie supérieure des unités administratives s'affiche si elle est disponible. En outre, vous pouvez ajouter d'autres unités administratives. Vous ne pouvez insérer une unité administrative supplémentaire que si elle correspond à la hiérarchie d'unités administratives déjà établie et aux formes géométriques de la carte. Si vous commencez à insérer, il y a quelques suggestions que vous pouvez accepter en cliquant, mais néanmoins vous pouvez entrer votre propre unité administrative en appuyant sur "Enter". L'unité administrative (en noir) qui est le plus petit dénominateur commun pour toutes les formes géométriques est affichée sur la carte. L'unité administrative n'est pas modifiable ou supprimable dans la carte, mais ici via le champ de saisie."
+msgstr "Sur la base de votre saisie dans la carte, des unités administratives sont proposées en fonction de votre saisie sur la carte. Chaque fois que vous mettez à jour les entrées, les informations de couverture sont calculées et mises à jour en conséquence. Vous pouvez supprimer une ou plusieurs unités administratives en cliquant sur le bouton rouge \"x\". Si vous survolez la ou les unités administratives, la hiérarchie supérieure des unités administratives s'affiche si elle est disponible. En outre, vous pouvez ajouter d'autres unités administratives. Vous ne pouvez insérer une unité administrative supplémentaire que si elle correspond à la hiérarchie d'unités administratives déjà établie et aux formes géométriques de la carte. Si vous commencez à insérer, il y a quelques suggestions que vous pouvez accepter en cliquant, mais néanmoins vous pouvez entrer votre propre unité administrative en appuyant sur \"Enter\". L'unité administrative (en noir) qui est le plus petit dénominateur commun pour toutes les formes géométriques est affichée sur la carte. L'unité administrative n'est pas modifiable ou supprimable dans la carte, mais ici via le champ de saisie."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit.description.article"
 msgstr "Ici sont listées les unités administratives qui sont supérieures au(x) lieu(x) dont traite l'article, avec le niveau le plus élevé à gauche et le plus bas à droite."
@@ -63,19 +63,16 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.adminis
 msgstr "Unités administratives"
 
 msgid "plugins.generic.optimetaGeo.article.details.download"
-msgstr "Télécharger les métadonnées géospatiales".
+msgstr "Télécharger les métadonnées géospatiales."
 
 msgid "plugins.generic.optimetaGeo.article.details.geoJSON.about"
-msgstr "About GeoJSON" (A propos de GeoJSON)
-
-msgid "plugins.generic.optimetaGeo.description"
-msgstr "Ce plugin permet la découverte d'articles basés sur des métadonnées géospatiales."
+msgstr "A propos de GeoJSON"
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
 msgstr "Obtenez votre nom d'utilisateur sur https://www.geonames.org/login ; le nom d'utilisateur doit être activé une fois pour utiliser le service Web gratuit, voir https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames.description"
-msgstr "Vous devez spécifier votre nom d'utilisateur pour l'API GeoNames, afin qu'un alignement pour les unités administratives soit possible. Créez un compte sur <a href="https://www.geonames.org/login">https://www.geonames.org/login</a> et insérez le nom d'utilisateur ici."
+msgstr "Vous devez spécifier votre nom d'utilisateur pour l'API GeoNames, afin qu'un alignement pour les unités administratives soit possible. Créez un compte sur <a href=\"https://www.geonames.org/login\">https://www.geonames.org/login</a> et insérez le nom d'utilisateur ici."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames"
 msgstr "URL de base des Geonames, à utiliser pour basculer entre 'http' et 'https'."
@@ -115,3 +112,12 @@ msgstr "Unités administratives"
 
 msgid "plugins.generic.optimetaGeo.map.coverageDisabledHover"
 msgstr "Ce champ a été désactivé. Les informations seront remplies automatiquement en fonction des informations géospatiales saisies ci-dessous."
+
+msgid "plugins.generic.optimetaGeo.license.submission"
+msgstr "Notez que les métadonnées temporelles et spatiales seront publiées sous la licence suivante:"
+
+msgid "plugins.generic.optimetaGeo.license.download"
+msgstr "Licence métadonnées spatiales:"
+
+msgid "plugins.generic.optimetaGeo.license.frontend"
+msgstr "Les métadonnées temporelles et spatiales sont publiées sous la licence suivante:"

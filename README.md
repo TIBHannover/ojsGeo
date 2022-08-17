@@ -1,6 +1,6 @@
 [![OPTIMETA Logo](https://projects.tib.eu/fileadmin/_processed_/e/8/csm_Optimeta_Logo_web_98c26141b1.png)](https://projects.tib.eu/optimeta/en/)
 
-# OPTIMETA geo plugin
+# OPTIMETA Geoplugin
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
@@ -29,15 +29,30 @@ In the article view, the properties specified by the author are then displayed a
 
 # Download & Installation
 
-1. Download the plugin [here](https://github.com/TIBHannover/optimetaGeo/) and unzip the folder into `ojs/plugins/generic/optimetaGeo` in OJS
-1. Go to the directory `js/lib` and run `php -f downloadJavascriptLibraries.php` to download required JS libs
+## Release
+
+See releases at <>.
+The release bundles contain only the required JavaScript dependencies.
+
+## From source
+
+1. Checkout the desired version from [the code repository](https://github.com/TIBHannover/optimetaGeo/) and save the contents into `ojs/plugins/generic/optimetaGeo` in your OJS installation
+1. Run `composer install` to download JavaScript dependencies for the plugin using [Asset Packagist](https://asset-packagist.org/site/about)
+   Go to `js/lib/leaflet-control-geocoder` and run `npm install` (see [this issue](https://github.com/perliedman/leaflet-control-geocoder/issues/310))
 1. Activate the plugin in the OJS plug-in settings
-1. Specify your GeoNames username
+1. Install and activate the OJS Geoplugin Theme: <https://github.com/ifgi/optimetaGeoTheme/releases>
+
+# Configuration
+
+1. Configure **GeoNames**
 
    You have to specify your username for the GeoNames api, so that an alignment for the administrative units is possible.
 
    1. Create an account on <https://www.geonames.org/login>
    1. Enter the username in the settings (OJS > Settings > Website > Plugins > Installed Plugins > OPTIMETA geo plugin > blue arrow > Settings)
+1. Configure **theme**
+
+   Set the name of your used theme.
 
 Further information is available in the [wiki](https://github.com/tnier01/geoOJS/wiki).
 
@@ -54,6 +69,8 @@ By participating in this project you agree to abide by its terms.
 
 # Testing
 
+Tests are run with [Cypress](https://www.cypress.io/), for which dependencies are installed with npm using the `package.json`.
+
 ## Running Cypress locally
 
 ```bash
@@ -62,8 +79,9 @@ npm install
 
 npx cypress open
 
-# start compose configuration for desired OJS version, which run on ports 9xxx where "xxx" is the version string of OJS, e.g., 9330
-docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up
+# start compose configuration for desired OJS version, running on port 8080; OJS_VERSION is a image tag for pkpofficial/ojs
+export OJS_VERSION=3_3_0-11 &&     docker-compose --file cypress/docker-compose-mysql.yml down --volume && docker-compose --file cypress/docker-compose-mysql.yml up
+export OJS_VERSION=3_2_1-4 && docker-compose --file cypress/docker-compose-mysql.yml down --volume && docker-compose --file cypress/docker-compose-mysql.yml up
 
 # open/run Cypress tests with a given OJS version
 npm run cy_open
@@ -78,6 +96,11 @@ To debug, add `debugger;` to the code and make sure to have the developer tools 
 1. Start Cypress (see above)
 1. Write tests, run them in Cypress
 1. If you need a clean start (= empty database) for a test, stop the docker-compose configuration, delete it ('down --volume') and restart it
+
+
+# Create a release
+
+Install the PKP CLI tool, see <https://docs.pkp.sfu.ca/dev/plugin-guide/en/release>.
 
 # License
 

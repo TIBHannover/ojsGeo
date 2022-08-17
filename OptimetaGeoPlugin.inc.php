@@ -82,15 +82,15 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr = TemplateManager::getManager($request);
 
 			// jQuery is already loaded via ojs/lib/pkp/classes/template/PKPTemplateManager.inc.php 
-			$urlLeafletCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.css';
-			$urlLeafletJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet-1.6.0/dist/leaflet.js';
-			$urlLeafletDrawCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet.draw-1.0.4/dist/leaflet.draw.css';
-			$urlLeafletDrawJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Leaflet.draw-1.0.4/dist/leaflet.draw.js';
-			$urlMomentJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/moment-2.18.1/moment.js';
-			$urlDaterangepickerJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker-3.1/daterangepicker.js';
-			$urlDaterangepickerCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker-3.1/daterangepicker.css';
-			$urlLeafletControlGeocodeJS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Control.Geocoder.js';
-			$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/Control.Geocoder.css';
+			$urlLeafletCSS =               $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet/dist/leaflet.css';
+			$urlLeafletJS =                $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet/dist/leaflet.js';
+			$urlLeafletDrawCSS =           $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-draw/dist/leaflet.draw.css';
+			$urlLeafletDrawJS =            $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-draw/dist/leaflet.draw.js';
+			$urlMomentJS =                 $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/moment/moment.js';
+			$urlDaterangepickerJS =        $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker/daterangepicker.js';
+			$urlDaterangepickerCSS =       $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/daterangepicker/daterangepicker.css';
+			$urlLeafletControlGeocodeJS =  $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-control-geocoder/dist/Control.Geocoder.min.js';
+			$urlLeafletControlGeocodeCSS = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-control-geocoder/dist/Control.Geocoder.css';
 
 			// loading the leaflet scripts, source: https://leafletjs.com/examples/quick-start/
 			$templateMgr->addStyleSheet('leafletCSS', $urlLeafletCSS, array('contexts' => array('frontend', 'backend')));
@@ -111,11 +111,12 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 			// plugins JS scripts and CSS
 			$templateMgr->assign('optimetageo_submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
-			$templateMgr->assign('optimetageo_article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
-			$templateMgr->assign('optimetageo_issueJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
-			$templateMgr->assign('optimetageo_markerBaseUrl', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers-1.0.0/img/');
+			$templateMgr->assign('optimetageo_article_detailsJS',              $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
+			$templateMgr->assign('optimetageo_issueJS',                        $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
+			$templateMgr->assign('optimetageo_markerBaseUrl',                  $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers/img/');
 
 			$templateMgr->assign('optimetageo_mapUrlPath', MAP_URL_PATH);
+			$templateMgr->assign('optimetageo_metadataLicense', '<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0</a>'); // TODO make configurable
 
 			// publication tab
 			// ...
@@ -265,13 +266,13 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$publication = $publicationDao->getById($submissionId);
 		// TODO check if the submission really belongs to the journal
 
-		$temporalProperties = $publication->getData(DB_FIELD_TIME_PERIODS);
+		$timePeriods = $publication->getData(DB_FIELD_TIME_PERIODS);
 		$spatialProperties = $publication->getData(DB_FIELD_SPATIAL);
 		$administrativeUnit = $publication->getData(DB_FIELD_ADMINUNIT);
 
 		// for the case that no data is available 
-		if ($temporalProperties === null) {
-			$temporalProperties = 'no data';
+		if ($timePeriods === null) {
+			$timePeriods = 'no data';
 		}
 
 		if ($spatialProperties === null || $spatialProperties === '{"type":"FeatureCollection","features":[],"administrativeUnits":{},"temporalProperties":{"timePeriods":[],"provenance":{"description":"not available","id":"not available"}}}') {
@@ -283,10 +284,9 @@ class OptimetaGeoPlugin extends GenericPlugin
 		}
 
 		//assign data as variables to the template 
-		$templateMgr->assign('temporalPropertiesFromDb', $temporalProperties);
+		$templateMgr->assign('timePeriodsFromDb', $timePeriods);
 		$templateMgr->assign('spatialPropertiesFromDb', $spatialProperties);
 		$templateMgr->assign('administrativeUnitFromDb', $administrativeUnit);
-		$templateMgr->assign('timePeriodsFromDb', $timePeriods);
 
 		// here the original template is extended by the additional template for entering geospatial metadata  
 		$output .= $templateMgr->fetch($this->getTemplateResource('submission/form/submissionMetadataFormFields.tpl'));

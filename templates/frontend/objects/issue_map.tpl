@@ -49,6 +49,10 @@
     <{$heading}>{translate key="plugins.generic.optimetaGeo.issue.title"}</{$heading}>
 
 	<div id="mapdiv" style="width: 100%; height: 360px; z-index: 1;"></div>
+	
+	<p class="optimetageo_license">
+		{translate key="plugins.generic.optimetaGeo.license.frontend"} {$optimetageo_metadataLicense}
+	</p>
 {/if}
 </div>
 

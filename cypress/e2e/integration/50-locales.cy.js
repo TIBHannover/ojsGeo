@@ -20,7 +20,7 @@ describe('OPTIMETA Geoplugin Locales', function () {
     cy.get('input[id^=select-cell-de_DE-uiLocale').check();
     cy.get('input[id^=select-cell-es_ES-uiLocale').check();
     cy.get('input[id^=select-cell-fr_FR-uiLocale').check();
-        
+
     cy.logout();
   });
 
@@ -80,7 +80,7 @@ describe('OPTIMETA Geoplugin Locales', function () {
     cy.get('#navigationPrimary > :nth-child(1) > a').click();
     cy.contains('.pkp_structure_main', /Tiempos y ubicaciones/);
   });
-  
+
   it('Has the French map headline in submission and the frontend if language is enabled for the UI', function () {
     cy.get('.pkpDropdown > .pkpButton').click();
     cy.get('a:contains("Français")').click();
@@ -100,6 +100,28 @@ describe('OPTIMETA Geoplugin Locales', function () {
     cy.visit('/');
     cy.get('#navigationPrimary > :nth-child(1) > a').click();
     cy.contains('.pkp_structure_main', /Heures et lieux de publication/);
+  });
+
+});
+
+describe('OPTIMETA Geoplugin Locale Files', function () {
+
+  it('Has the same number of entries and no erorrs in the locale files', function () {
+    const reference = 'en_US';
+
+    cy.readFile('locale/' + reference + '/locale.po').then((text) => {
+      var count = text.match(/msgid/g).length - 1; // adjust for metadata field
+      
+      cy.task("readdir", { path: 'locale/' }).then((folders) => {
+        var locales = folders;
+        locales.forEach((l) => {
+          cy.exec('msgfmt --statistics locale/' + l + '/locale.po', { failOnNonZeroExit: false }).then((result) => {
+            expect(result.code, 'Validation of locale file ' + l + ': ' + result.stderr).to.eq(0);
+            expect(result.stderr, 'in locale ' + l).to.contain(count + ' translated messages');
+          });
+        });
+      });
+    });
   });
 
 });
