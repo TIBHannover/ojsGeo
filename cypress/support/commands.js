@@ -41,7 +41,7 @@ Cypress.Commands.add('install', function () {
 
     // for OJS 3.2.1.x, see https://github.com/pkp/pkp-lib/blob/9abc0f70f8d151f153fe36270341938216f3e5c2/cypress/support/commands.js
     cy.get('body').then($body => {
-        if ($body.find('#createDatabase').length > 0) {   
+        if ($body.find('#createDatabase').length > 0) {
             cy.get('input[id=createDatabase]').uncheck();
         }
     });
@@ -57,7 +57,7 @@ Cypress.Commands.add('install', function () {
 
     // Complete the installation
     cy.get('button[id^=submitFormButton-]').click();
-	cy.get('p:contains("has completed successfully.")');
+    cy.get('p:contains("has completed successfully.")');
 });
 
 // from https://github.com/pkp/ojs/blob/stable-3_3_0/cypress/tests/data/20-CreateContext.spec.js
@@ -367,12 +367,21 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.get('.applyBtn').click();
 
     // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
-    cy.toolbarButton('polyline').click();
-
-    cy.get('#mapdiv') // too small differences dont work, min 5 pixels
-        .click(448, 110)
-        .click(453, 115)
-        .click(453, 115);
+    if ('spatial' in data) {
+        cy.toolbarButton(data.spatial.type).click();
+        for (let index = 0; index < data.spatial.coords.length; index++) {
+            let coords = data.spatial.coords[index];
+            console.log(index + ": " + coords);
+            cy.get('#mapdiv').click({ x: coords.x, y: coords.y });
+        }
+    } else {
+        // default to line geometry in Germany
+        cy.toolbarButton('polyline').click();
+        cy.get('#mapdiv') // too small differences dont work, min 5 pixels
+            .click(448, 110)
+            .click(453, 115)
+            .click(453, 115);
+    }
 
     cy.wait(2000);
 
