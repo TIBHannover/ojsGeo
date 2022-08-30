@@ -97,8 +97,7 @@ To debug, add `debugger;` to the code and make sure to have the developer tools 
 1. Start docker-compose configuration (see above)
 1. Start Cypress (see above)
 1. Write tests, run them in Cypress
-1. If you need a clean start (= empty database) for a test, stop the docker-compose configuration, delete it ('down --volume') and restart it
-
+1. If you need a clean start (= empty database) for a test, stop the docker-compose configuration, delete it (`down --volume`) and restart it
 
 # Create a release
 
