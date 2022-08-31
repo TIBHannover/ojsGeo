@@ -8,7 +8,6 @@
  * @brief Show geospatial metadata and allow editing during publication phase.
  *}
 
-<script src="{$pluginJavaScriptURL}/optimetaGeo.js"></script>
 <link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
 
 <script>
