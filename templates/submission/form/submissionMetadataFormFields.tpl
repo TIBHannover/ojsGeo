@@ -12,8 +12,7 @@
  *}
 
 <div style="clear:both;">
-    {fbvFormArea id="tagitFields"
-    title="plugins.generic.optimetaGeo.article.metadata.long"}
+    {fbvFormArea id="spatioTemporalFields"}
 
     <input type="text" id="optimetageo_coverageDisabledHover" name="coverageDisabledHover"
         style="height: 0px; width: 0px; visibility: hidden;"

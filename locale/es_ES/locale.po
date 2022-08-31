@@ -39,7 +39,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"
 msgstr "a"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"
-msgstr "Este artículo cubre la(s) ubicación(es) o área(s) mostrada(s) en el mapa de abajo."
+msgstr "Ubicación(es) o área(s)"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"
 msgstr "Las unidades administrativas que encierran los lugares del artículo son: "
