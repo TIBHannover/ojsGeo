@@ -83,7 +83,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
     });
   });
 
-  it('The article page has the admnistrative units in a text', function () {
+  it('The article page has the administrative units in a text', function () {
     cy.visit('/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
