@@ -121,3 +121,12 @@ msgstr "Licencia metadatos espaciales:"
 
 msgid "plugins.generic.optimetaGeo.license.frontend"
 msgstr "Los metadatos temporales y espaciales se publican bajo la siguiente licencia:"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw"
+msgstr "Datos sin procesar"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw.description"
+msgstr "¡Edite los datos sin procesar con cuidado! Los cambios realizados en los datos sin procesar <strong>no</strong> desencadenan cambios en los campos de formulario y el mapa anteriores."
+
+msgid "plugins.generic.optimetaGeo.publication.success"
+msgstr "Actualización de metadatos exitosa."

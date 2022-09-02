@@ -111,7 +111,7 @@ msgid "plugins.generic.optimetaGeo.map.administrativeLayerName"
 msgstr "Administrative Units"
 
 msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
-msgstr "This field has been disabled. Information will be filled automatically based on the geospatial information entered below."
+msgstr "This field has been disabled. Information will be filled in automatically based on the location information entered below."
 
 msgid "plugins.generic.optimetaGeo.license.submission"
 msgstr "Note that the temporal and spatial metadata will be published under the following license:"
@@ -121,3 +121,12 @@ msgstr "Geodata license:"
 
 msgid "plugins.generic.optimetaGeo.license.frontend"
 msgstr "Temporal and spatial metadata are published under the following license:"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw"
+msgstr "Raw data"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw.description"
+msgstr "Edit raw data with care! Changes made to the raw data do <strong>not</strong> trigger changes in the above form fields and map."
+
+msgid "plugins.generic.optimetaGeo.publication.success"
+msgstr "Metadata update succesful."

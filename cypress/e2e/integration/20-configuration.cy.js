@@ -70,7 +70,7 @@ describe('OPTIMETA Geoplugin Configuration', function () {
     cy.logout();
   });
 
-  it.only('Has coverage input disabled with a hover message in the right language if the metadata field is enabled', function () {
+  it('Has coverage input disabled with a hover message in the right language if the metadata field is enabled', function () {
     cy.login('admin', 'admin', Cypress.env('contextPath'));
 
     cy.get('nav[class="app__nav"] a:contains("Workflow")').click();

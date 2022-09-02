@@ -160,20 +160,19 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.login('eeditor');
     cy.get('a:contains("eeditor"):visible').click();
     cy.get('a:contains("Dashboard")').click({ force: true });
-    // only one editor, should be only one submission under "My Assigned"
-    cy.get('a:contains("View")').click();
+    cy.get('a:contains("View")').first().click();
     cy.get('a[id^="accept-button"]').click();
     cy.get('input[id^="skipEmail-skip"]').click();
     cy.get('form[id="promote"] button:contains("Next:")').click();
     cy.get('input[id^="select"]').click();
     cy.get('button:contains("Record Editorial Decision")').click();
-    cy.wait(4000);
+    cy.wait(2000);
     cy.get('a:contains("Send To Production")').click();
     cy.get('input[id="skipEmail-skip"]').click();
     cy.get('form[id="promote"] button:contains("Next:")').click();
     cy.get('input[id^="select"]').click();
     cy.get('button:contains("Record Editorial Decision")').click();
-    cy.wait(4000);
+    cy.wait(2000);
     cy.get('div[id="production"]')
         .find('button:contains("Schedule For Publication")').click();
     cy.get('button[id="issue-button"]').click();
@@ -218,7 +217,7 @@ Cypress.Commands.add('createSubmission', (data, context) => {
     if (!('issue' in data)) data.issue = '1';
 
     cy.get('a:contains("Make a New Submission"), div#myQueue a:contains("New Submission"), a:contains("Back to New Submission")').click();
-    cy.wait(5000); // extra wait time for GH action
+    cy.wait(2000);
 
     // === Submission Step 1 ===
     if ('section' in data) cy.get('select[id="sectionId"],select[id="seriesId"]').select(data.section);
@@ -236,7 +235,7 @@ Cypress.Commands.add('createSubmission', (data, context) => {
         cy.get('input[name=userGroupId]').parent().contains(data.submitterRole).click();
     } else {
         cy.get("body").then($body => {
-            cy.get('input[id=userGroupId]').then($input => {
+            cy.get('input[name=userGroupId]').then($input => {
                 if ($input.is(':visible')) {
                     cy.get('input[id=userGroupId]').click();
                 } // else: user is just an author and selection is not visible
@@ -396,7 +395,7 @@ Cypress.Commands.add('createSubmission', (data, context) => {
 
     // geospatial metadata
     cy.get('input[name=datetimes]').type(data.timePeriod);
-    cy.wait(2000);
+    cy.wait(1000);
     cy.get('.applyBtn').click();
 
     // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b

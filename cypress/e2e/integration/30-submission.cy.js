@@ -11,6 +11,8 @@ describe('OPTIMETA Geoplugin Submission', function () {
 
   var submission;
   var submission2;
+  var sub1start = '2022-01-01';
+  var sub1end = '2022-12-31';
 
   before(function () {
     submission = {
@@ -20,7 +22,7 @@ describe('OPTIMETA Geoplugin Submission', function () {
       title: 'Hanover is nice',
       subtitle: 'It really is',
       abstract: 'The city of Hanover is really nice, because it is home of the TIB.',
-      timePeriod: '2022-01-01 - 2022-12-31',
+      timePeriod: sub1start + ' - ' + sub1end,
       issue: '1'
     };
 
@@ -57,6 +59,39 @@ describe('OPTIMETA Geoplugin Submission', function () {
     cy.get('.pkp_structure_main').should('contain', 'Augusta Author');
     cy.get('.pkp_structure_main').should('contain', 'Times & locations');
     cy.get('#mapdiv').should('exist');
+  });
+
+  it('Has the content of the administrative unit field inserted into the coverage field', function() {
+    cy.login('aauthor');
+    cy.get('a:contains("aauthor")').click();
+    cy.get('a:contains("Dashboard")').click({ force: true });
+
+    cy.get('div#myQueue a:contains("New Submission")').click();
+    cy.get('input[id^="checklist-"]').click({ multiple: true });
+    cy.get('input[id="privacyConsent"]').click();
+    cy.get('button.submitFormButton').click();
+    cy.wait(1000);
+    cy.get('button.submitFormButton').click();
+
+    cy.toolbarButton('marker').click();
+    cy.get('#mapdiv').click(260, 110);
+    cy.wait(1000);
+    cy.get('input[id^="coverage-"').should('have.value', 'Earth, North America, Canada, British Columbia, Nazko');
+    cy.get('a.leaflet-control-zoom-out').click().click().click().click().click().click().click().click().click().click().click();
+    cy.wait(1000);
+  });
+
+  it('Updates the coverage field on interaction with the map', function () {
+    // add another marker to update
+    cy.toolbarButton('marker').click();
+    cy.get('#mapdiv').click(400, 380);
+    cy.wait(1000);
+    cy.get('input[id^="coverage-"').should('have.value', 'Earth, North America, Canada, British Columbia');
+  });
+
+  it('Updates the coverage field on interaction with the administrative unit field', function () {
+    cy.get('[title="Earth, North America, Canada, British Columbia"] > .tagit-close').click(); // click on the last tag
+    cy.get('input[id^="coverage-"').should('have.value', 'Earth, North America, Canada');
   });
 
 });
