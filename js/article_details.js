@@ -154,11 +154,11 @@ $(function () {
         document.getElementById("item temporal").remove();
     }
     else {
-        let startFromDb = temporalProperties.split('{')[1].split('..')[0];
-        let endFromDb = temporalProperties.split('{')[1].split('..')[1].split('}')[0];
+        let start = temporalProperties.split('{')[1].split('..')[0];
+        let end = temporalProperties.split('{')[1].split('..')[1].split('}')[0];
 
-        document.getElementById("optimetageo_start").innerHTML = startFromDb;
-        document.getElementById("optimetageo_end").innerHTML = endFromDb;
+        document.getElementById("optimetageo_start").innerHTML = start;
+        document.getElementById("optimetageo_end").innerHTML = end;
     }
 });
 
