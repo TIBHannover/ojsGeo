@@ -52,7 +52,7 @@ describe('OPTIMETA Geoplugin Locales', function () {
     cy.wait(2000);
     cy.get('button.submitFormButton').click();
     cy.wait(2000);
-    cy.contains('#submitStep3Form', /Zeit und Ort/);
+    cy.contains('#submitStep3Form', /Ort\(e\) oder Gebiet\(e\)/);
 
     // home page
     cy.visit('/');
@@ -73,7 +73,7 @@ describe('OPTIMETA Geoplugin Locales', function () {
     cy.wait(2000);
     cy.get('button.submitFormButton').click();
     cy.wait(2000);
-    cy.contains('#submitStep3Form', /Hora y ubicación/);
+    cy.contains('#submitStep3Form', /Ubicación\(es\) o área\(s\)/);
 
     // home page
     cy.visit('/');
@@ -94,7 +94,7 @@ describe('OPTIMETA Geoplugin Locales', function () {
     cy.wait(2000);
     cy.get('button.submitFormButton').click();
     cy.wait(2000);
-    cy.contains('#submitStep3Form', /Heure et localisation/);
+    cy.contains('#submitStep3Form', /Lieu\(x\) ou la\(les\) zone\(s\)/);
 
     // home page
     cy.visit('/');

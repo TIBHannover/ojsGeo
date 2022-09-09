@@ -99,7 +99,7 @@ describe('OPTIMETA Geoplugin Production Editing', function () {
     cy.get('input[id^="metadata-coverage-"').should('have.value', 'Earth');
   });
 
-  it('Author can see and edit time & location in publication tab', function () {
+  it('Author can see but not edit time & location in publication tab', function () {
     cy.login('aauthor');
     cy.get('a:contains("aauthor")').click();
     cy.get('a:contains("Dashboard")').click({ force: true });
@@ -129,7 +129,7 @@ describe('OPTIMETA Geoplugin Production Editing', function () {
       times: 1
     }).as('post');
     cy.get('div#timeLocation button[label="Save"]').click();
-    cy.wait('@post').its('response.statusCode').should('eq', 200);
+    cy.wait('@post').its('response.statusCode').should('eq', 403);
 
     cy.logout();
   });
@@ -191,7 +191,7 @@ describe('OPTIMETA Geoplugin Production Editing', function () {
     cy.wait(500);
     cy.get('.applyBtn').click();
     cy.toolbarButton('marker').click();
-    cy.get('#mapdiv').dblclick(220, 200);
+    cy.get('#mapdiv').click(220, 220);
     cy.wait(4000); // needs to query GeoNames etc.
 
     cy.get('div#timeLocation button[label="Save"]').click();
@@ -211,15 +211,10 @@ describe('OPTIMETA Geoplugin Production Editing', function () {
     cy.get('a:contains("eeditor"):visible').click();
     cy.get('a:contains("Dashboard")').click({ force: true });
     cy.get('a:contains("View")').first().click(); // click latest submission
-
-    cy.get('a[id^="accept-button"]').click();
-    cy.get('input[id^="skipEmail-skip"]').click();
-    cy.get('form[id="promote"] button:contains("Next:")').click();
-    cy.get('input[id^="select"]').click();
-    cy.get('button:contains("Record Editorial Decision")').click();
     cy.wait(2000);
-    cy.get('a:contains("Send To Production")').click();
-    cy.get('input[id="skipEmail-skip"]').click();
+
+    cy.get('a[id^="sendToProduction-button"]').click();
+    cy.get('input[id^="skipEmail-skip"]').click();
     cy.get('form[id="promote"] button:contains("Next:")').click();
     cy.get('input[id^="select"]').click();
     cy.get('button:contains("Record Editorial Decision")').click();
@@ -245,14 +240,14 @@ describe('OPTIMETA Geoplugin Production Editing', function () {
       cy.get('#optimetageo_end').should('contain', '2022-09-08');
       cy.get('meta[name="DC.Coverage"]').should('have.attr', 'content').and('equal', 'Earth, Europe');
       cy.get('meta[name="DC.SpatialCoverage"]').should('have.attr', 'content').and('contain', '{"type":"Point","coordinates":['); // cypress takes are of decoding
-
-      cy.logout();
     });
+
+    cy.logout();
   });
 
-  it('After publication author cannot edit time & location metadata', function () {
-    cy.login('aauthor');
-    cy.get('a:contains("aauthor")').click();
+  it('After publication editor cannot edit time & location metadata', function () {
+    cy.login('eeditor');
+    cy.get('a:contains("eeditor")').click();
     cy.get('a:contains("Dashboard")').click({ force: true });
     cy.get('button:contains("Archives")').click({ force: true });
     cy.wait(5000);
