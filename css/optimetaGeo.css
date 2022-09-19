@@ -27,6 +27,18 @@
 	font-style: italic;
 }
 
+/* to debug the hidden data fields, rename the class below to make them visible */
+.hiddenDataField {
+	height: 0px;
+	width: 0px;
+	visibility: hidden;
+	display: none;
+}
+
+.optimetageo_formGroupMargin {
+	margin-top: 1.5rem;
+}
+
 /* https://www.w3schools.com/css/css_tooltip.asp */
 .tooltip {
 	position: relative;
@@ -38,7 +50,8 @@
 	width: 300px;
 	top: 100%;
 	left: 50%;
-	margin-top: 5px; /* space for arrow */
+	margin-top: 5px;
+	/* space for arrow */
 	margin-left: -150px;
 	position: absolute;
 	z-index: 9;
@@ -48,7 +61,7 @@
 	text-align: center;
 	padding: 5px 5px;
 	border-radius: 3px;
-	
+
 	color: #777;
 	font-size: 13px;
 }
@@ -60,7 +73,8 @@
 .tooltip .tooltiptext::after {
 	content: " ";
 	position: absolute;
-	bottom: 100%;  /* At the top of the tooltip */
+	bottom: 100%;
+	/* At the top of the tooltip */
 	left: 50%;
 	margin-left: -5px;
 	border-width: 5px;

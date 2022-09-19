@@ -66,10 +66,33 @@ describe('OPTIMETA Geoplugin Configuration', function () {
     cy.wait(2000);
     cy.get('button.submitFormButton').click();
     cy.get('#mapdiv').should('exist');
+
+    cy.logout();
   });
 
-  it('Has a map in the final metadata check before publication', function () {
-    this.skip(); // TODO implement test
+  it('Has coverage input disabled with a hover message in the right language if the metadata field is enabled', function () {
+    cy.login('admin', 'admin', Cypress.env('contextPath'));
+
+    cy.get('nav[class="app__nav"] a:contains("Workflow")').click();
+    cy.get('button#metadata-button').click();
+    cy.get('input[aria-describedby^="metadataSettings-coverage"]').click();
+    cy.get('input[value="request"]').click({ multiple: true });
+    cy.get('div#metadata').find('button:contains("Save")').click();
+    cy.wait(2000);
+    
+    cy.get('a:contains("Submissions")').click();
+    cy.get('div#myQueue a:contains("New Submission")').click();
+    cy.get('input[id^="checklist-"]').click({ multiple: true });
+    cy.get('input[id="privacyConsent"]').click();
+    cy.get('button.submitFormButton').click();
+    cy.wait(2000);
+    cy.get('button.submitFormButton').click();
+    cy.get('input[id^="coverage-"').should('exist');
+    cy.get('input[id^="coverage-"').invoke('attr', 'disabled').should('eq', 'disabled');
+    cy.get('input[id^="coverage-"').invoke('attr', 'title').should('contain', 'field has been disabled');
+    cy.get('input[id^="coverage-"').should('have.value', '');
+    
+    cy.logout();
   });
 
   it('Configure Geoplugin - Map colors', function () {

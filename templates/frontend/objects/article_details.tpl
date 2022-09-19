@@ -56,12 +56,13 @@ const optimetageo_adminLayerName = '{translate key="plugins.generic.optimetaGeo.
             {translate key="plugins.generic.optimetaGeo.license.frontend"} {$optimetageo_metadataLicense}
         </p>
 
-        <input type="text" id="optimeta_temporal" name="temporalProperties"
-            style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalProperties}' />
-        <input type="text" id="optimeta_spatial" name="spatialProperties"
-            style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialProperties}'>
-        <input type="text" id="optimeta_administrativeUnit" name="administrativeUnit"
-            style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnit}'>
+        {* name is used for the submitted form and the name in the PHP backend, id is used for JavaScript *}
+        <input type="text" id="optimeta_temporal" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_TIME_PERIODS}"
+            style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.OPTIMETA_GEO_DB_FIELD_TIME_PERIODS}}' />
+        <input type="text" id="optimeta_spatial" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_SPATIAL}"
+            style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.OPTIMETA_GEO_DB_FIELD_SPATIAL}}' />
+        <input type="text" id="optimeta_administrativeUnit" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_ADMINUNIT}"
+            style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.OPTIMETA_GEO_DB_FIELD_ADMINUNIT}}' />
     </section>
 
 </div>

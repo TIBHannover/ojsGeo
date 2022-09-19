@@ -11,56 +11,51 @@
  * The main template is here extended using the hook 'Templates::Submission::SubmissionMetadataForm::AdditionalMetadata'
  *}
 
-<div style="clear:both;">
-    {fbvFormArea id="tagitFields"
-    title="plugins.generic.optimetaGeo.article.metadata.long"}
+<link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
 
-    <input type="text" id="optimetageo_coverageDisabledHover" name="coverageDisabledHover"
+<input type="text" id="optimetageo_usernameGeonames" name="usernameGeonames" class="hiddenDataField" value="{$usernameGeonames}" />
+<input type="text" id="optimetageo_baseurlGeonames" name="baseurlGeonames" class="hiddenDataField" value="{$baseurlGeonames}" />
+<input type="text" id="optimetageo_coverageDisabledHover" name="coverageDisabledHover"
         style="height: 0px; width: 0px; visibility: hidden;"
         value="{translate key="plugins.generic.optimetaGeo.submission.coverageDisabledHover"}">
-    
+        
+<div style="clear:both;">
+    {fbvFormArea id="spatioTemporalFields"}
+
     {*temporal*}
-    {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal" for="period" inline=true}
+    {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal" for="timePeriodsWithDatepicker" inline=true}
     <p align="justify" class="description">{translate
         key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.submission"}
     </p>
-    <input type="text" name="datetimes" style="width: 100%; height: 32px; z-index: 0;" />
-    <input type="text" id="temporalProperties" name="temporalProperties"
-        style="height: 0px; width: 0px; z-index: 0; visibility: hidden;" />
-    <input type="text" id="timePeriodsFromDb" name="timePeriodsFromDb"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$timePeriodsFromDb}' />
+    <input type="text" id="timePeriodsWithDatepicker" name="datetimes" style="width: 100%; height: 32px; z-index: 0;" />
+    <textarea id="timePeriods" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_TIME_PERIODS}"
+        class="hiddenDataField" style="height: 0;">{${$smarty.const.OPTIMETA_GEO_DB_FIELD_TIME_PERIODS}}</textarea>
     {/fbvFormSection}
 
     {*spatial*}
-    {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial" for="period" inline=true}
+    {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial" for="spatialProperties" inline=true}
     <p align="justify" class="description">{translate
         key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.submission"}
     </p>
     <div id="mapdiv" style="width: 100%; height: 400px; z-index: 0;"></div>
-    <input type="text" id="spatialProperties" name="spatialProperties" size="30"
-        style="height: 0px; width: 0px; visibility: hidden;">
-    <input type="text" id="spatialPropertiesFromDb" name="spatialPropertiesFromDb"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialPropertiesFromDb}' />
+    <textarea id="spatialProperties" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_SPATIAL}"
+        class="hiddenDataField" style="height: 0;">{${$smarty.const.OPTIMETA_GEO_DB_FIELD_SPATIAL}}</textarea>
+
     <p align="justify" class="description">{translate
         key="plugins.generic.optimetaGeo.license.submission"} {$optimetageo_metadataLicense}
     </p>
     {/fbvFormSection}
 
     {*administrativeUnit*}
-    {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit" for="period"
+    {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit" for="administrativeUnitInput"
     inline=true}
     <p align="justify" class="description">{translate
         key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"}
     </p>
     <ul id="administrativeUnitInput">
     </ul>
-    <input type="text" id="administrativeUnit" name="administrativeUnit" size="30" style="visibility: hidden;">
-    <input type="text" id="administrativeUnitFromDb" name="administrativeUnitFromDb"
-        style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnitFromDb}' />
-    <input type="text" id="optimetageo_usernameGeonames" name="usernameGeonames"
-        style="height: 0px; width: 0px; visibility: hidden;" value="{$usernameGeonames}" />
-    <input type="text" id="optimetageo_baseurlGeonames" name="baseurlGeonames"
-        style="height: 0px; width: 0px; visibility: hidden;" value="{$baseurlGeonames}" />
+    <textarea id="administrativeUnit" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_ADMINUNIT}"
+        class="hiddenDataField" style="height: 0;">{${$smarty.const.OPTIMETA_GEO_DB_FIELD_ADMINUNIT}}</textarea>
     {/fbvFormSection}
     {/fbvFormArea}
 </div>

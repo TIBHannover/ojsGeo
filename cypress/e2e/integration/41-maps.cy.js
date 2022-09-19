@@ -16,9 +16,12 @@ describe('OPTIMETA Geoplugin Maps', function () {
     expect(features[0].geometry.coordinates[0][1] - 53.33).to.be.lessThan(0.01);
   });
 
-  it('The map on the current issue page has the paper\'s geometry', function () {
+  const geometriesCount = 4;
+
+  it('The map on the current issue page has the papers\' geometries', function () {
     cy.visit('/');
-    cy.mapHasFeatures(1);
+    // 1 from "Hanover is nice", 3 from "Editors save the day"
+    cy.mapHasFeatures(geometriesCount);
     cy.window().wait(200).then(({ map }) => {
       var features = [];
       map.eachLayer(function (layer) {
@@ -30,7 +33,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
     });
   });
 
-  it('The map on the issue page has the paper\'s geometry', function () {
+  it('The map on the issue page in the archive has the papers\' geometries', function () {
     cy.visit('/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
@@ -38,7 +41,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
     cy.get('.pkp_structure_main').should('contain', 'Times & locations');
     cy.get('#mapdiv').should('exist');
 
-    cy.mapHasFeatures(1);
+    cy.mapHasFeatures(geometriesCount);
     cy.window().wait(200).then(({ map }) => {
       var features = [];
       map.eachLayer(function (layer) {
@@ -59,7 +62,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
     cy.get('.pkp_structure_main').should('contain', 'Time and location');
     cy.get('#mapdiv').should('exist');
 
-    cy.mapHasFeatures(2);
+    cy.mapHasFeatures(1);
     cy.window().wait(200).then(({ map }) => {
       var features = [];
       map.eachLayer(function (layer) {
@@ -83,7 +86,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
     });
   });
 
-  it('The article page has the admnistrative units in a text', function () {
+  it('The article page has the administrative units in a text', function () {
     cy.visit('/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();

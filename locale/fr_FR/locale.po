@@ -39,7 +39,7 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"
 msgstr "à"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"
-msgstr "Cet article couvre le(s) lieu(x) ou la(les) zone(s) figurant sur la carte ci-dessous."
+msgstr "Lieu(x) ou la(les) zone(s)"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"
 msgstr "Les unités administratives englobant les lieux de l'article sont : "
@@ -121,3 +121,12 @@ msgstr "Licence métadonnées spatiales:"
 
 msgid "plugins.generic.optimetaGeo.license.frontend"
 msgstr "Les métadonnées temporelles et spatiales sont publiées sous la licence suivante:"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw"
+msgstr "Données brutes"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw.description"
+msgstr "Modifiez les données brutes avec soin! Les modifications apportées aux données brutes ne déclenchent <strong>pas</strong> de modifications dans les champs de formulaire et la carte ci-dessus."
+
+msgid "plugins.generic.optimetaGeo.publication.success"
+msgstr "Mise à jour des métadonnées réussie."

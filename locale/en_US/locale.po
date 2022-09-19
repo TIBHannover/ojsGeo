@@ -39,13 +39,13 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"
 msgstr "to"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"
-msgstr "This article covers location(s) or area(s) shown on the map below."
+msgstr "Location(s) or area(s)"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"
 msgstr "The administrative units enclosing the article's places are: "
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.submission"
-msgstr "Define the location of the articles content by one or more geometric shape(s). You can choose in the control on the left side between polyline, polygon, rectangle and point. By the icons below you can edit or delete the created geometric shape(s). With the \"–\" and \"+\" in the upper left corner it is possible to zoom in and out. In the upper right corner you can change the background maps. You can choose between a street map (\"OpenStreetMap\" layer) and aerial imagery (\"Esri World Imagery\" layer). You can also set whether the geometric shape(s) and the administrative unit should be displayed or not. For the administrative unit you will find a more detailed description in the next paragraph of this form. Below the layer control you will find a search for the map. You can search for locations and by hitting \"Enter\" you will be offered different locations that match your input. By clicking on a suggestion it will be accepted and a matching rectangle, describing the boundaries of the location, will be displayed on the map. This rectangle can also be deleted/ edited by clicking on the trash-/ edit icon on the left side. You can choose a coarser level of detail to protect sensitive locations."
+msgstr "Define the location and areas that further describe the article's content by one or more geometric shape(s). You can choose in the <strong>editing controls for geometry creation</strong> on the left side between polyline, polygon, rectangle and point. Using the icons below you can <strong>edit or delete</strong> the created geometric shape(s). With the \"–\" and \"+\" in the upper left corner it is possible to zoom in and out. In the upper right corner you can change the <strong>background maps</strong>. You can choose between a street map (\"OpenStreetMap\" layer) and aerial imagery (\"Esri World Imagery\" layer). You can also configure whether the geometric shape(s) and the administrative unit should be displayed on the map or not. For the administrative unit you will find a more detailed description in the next paragraph of this form. Below the layer control you will find a <strong>search</strong> form for the map. You can search for locations and by hitting \"Enter\" you will be offered different locations that match your input. By clicking on a search result a rectangular geometry describing the boundaries of the respective location will be added to the map. This rectangle can also be deleted/edited by clicking on the trash-/edit icons in the menu on the left side of the map. You can choose a coarser level of detail to <strong>protect sensitive locations</strong>."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"
 msgstr "The geometric shape(s) in blue represent the locations or areas of the article's content as provided by the authors. The administrative unit shown in a black rectangle represents the smallest administrative unit that encloses the spatial extent that the article is dealing with."
@@ -111,7 +111,7 @@ msgid "plugins.generic.optimetaGeo.map.administrativeLayerName"
 msgstr "Administrative Units"
 
 msgid "plugins.generic.optimetaGeo.submission.coverageDisabledHover"
-msgstr "This field has been disabled. Information will be filled automatically based on the geospatial information entered below."
+msgstr "This field has been disabled. Information will be filled in automatically based on the location information entered below."
 
 msgid "plugins.generic.optimetaGeo.license.submission"
 msgstr "Note that the temporal and spatial metadata will be published under the following license:"
@@ -121,3 +121,12 @@ msgstr "Geodata license:"
 
 msgid "plugins.generic.optimetaGeo.license.frontend"
 msgstr "Temporal and spatial metadata are published under the following license:"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw"
+msgstr "Raw data"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw.description"
+msgstr "Edit raw data with care! Changes made to the raw data do <strong>not</strong> trigger changes in the above form fields and map."
+
+msgid "plugins.generic.optimetaGeo.publication.success"
+msgstr "Metadata update succesful."

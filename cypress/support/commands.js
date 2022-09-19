@@ -154,6 +154,38 @@ Cypress.Commands.add('createIssues', (data, context) => {
 });
 
 Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
+    cy.createSubmission(data);
+    
+    // === Jump through review and publication  ===
+    cy.login('eeditor');
+    cy.get('a:contains("eeditor"):visible').click();
+    cy.get('a:contains("Dashboard")').click({ force: true });
+    cy.get('a:contains("View")').first().click();
+    cy.get('a[id^="accept-button"]').click();
+    cy.get('input[id^="skipEmail-skip"]').click();
+    cy.get('form[id="promote"] button:contains("Next:")').click();
+    cy.get('input[id^="select"]').click();
+    cy.get('button:contains("Record Editorial Decision")').click();
+    cy.wait(2000);
+    cy.get('a:contains("Send To Production")').click();
+    cy.get('input[id="skipEmail-skip"]').click();
+    cy.get('form[id="promote"] button:contains("Next:")').click();
+    cy.get('input[id^="select"]').click();
+    cy.get('button:contains("Record Editorial Decision")').click();
+    cy.wait(2000);
+    cy.get('div[id="production"]')
+        .find('button:contains("Schedule For Publication")').click();
+    cy.get('button[id="issue-button"]').click();
+    cy.get('button:contains("Assign to Issue")').click();
+    cy.get('select[id^="assignToIssue"]').select(data.issue);
+    cy.get('div[id^="assign"]').
+        find('button:contains("Save")').click();
+    cy.wait(2000);
+    cy.get('button:contains("Schedule For Publication")');
+    cy.get('button:contains("Publish"), div[class="pkpFormPages"] button:contains("Schedule For Publication")').click();
+});
+
+Cypress.Commands.add('createSubmission', (data, context) => {
     // Initialize some data defaults before starting
     if (data.type == 'editedVolume' && !('files' in data)) {
         data.files = [];
@@ -185,7 +217,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     if (!('issue' in data)) data.issue = '1';
 
     cy.get('a:contains("Make a New Submission"), div#myQueue a:contains("New Submission"), a:contains("Back to New Submission")').click();
-    cy.wait(5000); // extra wait time for GH action
+    cy.wait(2000);
 
     // === Submission Step 1 ===
     if ('section' in data) cy.get('select[id="sectionId"],select[id="seriesId"]').select(data.section);
@@ -203,7 +235,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
         cy.get('input[name=userGroupId]').parent().contains(data.submitterRole).click();
     } else {
         cy.get("body").then($body => {
-            cy.get('input[id=userGroupId]').then($input => {
+            cy.get('input[name=userGroupId]').then($input => {
                 if ($input.is(':visible')) {
                     cy.get('input[id=userGroupId]').click();
                 } // else: user is just an author and selection is not visible
@@ -385,7 +417,7 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
 
     cy.wait(2000);
 
-    // TODO check if administrative unit fields are filled in
+    // make sure administrative unit fields are filled in
     cy.get('#administrativeUnitInput').contains("Earth");
 
     cy.get('form[id=submitStep3Form]').find('button').contains('Save and continue').click();
@@ -398,35 +430,6 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.get('h2:contains("Submission complete")');
 
     cy.logout();
-
-    // === Jump through review and publication  ===
-    cy.login('eeditor');
-    cy.get('a:contains("eeditor"):visible').click();
-    cy.get('a:contains("Dashboard")').click({ force: true });
-    // only one editor, should be only one submission under "My Assigned"
-    cy.get('a:contains("View")').click();
-    cy.get('a[id^="accept-button"]').click();
-    cy.get('input[id^="skipEmail-skip"]').click();
-    cy.get('form[id="promote"] button:contains("Next:")').click();
-    cy.get('input[id^="select"]').click();
-    cy.get('button:contains("Record Editorial Decision")').click();
-    cy.wait(4000);
-    cy.get('a:contains("Send To Production")').click();
-    cy.get('input[id="skipEmail-skip"]').click();
-    cy.get('form[id="promote"] button:contains("Next:")').click();
-    cy.get('input[id^="select"]').click();
-    cy.get('button:contains("Record Editorial Decision")').click();
-    cy.wait(4000);
-    cy.get('div[id="production"]')
-        .find('button:contains("Schedule For Publication")').click();
-    cy.get('button[id="issue-button"]').click();
-    cy.get('button:contains("Assign to Issue")').click();
-    cy.get('select[id^="assignToIssue"]').select(data.issue);
-    cy.get('div[id^="assign"]').
-        find('button:contains("Save")').click();
-    cy.wait(2000);
-    cy.get('button:contains("Schedule For Publication")');
-    cy.get('button:contains("Publish"), div[class="pkpFormPages"] button:contains("Schedule For Publication")').click();
 });
 
 Cypress.Commands.add('findSubmissionAsEditor', (username, password, familyName, context) => {
@@ -574,6 +577,6 @@ Cypress.Commands.add('mapHasFeatures', (count) => {
                 features.push(layer.feature);
             }
         });
-        expect(features).to.have.lengthOf(1);
+        expect(features).to.have.lengthOf(count);
     });
 });

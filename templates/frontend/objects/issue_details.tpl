@@ -10,11 +10,10 @@
  * The main template is here extended using the hook 'Templates::Issue::Issue::Article'.
  *}
 
-<input type="text" class="optimeta_data articleId" name="spatialProperties"
+<input type="text" class="optimeta_data articleId" name="articleId"
     style="height: 0px; width: 0px; visibility: hidden;" value='article-{$article->getId()}'>
-<input type="text" class="optimeta_data spatial" name="spatialProperties"
-    style="height: 0px; width: 0px; visibility: hidden;" value='{$spatialProperties}'>
-
+<input type="text" class="optimeta_data spatial" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_SPATIAL}"
+    style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.OPTIMETA_GEO_DB_FIELD_SPATIAL}}'>
 
 {if $activeTheme->getOption('parentName') == 'defaultthemeplugin'}
 
@@ -59,7 +58,7 @@
 
 {/if} {* pragmathemeplugin *}
 
-{* <input type="text" class="optimeta_data temporal" name="temporalProperties"
-    style="height: 0px; width: 0px; visibility: hidden;" value='{$temporalProperties}' /> *}
-{* <input type="text" class="optimeta_data administrativeUnit" name="administrativeUnit"
-    style="height: 0px; width: 0px; visibility: hidden;" value='{$administrativeUnit}'> *}
+{* <input type="text" class="optimeta_data temporal" name="{$smarty.const.OPTIMETA_GEO_DB_FIELD_TIME_PERIODS}"
+    style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.OPTIMETA_GEO_DB_FIELD_TIME_PERIODS}}' /> *}
+{* <input type="text" class="optimeta_data administrativeUnit" naissueme="{$smarty.const.OPTIMETA_GEO_DB_FIELD_ADMINUNIT}"
+    style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.OPTIMETA_GEO_DB_FIELD_ADMINUNIT}}' /> *}

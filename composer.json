@@ -1,5 +1,15 @@
 {
+    "name": "optimeta/geo",
+    "description": "Create and display spatio-temporal metadata for publications",
+    "license": "GPL-3.0-or-later",
+    "keywords": [
+        "Optimeta",
+        "spatial",
+        "temporal",
+        "geo"
+    ],
     "require": {
+        "php": ">=7.3",
         "bower-asset/leaflet": "1.6.0",
         "bower-asset/leaflet-draw": "1.0.4",
         "bower-asset/leaflet-control-geocoder": "2.4.0",
@@ -7,6 +17,11 @@
         "npm-asset/daterangepicker": "3.1",
         "bower-asset/moment": "2.18.1",
         "oomphinc/composer-installers-extender": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Optimeta\\Geo\\":"classes"
+        }
     },
     "extra": {
         "installer-types": [

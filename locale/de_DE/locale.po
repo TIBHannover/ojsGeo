@@ -39,19 +39,19 @@ msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"
 msgstr "bis"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"
-msgstr "Dieser Artikel deckt Ort(e) oder Gebiet(e) ab, die auf der untenstehenden Karte gezeigt werden."
+msgstr "Ort(e) oder Gebiet(e)"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"
 msgstr "Die Verwaltungseinheiten, welche die zum Artikel zugehörigen Orte umschließen, sind:"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.submission"
-msgstr "Definieren Sie die Orte und Gebiete des Artikelinhalts durch eine oder mehrere geometrische Form(en). Sie können in der Steuerung auf der linken Seite zwischen Polylinie, Polygon, Rechteck und Punkt-Geometrie wählen. Über die Icons darunter können Sie die erstellte(n) geometrische(n) Form(en) bearbeiten oder löschen. Mit den Symbolen \"-\" und \"+\" in der oberen linken Ecke können Sie die Ansicht vergrößern und verkleinern. In der oberen rechten Ecke können Sie die Hintergrundkarten wechseln. Sie können zwischen einer Straßenkarte (\"OpenStreetMap\"-Ebene) und Luftbildern (\"Esri World Imagery\"-Ebene) wählen. Sie können auch einstellen, ob die geometrische(n) Form(en) und die Verwaltungseinheit angezeigt werden sollen oder nicht. Für die Verwaltungseinheiten finden Sie eine genauere Beschreibung im nächsten Abschnitt dieses Formulars. Unterhalb der Ebenensteuerung finden Sie eine Suchfunktion für die Karte. Sie können nach Orten suchen und durch Drücken von \"Enter\" werden Ihnen verschiedene Orte angeboten, die Ihren Eingaben entsprechen. Wenn Sie auf einen Vorschlag klicken, wird er akzeptiert und ein passendes Rechteck, das die Grenzen des Ortes beschreibt, wird auf der Karte angezeigt. Dieses Rechteck kann auch gelöscht/bearbeitet werden, indem Sie auf das Lösch-/Bearbeitungssymbol auf der linken Seite klicken. Sie können einen gröberen Detaillierungsgrad wählen, um sensible Orte zu schützen."
+msgstr "Definieren Sie die Orte und Gebiete, die den Artikelinhalt beschreiben, durch eine oder mehrere geometrische Form(en). Sie können im <strong>Menü zur Erstellung verschiedener Geometrietypen</strong> auf der linken Seite zwischen Polylinie, Polygon, Rechteck und Punkt-Geometrie wählen. Über die Icons darunter können Sie die erstellte(n) geometrische(n) Form(en) <strong>bearbeiten oder löschen</strong> (\"Mülleimer\"). Mit den Symbolen \"-\" und \"+\" in der oberen linken Ecke können Sie die Ansicht vergrößern und verkleinern. In der oberen rechten Ecke können Sie die <strong>Hintergrundkarten</strong> wechseln. Sie können zwischen einer Straßenkarte (\"OpenStreetMap\"-Ebene) und Luftbildern (\"Esri World Imagery\"-Ebene) wählen. Sie können auch einstellen, ob die geometrische(n) Form(en) und die Verwaltungseinheit angezeigt werden sollen oder nicht. Für die Verwaltungseinheiten finden Sie eine genauere Beschreibung im nächsten Abschnitt dieses Formulars. Unterhalb der Ebenensteuerung auf der rechten Seite finden Sie eine <strong>Suchfunktion</strong> für die Karte. Nach Drücken von \"Enter\" werden Ihnen verschiedene Orte angeboten und wenn Sie auf einen Vorschlag klicken, wird er akzeptiert und ein passendes Rechteck, das die Grenzen des Ortes beschreibt, wird auf der Karte erstellt. Dieses Rechteck kann bearbeitet oder gelöscht indem Sie auf das Lösch-/Bearbeitungssymbol in der Menüleiste auf der linken Seite der Karte klicken. Zum <strong>Schützen sensibler Orte</strong> können sie einen gröberen Detaillierungsgrad für die Geometrien nutzen."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"
 msgstr "Die blaue(n) geometrische(n) Form(en) stellen die Orte oder Gebiete des Artikelinhalts dar, wie sie von den Nutzer*innen angegeben wurden. Die in einem schwarzen Rechteck dargestellte Verwaltungseinheit stellt die kleinste Verwaltungseinheit dar, welche alle Orte und Gebiete umschließt, mit denen sich der Artikel befasst."
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit"
-msgstr "Adiministrative Region"
+msgstr "Administrative Region"
 
 msgid "plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
 msgstr "Auf Basis Ihrer Eingaben in der Karte werden Verwaltungseinheiten vorgeschlagen, die entsprechend Ihrer Eingaben in der Karte ausgewählt wurden. Jedes Mal, wenn Sie die Eingaben aktualisieren, werden die Erfassungsinformationen neu berechnet und entsprechend aktualisiert. Mit dem roten \"x\" können Sie die Verwaltungseinheit(en) löschen. Wenn Sie den Mauszeiger über die Verwaltungseinheit(en) bewegen, wird die übergeordnete Hierarchie der Verwaltungseinheit(en) angezeigt, sofern vorhanden. Außerdem können Sie weitere Verwaltungseinheiten hinzufügen. Sie können nur dann eine weitere Verwaltungseinheit einfügen, wenn diese zu der bereits vorgegebenen Hierarchie der Verwaltungseinheiten und der vorgegebenen geometrischen Form in der Karte passt. Wenn Sie mit dem Einfügen beginnen, gibt es einige Vorschläge, die Sie durch Anklicken akzeptieren können, aber Sie können trotzdem Ihre eigene Verwaltungseinheit eingeben, indem Sie \"Enter\" drücken. Die Verwaltungseinheit (in Schwarz), die den kleinsten gemeinsamen Nenner für alle geometrischen Formen darstellt, wird in der Karte angezeigt. Die Verwaltungseinheit ist nicht direkt in der Karte, sondern über das Eingabefeld editierbar oder löschbar."
@@ -121,3 +121,12 @@ msgstr "Geodaten-Lizenz:"
 
 msgid "plugins.generic.optimetaGeo.license.frontend"
 msgstr "Die zeitlichen und räumlichen Metadaten sind unter der folgenden Lizenz veröffentlicht:"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw"
+msgstr "Rohdaten"
+
+msgid "plugins.generic.optimetaGeo.publication.tab.raw.description"
+msgstr "Bearbeitung der Rohdaten hat mit Vorsicht zu erfolgen! Änderungen in den Rohdaten verursachen <strong>kein</strong> update der obigen Formularfelder und Karte."
+
+msgid "plugins.generic.optimetaGeo.publication.success"
+msgstr "Die Metadaten wurden aktualisiert."
