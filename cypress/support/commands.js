@@ -577,6 +577,6 @@ Cypress.Commands.add('mapHasFeatures', (count) => {
                 features.push(layer.feature);
             }
         });
-        expect(features).to.have.lengthOf(1);
+        expect(features).to.have.lengthOf(count);
     });
 });

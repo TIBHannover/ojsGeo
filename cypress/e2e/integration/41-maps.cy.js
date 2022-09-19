@@ -62,7 +62,7 @@ describe('OPTIMETA Geoplugin Maps', function () {
     cy.get('.pkp_structure_main').should('contain', 'Time and location');
     cy.get('#mapdiv').should('exist');
 
-    cy.mapHasFeatures(2);
+    cy.mapHasFeatures(1);
     cy.window().wait(200).then(({ map }) => {
       var features = [];
       map.eachLayer(function (layer) {
