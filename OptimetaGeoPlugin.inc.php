@@ -28,8 +28,10 @@ require_once (OPTIMETA_GEO_PLUGIN_PATH . '/vendor/autoload.php');
 import('lib.pkp.classes.plugins.GenericPlugin');
 
 import('plugins.generic.optimetaGeo.classes.Components.Forms.PublicationForm');
+import('plugins.generic.optimetaGeo.classes.Components.Forms.SettingsForm');
 
 use Optimeta\Geo\Components\Forms\PublicationForm;
+use Optimeta\Geo\Components\Forms\SettingsForm;
 
 class OptimetaGeoPlugin extends GenericPlugin
 {
@@ -602,9 +604,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		switch ($request->getUserVar('verb')) {
 			case 'settings':
 
-				// Load the custom form
-				$this->import('OptimetaGeoSettingsForm');
-				$form = new OptimetaGeoSettingsForm($this);
+				$form = new SettingsForm($this);
 
 				// Fetch the form the first time it loads, before
 				// the user has tried to save it
