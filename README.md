@@ -6,7 +6,7 @@
 
 The OPTIMETA geo plugin offers a novel way to capture and provide geospatial properties of research articles in [Open Journal Systems](https://pkp.sfu.ca/ojs/) (OJS).
 It is developed as part of the BMBF-funded project [OPTIMETA](https://projects.tib.eu/optimeta/en/).
-The OPTIMETA team also develops the [OPTIMETA Citations Plugin](https://github.com/TIBHannover/optimetaCitations) for capturing articles' citation information and contributing these to the metadata commons. 
+The OPTIMETA team also develops the [OPTIMETA Citations Plugin](https://github.com/TIBHannover/optimetaCitations) for capturing articles' citation information and contributing these to the metadata commons.
 
 A first prototype of the Geoplugin was developed under the name *geoOJS* by Tom Niers for the BSc. thesis [Geospatial Metadata for Discovery in Scholarly Publishing](http://nbn-resolving.de/urn:nbn:de:hbz:6-69029469735); the work was [presented at The Munin Conference on Scholarly Publishing, 2020](https://doi.org/10.7557/5.5590), see [recording](https://youtu.be/-Lc9AjHq_AY).
 
@@ -33,8 +33,9 @@ In the article view, the properties specified by the author are then displayed a
 
 ## Release
 
-See releases at <>.
-The release bundles contain only the required JavaScript dependencies.
+See releases at <https://github.com/TIBHannover/optimetaGeo/releases>.
+The release bundles contain plugin source code as well as the the required JavaScript dependencies so the plugin is ready to be used.
+Note that you need the OPTIMETA geo plugin theme for some of the frontend displays, see <https://github.com/ifgi/optimetaGeoTheme>.
 
 ## From source
 
@@ -67,7 +68,10 @@ By participating in this project you agree to abide by its terms.
 
 # Notes about accuracy
 
-- accuracy +/- 2 m (via https://twitter.com/nyalldawson/status/1393050257554956289?s=09) is sufficient for discovery
+The spatial metadata is saved in GeoJSON format using the [EPSG:4326 coordinate reference system]() (CRS) and the underlying [dynamic WGS84 datum]().
+This means that even the same coordinates can point to different locations on Earth over time, as the so called "epoch" is not saved.
+However, this only leads to an uncertainty of about +/- 2 m, which is generally _no problem at all_ for the use case of global dataset discovery.
+For a nice explainer on this (non) issue see [this informative thread on Twitter by Nyall Dawson](https://twitter.com/nyalldawson/status/1393050257554956289?s=09).
 
 # Testing
 
@@ -101,7 +105,18 @@ To debug, add `debugger;` to the code and make sure to have the developer tools 
 
 # Create a release
 
-Install the PKP CLI tool, see <https://docs.pkp.sfu.ca/dev/plugin-guide/en/release>.
+1. Run `composer update` and `composer install`
+1. Update the release version in `version.xml`
+1. Add a git tag and push it to GitHub
+1. Create a zip archive of the local files with the following command to include the required dependencies from `vendor/` and `js/lib/` but to exclude non-essential files:
+
+   ```bash
+   rm optimetaGeo.zip && zip -r optimetaGeo.zip ./ --exclude '*.git*' --exclude '*.github/*' --exclude 'node_modules/*' --exclude '*cypress/*' --exclude '*.gitignore*' --exclude '*.npmignore*' --exclude '*messages.mo*' --exclude '*cypress.config.js*' --exclude '*CONDUCT.md*' --exclude '*screenshots/*'
+   ```
+
+1. Upload the archive to the release on GitHub
+
+Later release workflows will include usage of the PKP CLI tool, see <https://docs.pkp.sfu.ca/dev/plugin-guide/en/release>.
 
 # License
 

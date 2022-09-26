@@ -97,6 +97,9 @@ rmdir_recursive($cwd . '/leaflet-control-geocoder/node_modules');
 rmdir_recursive($cwd . '/leaflet/.github');
 rmdir_recursive($cwd . '/leaflet/spec');
 
+// transitive dependency - already included in OJS
+rmdir_recursive($cwd . '/jquery');
+
 // final cleanup
 RemoveEmptySubFolders($cwd);
 

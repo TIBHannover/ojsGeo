@@ -1,0 +1,7 @@
+cypress/**
+screenshots/**
+messages.mo
+CONDUCT.md
+composer.*
+cypress.config.js
+.github/**
