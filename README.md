@@ -114,6 +114,7 @@ To debug, add `debugger;` to the code and make sure to have the developer tools 
    rm optimetaGeo.zip && zip -r optimetaGeo.zip ./ --exclude '*.git*' --exclude '*.github/*' --exclude 'node_modules/*' --exclude '*cypress/*' --exclude '*.gitignore*' --exclude '*.npmignore*' --exclude '*messages.mo*' --exclude '*cypress.config.js*' --exclude '*CONDUCT.md*' --exclude '*screenshots/*'
    ```
 
+1. Create a new release on GitHub using the tag just created, with a fitting title, description and, if need be, the `pre-release` box checked
 1. Upload the archive to the release on GitHub
 
 Later release workflows will include usage of the PKP CLI tool, see <https://docs.pkp.sfu.ca/dev/plugin-guide/en/release>.
