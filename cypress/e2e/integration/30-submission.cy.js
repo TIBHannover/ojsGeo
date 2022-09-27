@@ -75,10 +75,10 @@ describe('OPTIMETA Geoplugin Submission', function () {
 
     cy.toolbarButton('marker').click();
     cy.get('#mapdiv').click(260, 110);
-    cy.wait(1000);
+    cy.wait(3000); // a bit longer for GitHub action
     cy.get('input[id^="coverage-"').should('have.value', 'Earth, North America, Canada, British Columbia, Nazko');
     cy.get('a.leaflet-control-zoom-out').click().click().click().click().click().click().click().click().click().click().click();
-    cy.wait(1000);
+    cy.wait(1000); // for map zoom to catch up
   });
 
   it('Updates the coverage field on interaction with the map', function () {
