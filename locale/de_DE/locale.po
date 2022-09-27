@@ -78,7 +78,7 @@ msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames"
 msgstr "Basis-URL von Geonames, um zwischen 'http' und 'https' zu wechseln."
 
 msgid "plugins.generic.optimetaGeo.settings.baseurlGeonames.description"
-msgstr "Geben Sie hier entweder <code>https://www.geonames.org</code> oder <code>http://www.geonames.org</code> ein in Abhängigkeit davon, ob Ihr OJS-Server unter HTTP oder HTTPS veröffentlicht ist."
+msgstr "Geben Sie hier entweder <code>https://www.geonames.org</code> oder <code>http://api.geonames.org</code> ein in Abhängigkeit davon, ob Ihr OJS-Server unter HTTP oder HTTPS veröffentlicht ist."
 
 msgid "plugins.generic.optimetaGeo.name"
 msgstr "OPTIMETA Geo Plugin"
