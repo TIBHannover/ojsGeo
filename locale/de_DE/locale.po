@@ -69,7 +69,7 @@ msgid "plugins.generic.optimetaGeo.article.details.geoJSON.about"
 msgstr "Über GeoJSON"
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames"
-msgstr "Erstellen Sie einen Benutzernamen unter https://www.geonames.org/login; der Benutzername muss einmalig aktiviert werden, um den kostenlosen Webservice zu nutzen, siehe https://www.geonames.org/manageaccount."
+msgstr "Erstellen Sie einen Benutzernamen unter https://www.geonames.org/login; der Benutzername muss einmalig aktiviert werden, um den kostenlosen Webservice zu nutzen ('free web services'), siehe https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.optimetaGeo.settings.usernameGeonames.description"
 msgstr "Sie müssen Ihren Benutzernamen für die GeoNames API angeben, damit ein Abruf der Verwaltungseinheiten möglich ist: <a href=\"https://www.geonames.org/login\">https://www.geonames.org/login</a>."

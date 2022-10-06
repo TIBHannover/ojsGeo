@@ -1,14 +1,14 @@
 [![OPTIMETA Logo](https://projects.tib.eu/fileadmin/_processed_/e/8/csm_Optimeta_Logo_web_98c26141b1.png)](https://projects.tib.eu/optimeta/en/)
 
-# OPTIMETA Geoplugin
+# OPTIMETA Geo Plugin
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
-The OPTIMETA geo plugin offers a novel way to capture and provide geospatial properties of research articles in [Open Journal Systems](https://pkp.sfu.ca/ojs/) (OJS).
+The OPTIMETA Geo Plugin offers a novel way to capture and provide geospatial properties of research articles in [Open Journal Systems](https://pkp.sfu.ca/ojs/) (OJS).
 It is developed as part of the BMBF-funded project [OPTIMETA](https://projects.tib.eu/optimeta/en/).
 The OPTIMETA team also develops the [OPTIMETA Citations Plugin](https://github.com/TIBHannover/optimetaCitations) for capturing articles' citation information and contributing these to the metadata commons.
 
-A first prototype of the Geoplugin was developed under the name *geoOJS* by Tom Niers for the BSc. thesis [Geospatial Metadata for Discovery in Scholarly Publishing](http://nbn-resolving.de/urn:nbn:de:hbz:6-69029469735); the work was [presented at The Munin Conference on Scholarly Publishing, 2020](https://doi.org/10.7557/5.5590), see [recording](https://youtu.be/-Lc9AjHq_AY).
+A first prototype of the OPTIMETA Geo Plugin was developed under the name *geoOJS* by Tom Niers for the BSc. thesis [Geospatial Metadata for Discovery in Scholarly Publishing](http://nbn-resolving.de/urn:nbn:de:hbz:6-69029469735); the work was [presented at The Munin Conference on Scholarly Publishing, 2020](https://doi.org/10.7557/5.5590), see [recording](https://youtu.be/-Lc9AjHq_AY).
 
 <div style="text-align:center">
 <img src="screenshots/SubmissionView.png" alt="Alt-Text" title="Screenshot of entering geospatial properties in the OJS submission process" width="50%" align="middle"/>
@@ -43,7 +43,7 @@ Note that you need the OPTIMETA geo plugin theme for some of the frontend displa
 1. Run `composer install` to download JavaScript dependencies for the plugin using [Asset Packagist](https://asset-packagist.org/site/about)
    Go to `js/lib/leaflet-control-geocoder` and run `npm install` (see [this issue](https://github.com/perliedman/leaflet-control-geocoder/issues/310))
 1. Activate the plugin in the OJS plug-in settings
-1. Install and activate the OJS Geoplugin Theme: <https://github.com/ifgi/optimetaGeoTheme/releases>
+1. Install and activate the OJS Geo Plugin Theme: <https://github.com/ifgi/optimetaGeoTheme/releases>
 
 # Configuration
 
@@ -51,7 +51,8 @@ Note that you need the OPTIMETA geo plugin theme for some of the frontend displa
 
    You have to specify your username for the GeoNames api, so that an alignment for the administrative units is possible.
 
-   1. Create an account on <https://www.geonames.org/login>
+   1. Create an account on <https://www.geonames.org/login> and enable it by clicking the activiation link you get via email
+   1. Go to <https://www.geonames.org/manageaccount> and enable your account for free web services
    1. Enter the username in the settings (OJS > Settings > Website > Plugins > Installed Plugins > OPTIMETA geo plugin > blue arrow > Settings)
 1. Configure **theme**
 
