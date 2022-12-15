@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin Licensing Information', function () {
+describe('OPTIMETA Geo Plugin Licensing Information', function () {
 
   it('Has licensing information on the journal map page', function () {
     cy.visit('/');

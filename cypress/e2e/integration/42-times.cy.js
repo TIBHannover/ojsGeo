@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin Time Periods', function () {
+describe('OPTIMETA Geo Plugin Time Periods', function () {
 
   it('has the time period for the article on the article page', function () {    
     cy.visit('/');

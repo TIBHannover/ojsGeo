@@ -3,7 +3,7 @@
 /**
  * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *
- * Download JavaScript dependencies for OJS plugin OPTIMETA Geoplugin
+ * Download JavaScript dependencies for OJS plugin OPTIMETA Geo Plugin
  * 
  * Usage:
  * 

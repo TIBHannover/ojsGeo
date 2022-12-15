@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin Production Editing', function () {
+describe('OPTIMETA Geo Plugin Production Editing', function () {
 
   var submission;
   var sub1start = '2022-01-01';

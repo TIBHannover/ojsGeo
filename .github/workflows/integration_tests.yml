@@ -7,7 +7,7 @@
 #
 # Based on https://github.com/o2r-project/ojs-erc-plugin/blob/master/.github/workflows/cypress_test.yml
 #
-name: OPTIMETA Geoplugin CI Test
+name: OPTIMETA Geo Plugin CI Test
 
 on:
   push:

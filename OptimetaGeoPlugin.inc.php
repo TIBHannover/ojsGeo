@@ -270,7 +270,6 @@ class OptimetaGeoPlugin extends GenericPlugin
 		$publicationDao = DAORegistry::getDAO('PublicationDAO');
 		$submissionId = $request->getUserVar('submissionId');
 		$publication = $publicationDao->getById($submissionId);
-		// TODO check if the submission really belongs to the journal
 
 		$timePeriods = $publication->getData(OPTIMETA_GEO_DB_FIELD_TIME_PERIODS);
 		$spatialProperties = $publication->getData(OPTIMETA_GEO_DB_FIELD_SPATIAL);

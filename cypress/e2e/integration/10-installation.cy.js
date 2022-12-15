@@ -9,7 +9,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin Installation', function () {
+describe('OPTIMETA Geo Plugin Installation', function () {
 
   it('Installs the software', function () {
     cy.install();

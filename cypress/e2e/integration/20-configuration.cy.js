@@ -7,9 +7,9 @@
  *
  */
 
-describe('OPTIMETA Geoplugin Configuration', function () {
+describe('OPTIMETA Geo Plugin Configuration', function () {
 
-  it('Disable Geoplugin', function () {
+  it('Disable OPTIMETA Geo Plugin', function () {
     cy.login('admin', 'admin', Cypress.env('contextPath'));
     cy.get('nav[class="app__nav"] a:contains("Website")').click();
     cy.get('button[id="plugins-button"]').click();
@@ -24,7 +24,7 @@ describe('OPTIMETA Geoplugin Configuration', function () {
       });
   });
 
-  it('Enable Geoplugin', function () {
+  it('Enable OPTIMETA Geo Plugin', function () {
     cy.login('admin', 'admin', Cypress.env('contextPath'));
     cy.get('nav[class="app__nav"] a:contains("Website")').click();
     cy.get('button[id="plugins-button"]').click();
@@ -33,7 +33,7 @@ describe('OPTIMETA Geoplugin Configuration', function () {
     cy.get('div:contains(\'The plugin "OPTIMETA Geo Plugin" has been enabled.\')');
   });
 
-  it('Configure Geoplugin - Geonames', function () {
+  it('Configure OPTIMETA Geo Plugin - Geonames', function () {
     cy.login('admin', 'admin', Cypress.env('contextPath'));
     cy.get('nav[class="app__nav"] a:contains("Website")').click();
     cy.get('button[id="plugins-button"]').click();
@@ -95,7 +95,7 @@ describe('OPTIMETA Geoplugin Configuration', function () {
     cy.logout();
   });
 
-  it('Configure Geoplugin - Map colors', function () {
+  it('Configure OPTIMETA Geo Plugin - Map colors', function () {
     this.skip(); // TODO implement
 
     //cy.get('form[id="optimetaGeoSettings"] input[name="optimetaGeo_mapLayerStyle_color"]')
@@ -106,7 +106,7 @@ describe('OPTIMETA Geoplugin Configuration', function () {
     //  .type('#01ff01');
   });
 
-  it('Configure Geoplugin - Download sidebar', function () {
+  it('Configure Geo Plugin - Download sidebar', function () {
     this.skip(); // TODO implement
   });
 });

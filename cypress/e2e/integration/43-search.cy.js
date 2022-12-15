@@ -7,7 +7,7 @@
  *
  */
 
-describe('OPTIMETA Geoplugin Search', function () {
+describe('OPTIMETA Geo Plugin Search', function () {
 
   var submission;
   var submission2;
