@@ -26,7 +26,7 @@ describe('OPTIMETA Geo Plugin Geospatial Metadata in HTML Head', function () {
     cy.visit('/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
-    cy.get('a:contains("Hanover is nice")').click();
+    cy.get('a:contains("Hanover is nice")').last().click();
   });
 
   it('has DC.Coverage with correct text string', function () {

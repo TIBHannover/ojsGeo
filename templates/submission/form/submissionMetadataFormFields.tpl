@@ -49,6 +49,9 @@
     {*administrativeUnit*}
     {fbvFormSection title="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit" for="administrativeUnitInput"
     inline=true}
+    <p align="justify" class="description optimetageo_warning" id="optimetageo_gazetteer_unavailable" style="display:none;">{translate
+        key="plugins.generic.optimetaGeo.geospatialmetadata.gazetteer_unavailable"}
+    </p>
     <p align="justify" class="description">{translate
         key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"}
     </p>
@@ -70,4 +73,4 @@
 </style>
 
 {*main js script, needs to be loaded last*}
-<script src="{$optimetageo_submissionMetadataFormFieldsJS}" type="text/javascript"></script>
+<script src="{$optimetageo_submissionJS}" type="text/javascript"></script>

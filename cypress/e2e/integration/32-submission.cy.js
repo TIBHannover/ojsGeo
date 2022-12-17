@@ -38,13 +38,6 @@ describe('OPTIMETA Geo Plugin Submission', function () {
     };
   });
 
-  it('Has no map on the empty current issue page', function () {
-    cy.visit('/');
-    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Current")').click();
-    cy.get('.pkp_structure_main').should('not.contain', 'Times & locations');
-    cy.get('#mapdiv').should('not.exist');
-  });
-
   it('Has a map on the current issue page after publishing a paper', function () {
     cy.login('aauthor');
     cy.get('a:contains("aauthor")').click();

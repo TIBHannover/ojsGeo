@@ -64,6 +64,9 @@
                     {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit"}
                 </label>
             </div>
+            <div align="justify" class="pkpFormField__description optimetageo_warning" id="optimetageo_gazetteer_unavailable" style="display:none;">{translate
+                key="plugins.generic.optimetaGeo.geospatialmetadata.gazetteer_unavailable"}
+            </div>
             <div id="geoplugin-adminunit-description" class="pkpFormField__description">
                 {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"}
             </div>
@@ -99,7 +102,7 @@
     </div>
 
     {*main js script, needs to be loaded last*}
-    <script src="{$optimetageo_submissionMetadataFormFieldsJS}" type="text/javascript"></script>
+    <script src="{$optimetageo_submissionJS}" type="text/javascript"></script>
     
     {* fix Leaflet gray map issue when it is displayed later than page load *}
     <script type="text/javascript">

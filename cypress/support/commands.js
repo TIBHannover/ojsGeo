@@ -155,7 +155,7 @@ Cypress.Commands.add('createIssues', (data, context) => {
 
 Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.createSubmission(data);
-    
+
     // === Jump through review and publication  ===
     cy.login('eeditor');
     cy.get('a:contains("eeditor"):visible').click();
@@ -394,17 +394,21 @@ Cypress.Commands.add('createSubmission', (data, context) => {
     });
 
     // geospatial metadata
-    cy.get('input[name=datetimes]').type(data.timePeriod);
-    cy.wait(1000);
-    cy.get('.applyBtn').click();
+    if ('timePeriod' in data && data.timePeriod !== null) {
+        cy.get('input[name=datetimes]').type(data.timePeriod);
+        cy.wait(1000);
+        cy.get('.applyBtn').click();
+    }
 
     // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
     if ('spatial' in data) {
-        cy.toolbarButton(data.spatial.type).click();
-        for (let index = 0; index < data.spatial.coords.length; index++) {
-            let coords = data.spatial.coords[index];
-            console.log(index + ": " + coords);
-            cy.get('#mapdiv').click({ x: coords.x, y: coords.y });
+        if (data.spatial !== null) {
+            cy.toolbarButton(data.spatial.type).click();
+            for (let index = 0; index < data.spatial.coords.length; index++) {
+                let coords = data.spatial.coords[index];
+                console.log(index + ": " + coords);
+                cy.get('#mapdiv').click({ x: coords.x, y: coords.y });
+            }
         }
     } else {
         // default to line geometry in Germany
@@ -417,8 +421,10 @@ Cypress.Commands.add('createSubmission', (data, context) => {
 
     cy.wait(2000);
 
-    // make sure administrative unit fields are filled in
-    cy.get('#administrativeUnitInput').contains("Earth");
+    if ('adminUnit' in data) {
+        cy.get('#administrativeUnitInput > .tagit-new > .ui-widget-content').type(data.adminUnit);
+        cy.wait(100);
+    }
 
     cy.get('form[id=submitStep3Form]').find('button').contains('Save and continue').click();
 

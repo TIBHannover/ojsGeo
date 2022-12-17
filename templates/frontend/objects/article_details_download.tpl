@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="{$pluginStylesheetURL}/optimetaGeo.css" type="text/css" />
 
 <div style="clear:both;">
-    <section id="item geospatialmetadatadownload" class="item geospatialmetadatadownload">
+    <section id="optimeta_article_spatial_download" class="item geospatialmetadatadownload">
         <section class="sub_item">
             <h2 class="label">
                 {translate key="plugins.generic.optimetaGeo.article.details.download"}

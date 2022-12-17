@@ -24,20 +24,20 @@ const optimetageo_adminLayerName = '{translate key="plugins.generic.optimetaGeo.
 </script>
 
 <div style="clear:both;">
-    <section id="item geospatialmetadata" class="item geospatialmetadata">
+    <section id="optimeta_article_geospatialmetadata" class="item geospatialmetadata">
         <h2 class="label">{translate key="plugins.generic.optimetaGeo.article.metadata.long"}</h2>
 
         {*temporal*}
-        <p id="item temporal" class="description">
-            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"} <span id="optimetageo_start"  class="optimetageo_timestamp"></span>
-            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"} <span id="optimetageo_end" class="optimetageo_timestamp"></span>.&nbsp;<span class="fa fa-question-circle tooltip">
+        <p id="optimeta_article_temporal" class="description">
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.from"} <span id="optimetageo_span_start"  class="optimetageo_timestamp"></span>
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.to"}   <span id="optimetageo_span_end" class="optimetageo_timestamp"></span>.&nbsp;<span class="fa fa-question-circle tooltip">
                 <span class="tooltiptext">{translate
                 key="plugins.generic.optimetaGeo.geospatialmetadata.properties.temporal.description.article"}</span>
             </span>
         </p>
 
         {*spatial*} {*administrativeUnit*}
-        <p id="item spatial" class="description">
+        <p id="optimeta_article_spatial" class="description">
             {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial"}&nbsp;<span class="fa fa-question-circle tooltip">
                 <span class="tooltiptext">{translate
                 key="plugins.generic.optimetaGeo.geospatialmetadata.properties.spatial.description.article"}</span>
@@ -45,8 +45,8 @@ const optimetageo_adminLayerName = '{translate key="plugins.generic.optimetaGeo.
 
         <div id="mapdiv" style="width: 100%; height: 300px; z-index: 1;"></div>
 
-        <p id="item admnistrativeUnit" class="description">
-            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"} <span id="administrativeUnit" class="optimetageo_coverage"></span>&nbsp;<span class="fa fa-question-circle tooltip">
+        <p id="optimeta_article_administrativeUnit" class="description">
+            {translate key="plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit"} <span id="optimeta_span_admnistrativeUnit" class="optimetageo_coverage"></span>&nbsp;<span class="fa fa-question-circle tooltip">
             <span class="tooltiptext">{translate
                 key="plugins.generic.optimetaGeo.geospatialmetadata.properties.administrativeUnit.description.article"}</span>
             </span>

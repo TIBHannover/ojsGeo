@@ -103,3 +103,9 @@
 	/* based on OJS @text-light */
 	font-size: 13px;
 }
+
+.optimetageo_warning {
+	border-left: 3px solid #ffa500;
+	padding-left: 5px;
+	background-color: rgba(255, 165, 0, 0.15);
+}

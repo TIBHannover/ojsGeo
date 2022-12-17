@@ -118,10 +118,10 @@ class OptimetaGeoPlugin extends GenericPlugin
 			$templateMgr->addStyleSheet("leafletControlGeocodeCSS", $urlLeafletControlGeocodeCSS, array('contexts' => array('frontend', 'backend')));
 
 			// plugins JS scripts and CSS
-			$templateMgr->assign('optimetageo_submissionMetadataFormFieldsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submissionMetadataFormFields.js');
-			$templateMgr->assign('optimetageo_article_detailsJS',              $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
-			$templateMgr->assign('optimetageo_issueJS',                        $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
-			$templateMgr->assign('optimetageo_markerBaseUrl',                  $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers/img/');
+			$templateMgr->assign('optimetageo_submissionJS',      $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/submission.js');
+			$templateMgr->assign('optimetageo_article_detailsJS', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/article_details.js');
+			$templateMgr->assign('optimetageo_issueJS',           $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/issue.js');
+			$templateMgr->assign('optimetageo_markerBaseUrl',     $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/lib/leaflet-color-markers/img/');
 
 			$templateMgr->assign('optimetageo_mapUrlPath', MAP_URL_PATH);
 			$templateMgr->assign('optimetageo_metadataLicense', '<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC-0</a>');
@@ -254,7 +254,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 		/*
 		Check if the user has entered an username in the plugin settings for the GeoNames API (https://www.geonames.org/login). 
-		The result is passed on accordingly to submissionMetadataFormFields.js as template variable. 
+		The result is passed on accordingly to submission.js as template variable. 
 		*/
 		$usernameGeonames = $this->getSetting($context->getId(), 'optimetaGeo_geonames_username');
 		$templateMgr->assign('usernameGeonames', $usernameGeonames);
@@ -265,7 +265,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 		In case the user repeats the step "3. Enter Metadata" in the process 'Submit an Article' and comes back to this step to make changes again, 
 		the already entered data is read from the database, added to the template and displayed for the user.
 		Data is loaded from the database, passed as template variable to the 'submissionMetadataFormFiels.tpl' 
-	 	and requested from there in the 'submissionMetadataFormFields.js' to display coordinates in a map, the date and coverage information if available.
+	 	and requested from there in the 'submission.js' to display coordinates in a map, the date and coverage information if available.
 		*/
 		$publicationDao = DAORegistry::getDAO('PublicationDAO');
 		$submissionId = $request->getUserVar('submissionId');
@@ -512,7 +512,7 @@ class OptimetaGeoPlugin extends GenericPlugin
 
 	/**
 	 * Function which fills the new fields (created by the function addToSchema) in the schema. 
-	 * The data is collected using the 'submissionMetadataFormFields.js', then passed as input to the 'submissionMetadataFormFields.tpl'
+	 * The data is collected using the 'submission.js', then passed as input to the 'submissionMetadataFormFields.tpl'
 	 * and requested from it in this php script by a POST-method. 
 	 * @param hook Publication::edit
 	 */

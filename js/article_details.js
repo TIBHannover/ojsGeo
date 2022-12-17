@@ -66,6 +66,7 @@ var geocoder = L.Control.geocoder({
 $(function () {
     // load spatial properties from article_details.tpl 
     var spatialProperties = document.getElementById("optimeta_spatial").value;
+    let spatialPropertiesParsed = JSON.parse(spatialProperties);
 
     // load temporal properties from article_details.tpl 
     var temporalProperties = document.getElementById("optimeta_temporal").value;
@@ -78,8 +79,8 @@ $(function () {
     and no geospatial metadata are displayed also the download of the geojson is not provided, because there is no data for the geojson. 
     Otherwise, the display of the elements is initiated. 
     */
-    if (spatialProperties === "no data" && temporalProperties === "no data" && administrativeUnit === "no data") {
-        document.getElementById("item geospatialmetadata").remove();
+    if (spatialPropertiesParsed.features.length === 0 && temporalProperties === "no data" && administrativeUnit === "no data") {
+        $("#optimeta_article_geospatialmetadata").hide();
     }
 
     /*
@@ -87,39 +88,33 @@ $(function () {
     If no spatial properties are available, the corresponding elements in the article_details.tpl are deleted 
     and no spatial metadata are displayed. Otherwise the map is created and the spatial properties are displayed. 
     */
-    if (spatialProperties === "no data") {
-        document.getElementById("item spatial").remove();
-        document.getElementById("item geospatialmetadatadownload").remove();
+    if (spatialPropertiesParsed.features.length === 0) {
+        $("#optimeta_article_spatial").hide();
+        $("#optimeta_article_spatial_download").hide();
+        $("#mapdiv").hide();
     }
     else {
-        let spatialPropertiesParsed = JSON.parse(spatialProperties);
-
-        if (spatialPropertiesParsed.features.length === 0) {
-            document.getElementById("item spatial").remove();
+        /*
+        Depending on the object type, the geoJSON object is structured slightly differently, 
+        so that the coordinates are at different locations and must be queried differently. 
+        */
+        if (spatialPropertiesParsed.features[0].geometry.type === 'Polygon') {
+            lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0][0];
+            latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0][1];
         }
-        else {
-            /*
-            Depending on the object type, the geoJSON object is structured slightly differently, 
-            so that the coordinates are at different locations and must be queried differently. 
-            */
-            if (spatialPropertiesParsed.features[0].geometry.type === 'Polygon') {
-                lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0][0];
-                latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0][1];
-            }
-            else if (spatialPropertiesParsed.features[0].geometry.type === 'LineString') {
-                lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0];
-                latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][1];
-            }
-            else if (spatialPropertiesParsed.features[0].geometry.type === 'Point') {
-                lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0];
-                latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[1];
-            }
-
-            let layer = L.geoJSON(spatialPropertiesParsed);
-            layer.setStyle(optimetageo_mapLayerStyle);
-            drawnItems.addLayer(layer);
-            map.fitBounds(drawnItems.getBounds());
+        else if (spatialPropertiesParsed.features[0].geometry.type === 'LineString') {
+            lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0];
+            latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][1];
         }
+        else if (spatialPropertiesParsed.features[0].geometry.type === 'Point') {
+            lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0];
+            latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[1];
+        }
+
+        let layer = L.geoJSON(spatialPropertiesParsed);
+        layer.setStyle(optimetageo_mapLayerStyle);
+        drawnItems.addLayer(layer);
+        map.fitBounds(drawnItems.getBounds());
     }
 
     /*
@@ -128,7 +123,7 @@ $(function () {
     The available elements are displayed. If there is a corresponding bbox available, the bbox for the lowest level is displayed in the map
     */
     if (administrativeUnit === "no data") {
-        document.getElementById("item administrativeUnit").remove();
+        $("#optimeta_article_administrativeUnit").hide();
     }
     else {
         var administrativeUnitEncoded = JSON.parse(administrativeUnit);
@@ -139,7 +134,7 @@ $(function () {
             administrativeUnitsNameList.push(administrativeUnitEncoded[i].name);
         }
 
-        document.getElementById("administrativeUnit").innerHTML = administrativeUnitsNameList.join(', ');
+        $("#optimeta_span_admnistrativeUnit").html(administrativeUnitsNameList.join(', '));
 
         let spatialPropertiesParsed = JSON.parse(spatialProperties);
         displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesParsed);
@@ -151,14 +146,14 @@ $(function () {
     and no temporal metadata are displayed. Otherwise the map is created and the temporal properties are displayed. 
     */
     if (temporalProperties === "no data") {
-        document.getElementById("item temporal").remove();
+        $("#optimeta_article_temporal").hide();
     }
     else {
         let start = temporalProperties.split('{')[1].split('..')[0];
         let end = temporalProperties.split('{')[1].split('..')[1].split('}')[0];
 
-        document.getElementById("optimetageo_start").innerHTML = start;
-        document.getElementById("optimetageo_end").innerHTML = end;
+        $("#optimetageo_span_start").html(start);
+        $("#optimetageo_span_end").html(end);
     }
 });
 
@@ -228,7 +223,8 @@ function downloadGeospatialMetadataAsGeoJSON() {
 }
 
 /**
- * Function to download an object as json. 
+ * Function to download an object as JSON
+ *  
  * @param {*} exportObj to download
  * @param {*} exportName name of object
  */

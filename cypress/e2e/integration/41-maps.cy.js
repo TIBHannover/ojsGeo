@@ -57,7 +57,7 @@ describe('OPTIMETA Geo Plugin Maps', function () {
     cy.visit('/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
-    cy.get('a:contains("Hanover is nice")').click();
+    cy.get('a:contains("Hanover is nice")').last().click();
 
     cy.get('.pkp_structure_main').should('contain', 'Time and location');
     cy.get('#mapdiv').should('exist');
@@ -90,7 +90,7 @@ describe('OPTIMETA Geo Plugin Maps', function () {
     cy.visit('/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
-    cy.get('a:contains("Hanover is nice")').click();
+    cy.get('a:contains("Hanover is nice")').last().click();
 
     cy.get('#administrativeUnit').should('contain', 'Earth, Europe, Federal Republic of Germany');
   });

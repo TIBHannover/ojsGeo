@@ -169,8 +169,8 @@ describe('OPTIMETA Geo Plugin Production Editing', function () {
     cy.wait(5000);
 
     cy.get('a:contains("Preview"):visible').click();
-    cy.get('#optimetageo_start').should('contain', '2022-10-10');
-    cy.get('#optimetageo_end').should('contain', '2022-11-11');
+    cy.get('#optimetageo_span_start').should('contain', '2022-10-10');
+    cy.get('#optimetageo_span_end').should('contain', '2022-11-11');
     cy.get('meta[name="DC.Coverage"]').should('have.attr', 'content').and('equal', 'Earth, Europe');
     cy.get('meta[name="DC.SpatialCoverage"]').should('have.attr', 'content').and('contain', '{"type":"Point","coordinates":[');
 
@@ -236,8 +236,8 @@ describe('OPTIMETA Geo Plugin Production Editing', function () {
       cy.wait(500);
 
       // check correct data is on the publication page
-      cy.get('#optimetageo_start').should('contain', '2022-09-08');
-      cy.get('#optimetageo_end').should('contain', '2022-09-08');
+      cy.get('#optimetageo_span_start').should('contain', '2022-09-08');
+      cy.get('#optimetageo_span_end').should('contain', '2022-09-08');
       cy.get('meta[name="DC.Coverage"]').should('have.attr', 'content').and('equal', 'Earth, Europe');
       cy.get('meta[name="DC.SpatialCoverage"]').should('have.attr', 'content').and('contain', '{"type":"Point","coordinates":['); // cypress takes are of decoding
     });
