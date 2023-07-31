@@ -4,7 +4,7 @@
 	<application>optimetaGeo</application>
 	<type>plugins.generic</type>
 	<release>1.0.0.0-beta</release>
-	<date>2022-09-26</date>
+	<date>2023-07-31</date>
 	<lazy-load>1</lazy-load>
 	<class>OptimetaGeoPlugin</class>
 </version>
