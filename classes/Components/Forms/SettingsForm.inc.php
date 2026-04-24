@@ -33,7 +33,50 @@ class SettingsForm extends \Form
      */
     private $settings = [
         'geoMetadata_geonames_username',
-        'geoMetadata_geonames_baseurl'
+        'geoMetadata_geonames_baseurl',
+        'geoMetadata_showDownloadSidebar',
+        'geoMetadata_showArticleMap',
+        'geoMetadata_showArticleTemporal',
+        'geoMetadata_showArticleAdminUnit',
+        'geoMetadata_showIssueMap',
+        'geoMetadata_showJournalMap',
+        'geoMetadata_submission_enableSpatial',
+        'geoMetadata_submission_enableTemporal',
+        'geoMetadata_submission_enableAdminUnit',
+        'geoMetadata_workflow_enableSpatial',
+        'geoMetadata_workflow_enableTemporal',
+        'geoMetadata_workflow_enableAdminUnit',
+        'geoMetadata_emitMetaDublinCore',
+        'geoMetadata_emitMetaGeoNames',
+        'geoMetadata_emitMetaGeoCoords',
+        'geoMetadata_emitMetaISO19139',
+        'geoMetadata_enableGeocoderSearch',
+        'geoMetadata_showEsriBaseLayer'
+    ];
+
+    /**
+     * Settings that are booleans defaulting to ON when no value has been saved yet.
+     * Keeps initData/readInputData/plugin-hook null-handling consistent.
+     */
+    private $booleanDefaultOnSettings = [
+        'geoMetadata_showDownloadSidebar',
+        'geoMetadata_showArticleMap',
+        'geoMetadata_showArticleTemporal',
+        'geoMetadata_showArticleAdminUnit',
+        'geoMetadata_showIssueMap',
+        'geoMetadata_showJournalMap',
+        'geoMetadata_submission_enableSpatial',
+        'geoMetadata_submission_enableTemporal',
+        'geoMetadata_submission_enableAdminUnit',
+        'geoMetadata_workflow_enableSpatial',
+        'geoMetadata_workflow_enableTemporal',
+        'geoMetadata_workflow_enableAdminUnit',
+        'geoMetadata_emitMetaDublinCore',
+        'geoMetadata_emitMetaGeoNames',
+        'geoMetadata_emitMetaGeoCoords',
+        'geoMetadata_emitMetaISO19139',
+        'geoMetadata_enableGeocoderSearch',
+        'geoMetadata_showEsriBaseLayer'
     ];
 
     public function __construct($plugin)
@@ -59,7 +102,11 @@ class SettingsForm extends \Form
         $context = Application::get()->getRequest()->getContext();
         $contextId = $context ? $context->getId() : CONTEXT_SITE;
         foreach($this->settings as $key){
-            $this->setData($key, $this->plugin->getSetting($contextId, $key));
+            $value = $this->plugin->getSetting($contextId, $key);
+            if ($value === null && in_array($key, $this->booleanDefaultOnSettings, true)) {
+                $value = true;
+            }
+            $this->setData($key, $value);
         }
 
         parent::initData();
@@ -72,6 +119,13 @@ class SettingsForm extends \Form
     {
         foreach($this->settings as $key){
             $this->readUserVars([$key]);
+        }
+        // Unchecked checkboxes are absent from POST; coerce to '0' so null-from-getSetting()
+        // later unambiguously means "never saved, default on".
+        foreach ($this->booleanDefaultOnSettings as $key) {
+            if ($this->getData($key) === null) {
+                $this->setData($key, '0');
+            }
         }
         parent::readInputData();
     }

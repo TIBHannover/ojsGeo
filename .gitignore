@@ -39,3 +39,9 @@ js/lib/leaflet-draw/
 js/lib/moment/
 
 geoMetadata.zip
+
+.claude/
+
+js/lib/leaflet.fullscreen/
+
+js/lib/jquery/

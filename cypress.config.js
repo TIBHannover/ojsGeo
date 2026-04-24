@@ -33,6 +33,8 @@ module.exports = defineConfig({
     DBUSERNAME: process.env.OJS_DB_USER,
     DBPASSWORD: process.env.OJS_DB_PASSWORD,
     DBHOST: process.env.OJS_DB_HOST,
+    GEONAMES_USERNAME: process.env.GEONAMES_USERNAME,
+    GEONAMES_BASEURL: process.env.GEONAMES_BASEURL,
     "contextTitles": {
       "en_US": "Journal of Geolocations",
     },

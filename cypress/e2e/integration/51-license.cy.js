@@ -8,8 +8,7 @@
 describe('geoMetadata Licensing Information', function () {
 
   it('Has licensing information on the journal map page', function () {
-    cy.visit('/');
-    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Map")').click();
+    cy.visit('/' + Cypress.env('contextPath') + '/map');
     cy.contains('.page', /license: CC-0/);
   });
 
@@ -26,7 +25,7 @@ describe('geoMetadata Licensing Information', function () {
     cy.get('a:contains("Hanover is nice")').last().click();
 
     cy.contains('.page', /Geodata License: CC-0/);
-    cy.contains('.page', /following License: CC-0/);
+    cy.contains('.page', /following license: CC-0/);
   });
 
   it('Shows license disclaimer during submission', function () {
@@ -49,7 +48,7 @@ describe('geoMetadata Licensing Information', function () {
     cy.contains('#submitStep3Form', /license: CC-0/);
   });
 
-  it.only('Has no licensing information on an article without geospatial metadta', function () {
+  it('Has no licensing information on an article without geospatial metadata', function () {
     cy.visit('/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();

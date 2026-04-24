@@ -1,5 +1,3 @@
-version: '3.6' 
-
 networks:
   inside:
 
@@ -30,6 +28,10 @@ services:
         volumes:
             - ./logs:/var/log/apache2
             - ../:/var/www/html/plugins/generic/geoMetadata
+            # Patches the stock issue_toc.tpl (which lacks the Templates::Issue::TOC::Main
+            # hook) so the plugin's issue map section renders. File name carries the
+            # OJS_VERSION; update/add a sibling file when bumping to a different image.
+            - ./ojs-patches/issue_toc-3_3_0-11.tpl:/var/www/html/templates/frontend/objects/issue_toc.tpl:ro
         depends_on:
             - db
         networks:

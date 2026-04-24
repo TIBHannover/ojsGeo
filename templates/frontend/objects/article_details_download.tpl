@@ -9,8 +9,6 @@
  * The main template is here extended using the hook 'Templates::Article::Details'.
  *}
 
-<link rel="stylesheet" href="{$pluginStylesheetURL}/styles.css" type="text/css" />
-
 <div style="clear:both;">
     <section id="geoMetadata_article_spatial_download" class="item geospatialmetadatadownload">
         <section class="sub_item">
@@ -27,7 +25,7 @@
                     </span>
                 </p>
                 <p class="geoMetadata_license">
-                    {translate key="plugins.generic.geoMetadata.license.download"} {$geoMetadata_metadataLicense}
+                    {translate key="plugins.generic.geoMetadata.license.download" license=$geoMetadata_metadataLicense}
                 </p>
             </div>
         </section>

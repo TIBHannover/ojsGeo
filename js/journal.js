@@ -8,24 +8,37 @@
  */
 
 var mapView = "0, 0, 1".split(",");
-var map = L.map('mapdiv').setView([mapView[0], mapView[1]], mapView[2]);
+var map = L.map('mapdiv', { zoomControl: false, worldCopyJump: true }).setView([mapView[0], mapView[1]], mapView[2]);
+
+// translated zoom control (issue #151)
+L.control.zoom({
+    zoomInTitle:  geoMetadata_zoomInTitle,
+    zoomOutTitle: geoMetadata_zoomOutTitle
+}).addTo(map);
 
 var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
     maxZoom: 18
 }).addTo(map);
 
-var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-    maxZoom: 18
-});
-
 var baseLayers = {
-    "OpenStreetMap": osmlayer,
-    "Esri World Imagery": Esri_WorldImagery
+    "OpenStreetMap": osmlayer
 };
+if (geoMetadata_showEsriBaseLayer) {
+    baseLayers["Esri World Imagery"] = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        maxZoom: 18
+    });
+}
 
 L.control.scale({ position: 'bottomright' }).addTo(map);
+
+// add fullscreen control
+L.control.fullscreen({
+    position: 'topleft',
+    title: geoMetadata_fullscreenTitle,
+    titleCancel: geoMetadata_fullscreenTitleCancel
+}).addTo(map);
 
 // FeatureGroup for the geospatial extent of articles
 var articleLocations = new L.FeatureGroup();
@@ -50,6 +63,7 @@ $(function () {
             let spatialParsed = JSON.parse(publication['spatial']);
 
             if(spatialParsed.features.length !== 0) {
+                spatialParsed.features = geoMetadata_prepareFeaturesForDisplay(spatialParsed.features);
                 let articleTitle = publication['title'];
                 let articleAuthors = publication['authors'];
                 let articleIssue = publication['issue'];
@@ -68,14 +82,12 @@ $(function () {
                         ${articleIssue}
                     </div>`
 
-                if (articleTemporal !== "no data" && articleTemporal !== null) {
-                    let articleTemporalStart = articleTemporal.split('{')[1].split('..')[0];
-                    let articleTemporalEnd = articleTemporal.split('{')[1].split('..')[1].split('}')[0];
-
+                let ranges = window.geoMetadataTemporal.parseTimePeriods(articleTemporal);
+                if (ranges.length > 0) {
                     let popupTemporal = `<br/>
                     <div class="authors">
                         <i class="fa fa-calendar pkpIcon--inline"></i>
-                        <i>${articleTemporalStart} – ${articleTemporalEnd}</i>
+                        <i>${ranges[0].start} – ${ranges[0].end}</i>
                     </div>`
 
                     popupTemplate = popupTemplate.concat(popupTemporal);
@@ -104,4 +116,28 @@ $(function () {
         }
         // TODO load temporal properties and add them to a timeline
     });
+});
+
+// aggregate time periods across publications and render the appropriate sentence
+$(function () {
+    var rangeEl = document.getElementById('geoMetadata_journalTemporalRange');
+    var singleEl = document.getElementById('geoMetadata_journalTemporalSingle');
+    if (!rangeEl || !singleEl) return;
+
+    var data = JSON.parse($('.geoMetadata_data.publications')[0].value);
+    var rawValues = data.map(function (p) { return p.temporal; });
+    var aggregate = window.geoMetadataTemporal.aggregateRange(rawValues);
+    if (!aggregate) return;
+
+    var fromYear = window.geoMetadataTemporal.yearOf(aggregate.minStart);
+    var toYear = window.geoMetadataTemporal.yearOf(aggregate.maxEnd);
+
+    if (fromYear === toYear) {
+        document.getElementById('geoMetadata_journalTemporalYear').textContent = fromYear;
+        singleEl.style.display = '';
+    } else {
+        document.getElementById('geoMetadata_journalTemporalFrom').textContent = fromYear;
+        document.getElementById('geoMetadata_journalTemporalTo').textContent = toYear;
+        rangeEl.style.display = '';
+    }
 });

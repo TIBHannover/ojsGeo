@@ -27,22 +27,25 @@ msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal"
 msgstr "Zeitliche Eigenschaften"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Definieren Sie die zeitlichen Eigenschaften des Artikelinhalts durch Angabe von Anfangs- und Enddatum. Die Eingabe ist sowohl über das Textfeld als auch über die Kalenderansicht möglich. Klicken Sie auf das Eingabefeld unter diesem Text, um die Kalenderansicht zu öffnen. Drücken Sie \"Übernehmen\", um die Kalendereinstellung zu speichern. Drücken Sie \"Löschen\", um die aktuellen Daten zu entfernen. Texteingaben müssen dem folgenden Format entsprechen und durch Klicken auf \"Anwenden\" bestätigt werden. Nutzen Sie bitte nicht die Enter-Taste. Bei manuellen Eingaben werden Anfang und Ende durch einen Bindestrich getrennt, der von Leerzeichen umgeben ist; Datumsangaben sind im Format \"JJJJ-MM-TT\" einzugeben, wobei \"JJJJ\" für Jahre, \"MM\" für Monate (mit einer führenden Null) und \"DD\" für Tage (mit einer führenden Null) steht. Darüber hinaus werden Eingaben wie "XXXX" und "XXXX-DD" auch akzeptiert und in der Folge formatiert in "XXXX-01-01" oder "XXXX-DD-01"."
+msgstr "Geben Sie Anfang und Ende des Zeitraums des Artikels, getrennt durch \"..\", ein, z. B. \"2020..2023\", \"2020-06..2023-12\" oder \"2020-06-15..2023-09-20\". Jede Seite kann unabhängig Jahr, Jahr-Monat oder Jahr-Monat-Tag als Präzision verwenden. Negative ganze Zahlen bezeichnen Jahre vor dem Jahr 1 (z. B. \"-10000..-5000\"). Betrachtet der Artikel nur einen bestimmten Zeitpunkt, geben Sie bitte denselben Wert für Anfang und Ende ein, z. B. \"2026..2026\" oder \"2000-01-01..2000-01-01\". Lassen Sie das Feld leer, wenn der Artikel keinen zeitlichen Bezug hat."
+
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.placeholder"
+msgstr "z. B. 2020..2023"
+
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.error"
+msgstr "Ungültiger Zeitraum. Geben Sie zwei Seiten getrennt durch \"..\" ein, jeweils im Format JJJJ, JJJJ-MM oder JJJJ-MM-TT (oder eine negative ganze Zahl für Jahre vor dem Jahr 1)."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.description.article"
-msgstr "Zeitliche Eigenschaften des Artikelinhalts, angegeben in Tagen."
+msgstr "Zeitliche Eigenschaften des Artikelinhalts mit tagesgenauer Auflösung."
 
-msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.from"
-msgstr "Dieser Artikel umfasst einen Zeitraum von"
-
-msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.to"
-msgstr "bis"
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.coverage"
+msgstr "Dieser Artikel umfasst einen Zeitraum von {$from} bis {$to}."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial"
 msgstr "Ort(e) oder Gebiet(e)"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.administrativeUnit"
-msgstr "Die Verwaltungseinheiten, welche die zum Artikel zugehörigen Orte umschließen, sind:"
+msgstr "Die Verwaltungseinheiten, welche die zum Artikel zugehörigen Orte umschließen, sind: {$units}"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.description.submission"
 msgstr "Definieren Sie die Orte und Gebiete, die den Artikelinhalt beschreiben, durch eine oder mehrere geometrische Form(en). Sie können im <strong>Menü zur Erstellung verschiedener Geometrietypen</strong> auf der linken Seite zwischen Polylinie, Polygon, Rechteck und Punkt-Geometrie wählen. Über die Icons darunter können Sie die erstellte(n) geometrische(n) Form(en) <strong>bearbeiten oder löschen</strong> (\"Mülleimer\"). Mit den Symbolen \"-\" und \"+\" in der oberen linken Ecke können Sie die Ansicht vergrößern und verkleinern. In der oberen rechten Ecke können Sie die <strong>Hintergrundkarten</strong> wechseln. Sie können zwischen einer Straßenkarte (\"OpenStreetMap\"-Ebene) und Luftbildern (\"Esri World Imagery\"-Ebene) wählen. Sie können auch einstellen, ob die geometrische(n) Form(en) und die Verwaltungseinheit angezeigt werden sollen oder nicht. Für die Verwaltungseinheiten finden Sie eine genauere Beschreibung im nächsten Abschnitt dieses Formulars. Unterhalb der Ebenensteuerung auf der rechten Seite finden Sie eine <strong>Suchfunktion</strong> für die Karte. Nach Drücken von \"Enter\" werden Ihnen verschiedene Orte angeboten und wenn Sie auf einen Vorschlag klicken, wird er akzeptiert und ein passendes Rechteck, das die Grenzen des Ortes beschreibt, wird auf der Karte erstellt. Dieses Rechteck kann bearbeitet oder gelöscht indem Sie auf das Lösch-/Bearbeitungssymbol in der Menüleiste auf der linken Seite der Karte klicken. Zum <strong>Schützen sensibler Orte</strong> können sie einen gröberen Detaillierungsgrad für die Geometrien nutzen."
@@ -51,13 +54,16 @@ msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.descrip
 msgstr "Die blaue(n) geometrische(n) Form(en) stellen die Orte oder Gebiete des Artikelinhalts dar, wie sie von den Nutzer*innen angegeben wurden. Die in einem schwarzen Rechteck dargestellte Verwaltungseinheit stellt die kleinste Verwaltungseinheit dar, welche alle Orte und Gebiete umschließt, mit denen sich der Artikel befasst."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit"
-msgstr "Administrative Region"
+msgstr "Verwaltungseinheit"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.gazetteer_unavailable"
-msgstr "Der Gazetteer-Dienst ist nicht verfügbar. Bitte geben sie die Verwaltungseinheiten manuell ein, z.B., <code>\"Earth Europe Germany\"</code>, und bestätigen sie jede Einheit mit \"Enter\"."
+msgstr "Der Gazetteer-Dienst ist nicht verfügbar. Bitte geben sie die Verwaltungseinheiten manuell ein, z.B., <code>\"Earth Europe Germany\"</code>, und bestätigen sie jede Einheit mit \"Enter\". Aktualisieren Sie die Seite, um es erneut zu versuchen."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
 msgstr "Auf Basis Ihrer Eingaben in der Karte werden Verwaltungseinheiten vorgeschlagen, die entsprechend Ihrer Eingaben in der Karte ausgewählt wurden, sofern ein Gazetter-Dienst verfügbar ist. Jedes Mal, wenn Sie die Eingaben aktualisieren, werden die Erfassungsinformationen neu berechnet und entsprechend aktualisiert. Mit dem roten \"x\" können Sie die Verwaltungseinheit(en) löschen. Wenn Sie den Mauszeiger über die Verwaltungseinheit(en) bewegen, wird die übergeordnete Hierarchie der Verwaltungseinheit(en) angezeigt, sofern vorhanden. Außerdem können Sie weitere Verwaltungseinheiten hinzufügen. Sie können nur dann eine weitere Verwaltungseinheit einfügen, wenn diese zu der bereits vorgegebenen Hierarchie der Verwaltungseinheiten und der vorgegebenen geometrischen Form in der Karte passt. Wenn Sie mit dem Einfügen beginnen, gibt es einige Vorschläge, die Sie durch Anklicken akzeptieren können, aber Sie können trotzdem Ihre eigene Verwaltungseinheit eingeben, indem Sie \"Enter\" drücken. Die Verwaltungseinheit (in Schwarz), die den kleinsten gemeinsamen Nenner für alle geometrischen Formen darstellt, wird in der Karte angezeigt. Die Verwaltungseinheit ist nicht direkt in der Karte, sondern über das Eingabefeld editierbar oder löschbar."
+
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit.manualOverrideNotice"
+msgstr "Eine oder mehrere Verwaltungseinheiten wurden manuell eingegeben und werden bei Kartenbearbeitungen nicht mehr automatisch aktualisiert. Entfernen Sie den/die manuellen Tag(s), damit die nächste Kartenbearbeitung den Wert wieder steuert."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.administrativeUnit.description.article"
 msgstr "Hier werden die administrativen Einheiten aufgelistet, die dem Ort bzw. den Orten übergeordnet sind, um die es in dem Artikel geht, wobei die höchste Ebene links und die niedrigste rechts steht."
@@ -75,13 +81,181 @@ msgid "plugins.generic.geoMetadata.settings.usernameGeonames"
 msgstr "Erstellen Sie einen Benutzernamen unter https://www.geonames.org/login; der Benutzername muss einmalig aktiviert werden, um den kostenlosen Webservice zu nutzen ('free web services'), siehe https://www.geonames.org/manageaccount."
 
 msgid "plugins.generic.geoMetadata.settings.usernameGeonames.description"
-msgstr "Sie müssen Ihren Benutzernamen für die GeoNames API angeben, damit ein Abruf der Verwaltungseinheiten möglich ist: <a href=\"https://www.geonames.org/login\">https://www.geonames.org/login</a>."
+msgstr "Sie müssen Ihren Benutzernamen für die GeoNames API angeben, damit die Verwaltungseinheiten abgerufen werden können. Legen Sie ein Konto unter <a href=\"https://www.geonames.org/login\">https://www.geonames.org/login</a> an und tragen Sie den Benutzernamen hier ein."
 
 msgid "plugins.generic.geoMetadata.settings.baseurlGeonames"
 msgstr "Basis-URL von GeoNames, um zwischen 'http' und 'https' zu wechseln."
 
 msgid "plugins.generic.geoMetadata.settings.baseurlGeonames.description"
-msgstr "Geben Sie hier in Abhängigkeit zu Ihrem Setup die passende GeoNames Base URL ein. Diese ist voraussichtlich eine der folgenden: <code>http://api.geonames.org</code>, <code>https://www.geonames.org</code>, oder <code>https://secure.geonames.org</code>. Wenn Sie das Plugin lokal testen sollten Sie <code>http://api.geonames.org</code> nutzen, der sichere und CORS-valide GeoNames endpoint ist <code>https://secure.geonames.org</code>. Weitere Informationen sind verfügbar unter <a href=\"https://www.geonames.org/export/web-services.html">https://www.geonames.org/export/web-services.html</a>."
+msgstr "Geben Sie hier in Abhängigkeit zu Ihrem Setup die passende GeoNames Base URL ein. Diese ist voraussichtlich eine der folgenden: <code>http://api.geonames.org</code>, <code>https://www.geonames.org</code>, oder <code>https://secure.geonames.org</code>. Wenn Sie das Plugin lokal testen sollten Sie <code>http://api.geonames.org</code> nutzen, der sichere und CORS-valide GeoNames endpoint ist <code>https://secure.geonames.org</code>. Weitere Informationen sind verfügbar unter <a href=\"https://www.geonames.org/export/web-services.html\">https://www.geonames.org/export/web-services.html</a>."
+
+msgid "plugins.generic.geoMetadata.settings.section.articlePage"
+msgstr "Artikelseite"
+
+msgid "plugins.generic.geoMetadata.settings.section.articlePage.intro"
+msgstr "Steuern Sie, welche Blöcke das Plugin auf der Artikelseite hinzufügt."
+
+msgid "plugins.generic.geoMetadata.settings.section.accounts"
+msgstr "Konten"
+
+msgid "plugins.generic.geoMetadata.settings.section.accounts.intro"
+msgstr "Zugangsdaten für externe Dienste, die das Plugin aufruft."
+
+msgid "plugins.generic.geoMetadata.settings.showDownloadSidebar"
+msgstr "GeoJSON-Download in der Artikel-Seitenleiste anzeigen."
+
+msgid "plugins.generic.geoMetadata.settings.showDownloadSidebar.description"
+msgstr "Wenn aktiviert, enthält die Seitenleiste der Artikelseite einen Bereich, in dem die räumlichen Metadaten des Artikels als GeoJSON-Datei heruntergeladen werden können, zusammen mit einem Link zu Informationen über das GeoJSON-Format sowie der Metadaten-Lizenz."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleMap"
+msgstr "Interaktive Karte auf der Artikelseite anzeigen."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleMap.description"
+msgstr "Wenn aktiviert, enthält die Artikelseite eine interaktive Leaflet-Karte, welche die Geometrie des Artikels und die Bounding Box der Verwaltungseinheit darstellt. Deaktivieren Sie diese Option, um nur die textuellen Metadaten (zeitlich und administrativ) ohne die Karte darzustellen."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleTemporal"
+msgstr "Zeitliche Abdeckung auf der Artikelseite anzeigen."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleTemporal.description"
+msgstr "Wenn aktiviert, zeigt die Artikelseite den ISO-8601-Zeitraum an, den der Artikelinhalt abdeckt. Deaktivieren Sie diese Option, um diesen Abschnitt auch dann wegzulassen, wenn zeitliche Metadaten hinterlegt sind."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleAdminUnit"
+msgstr "Verwaltungseinheiten auf der Artikelseite anzeigen."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleAdminUnit.description"
+msgstr "Wenn aktiviert, listet die Artikelseite die Verwaltungseinheiten (Land, Region, …) auf, die die im Artikel behandelten Orte umschließen, in hierarchischer Reihenfolge. Deaktivieren Sie diese Option, um diesen Abschnitt wegzulassen."
+
+msgid "plugins.generic.geoMetadata.settings.section.issueAndJournal"
+msgstr "Ausgaben- und Journalseiten"
+
+msgid "plugins.generic.geoMetadata.settings.section.issueAndJournal.intro"
+msgstr "Aktivieren oder deaktivieren Sie die aggregierten Kartenansichten, die das Plugin in Ausgaben-Inhaltsverzeichnissen und auf der Journalweiten Kartenseite einfügt."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueMap"
+msgstr "Aggregierte Karte im Inhaltsverzeichnis jeder Ausgabe anzeigen."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueMap.description"
+msgstr "Wenn aktiviert, enthält das Inhaltsverzeichnis einer Ausgabe eine interaktive Karte, die die räumlichen Metadaten aller Artikel in der Ausgabe zusammenführt. Wenn deaktiviert, wird die Ausgabenkarte auch dann nicht gerendert, wenn Artikel räumliche Daten enthalten. Erfordert den Hook Templates::Issue::TOC::Main in issue_toc.tpl (siehe README)."
+
+msgid "plugins.generic.geoMetadata.settings.showJournalMap"
+msgstr "Journal-weite Kartenseite unter /map bereitstellen."
+
+msgid "plugins.generic.geoMetadata.settings.showJournalMap.description"
+msgstr "Wenn aktiviert, registriert das Plugin eine öffentliche /map-Route des Journals, welche eine interaktive Karte aller veröffentlichten Artikel mit ihren räumlichen Metadaten darstellt. Wenn deaktiviert, liefert die Route 404 und Menüverweise darauf funktionieren nicht mehr."
+
+msgid "plugins.generic.geoMetadata.settings.section.submission"
+msgstr "Einreichungsformular (Autor*innen)"
+
+msgid "plugins.generic.geoMetadata.settings.section.submission.intro"
+msgstr "Legen Sie fest, welche raum-zeitlichen Felder im Einreichungsformular erscheinen. Ein hier deaktiviertes Feld entfernt es nicht aus dem Publikations-Tab im redaktionellen Workflow — dieser wird separat gesteuert."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableSpatial"
+msgstr "Räumliche Eingabe (Karte) im Einreichungsformular anbieten."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableSpatial.description"
+msgstr "Wenn aktiviert, enthält das Einreichungsformular eine interaktive Karte, in der Autor*innen die Geometrie des Artikels zeichnen. Deaktivieren Sie diese Option, um räumliche Metadaten erst im redaktionellen Workflow zu erheben."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableTemporal"
+msgstr "Zeitliche Eingabe (Zeitraumauswahl) im Einreichungsformular anbieten."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableTemporal.description"
+msgstr "Wenn aktiviert, enthält das Einreichungsformular einen Zeitraum-Picker für die zeitliche Abdeckung des Artikels. Deaktivieren Sie diese Option, um zeitliche Metadaten erst im redaktionellen Workflow zu erheben."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableAdminUnit"
+msgstr "Verwaltungseinheit-Eingabe (GeoNames) im Einreichungsformular anbieten."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableAdminUnit.description"
+msgstr "Wenn aktiviert, bietet das Einreichungsformular eine GeoNames-gestützte Autovervollständigung für Verwaltungseinheiten. Erfordert ein konfiguriertes GeoNames-Konto; ohne dieses fällt das Widget auf freie Texteingabe zurück. Deaktivieren Sie diese Option, um Verwaltungseinheiten erst im redaktionellen Workflow zu erheben."
+
+msgid "plugins.generic.geoMetadata.settings.section.workflow"
+msgstr "Publikationsworkflow (Redaktion)"
+
+msgid "plugins.generic.geoMetadata.settings.section.workflow.intro"
+msgstr "Legen Sie fest, welche raum-zeitlichen Felder im Publikations-Tab für Redakteur*innen und Korrekturleser*innen erscheinen. Ein hier deaktiviertes Feld entfernt es nicht aus dem Einreichungsformular der Autor*innen — dieses wird separat gesteuert."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableSpatial"
+msgstr "Räumliche Bearbeitung (Karte) im Publikations-Tab anbieten."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableSpatial.description"
+msgstr "Wenn aktiviert, enthält der Publikations-Tab im redaktionellen Workflow eine interaktive Karte zur Bearbeitung der Artikelgeometrie. Deaktivieren Sie diese Option, wenn ausschließlich Autor*innen die räumlichen Metadaten pflegen."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableTemporal"
+msgstr "Zeitliche Bearbeitung (Zeitraumauswahl) im Publikations-Tab anbieten."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableTemporal.description"
+msgstr "Wenn aktiviert, enthält der Publikations-Tab einen Zeitraum-Picker für die zeitliche Abdeckung des Artikels. Deaktivieren Sie diese Option, wenn ausschließlich Autor*innen die zeitlichen Metadaten pflegen."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableAdminUnit"
+msgstr "Verwaltungseinheit-Bearbeitung (GeoNames) im Publikations-Tab anbieten."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableAdminUnit.description"
+msgstr "Wenn aktiviert, bietet der Publikations-Tab eine GeoNames-gestützte Autovervollständigung für Verwaltungseinheiten für Redakteur*innen und Korrekturleser*innen. Deaktivieren Sie diese Option, wenn ausschließlich Autor*innen die Verwaltungseinheiten pflegen."
+
+msgid "plugins.generic.geoMetadata.settings.section.discovery"
+msgstr "Discovery-Meta-Tags (HTML-Head)"
+
+msgid "plugins.generic.geoMetadata.settings.section.discovery.intro"
+msgstr "Legen Sie fest, welche Metadaten-Familien das Plugin in den HTML-<head> der Artikelseiten einfügt. Diese Tags werden nicht sichtbar dargestellt, sondern von Harvester-Diensten, Suchmaschinen und maschinenlesbaren Werkzeugen ausgewertet."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaDublinCore"
+msgstr "Dublin-Core-Meta-Tags ausgeben."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaDublinCore.description"
+msgstr "Wenn aktiviert, wird die Dublin-Core-Schema-Deklaration sowie DC.SpatialCoverage, DC.box und DC.temporal ausgegeben. Wird von OAI-PMH-Harvestern und wissenschaftlichen Indizes breit genutzt."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoNames"
+msgstr "Meta-Tags geo.placename und geo.region ausgeben."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoNames.description"
+msgstr "Wenn aktiviert, werden die informellen Tags geo.placename (niedrigste Verwaltungseinheit) und geo.region (ISO-3166 Land + Unterteilung) ausgegeben. Name- und codebasiert; genutzt von einigen SEO- und Kartentools."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoCoords"
+msgstr "Meta-Tags ICBM und geo.position ausgeben."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoCoords.description"
+msgstr "Wenn aktiviert, werden ICBM und geo.position mit einem 5-Nachkommastellen-Zentroid (~1,1 m Genauigkeit) ausgegeben, begleitet von einem HTML-Kommentar zur Herkunft. Deaktivieren Sie diese Option, wenn exakte Koordinaten nicht im Head erscheinen sollen — namensbasierte Auffindbarkeit (geo.placename / geo.region) bleibt über den anderen Schalter verfügbar."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaISO19139"
+msgstr "Meta-Tag ISO-19139 EX_GeographicBoundingBox ausgeben."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaISO19139.description"
+msgstr "Wenn aktiviert, wird die Bounding Box der Verwaltungseinheit als inline ISO-19139-XML-Fragment in den Head eingefügt. Nische; deaktivieren Sie dies für strikte HTML-Head-Hygiene (das Tag enthält gmd:/gco:-Namespaces, die in HTML nicht deklariert sind)."
+
+msgid "plugins.generic.geoMetadata.settings.section.services"
+msgstr "Drittanbieterdienste"
+
+msgid "plugins.generic.geoMetadata.settings.section.services.intro"
+msgstr "Vom Plugin verwendete Drittanbieter-Kartendienste und die entsprechenden Datenschutzhinweise für Leser*innen."
+
+msgid "plugins.generic.geoMetadata.settings.showEsriBaseLayer"
+msgstr "Esri World Imagery als Hintergrundkarte auf Leser*innen-Seiten anbieten"
+
+msgid "plugins.generic.geoMetadata.settings.showEsriBaseLayer.description"
+msgstr "Wenn aktiviert, bieten alle Karten des Plugins (Artikel-, Ausgaben-, Journalkarte und Einreichungsformular) OpenStreetMap und Esri World Imagery als Hintergrundkarten an. Wenn deaktiviert, wird ausschließlich OpenStreetMap geladen, sodass keine Kachel-Anfragen an Esri gesendet werden."
+
+msgid "plugins.generic.geoMetadata.settings.enableGeocoderSearch"
+msgstr "Geocoder-Suchfeld auf Leser*innen-Seiten anbieten."
+
+msgid "plugins.generic.geoMetadata.settings.enableGeocoderSearch.description"
+msgstr "Wenn aktiviert, enthält jede Karte im Plugin ein Suchfeld, mit dem Leser*innen zu benannten Orten springen können. Anfragen werden an den Nominatim-Dienst der OpenStreetMap Foundation gesendet. Wenn deaktiviert, werden keine Suchanfragen gesendet."
+
+msgid "plugins.generic.geoMetadata.settings.privacy.info"
+msgstr "Karten laden Kacheln von Drittanbieter-Servern, die dabei die IP-Adressen der Leser*innen erhalten. Unter jeder Karte wird ein kurzer Hinweis angezeigt. Zusätzlich empfehlen wir, einen Absatz in die Datenschutzerklärung des Journals aufzunehmen — der folgende Text spiegelt die aktuell aktivierten Hintergrundkarten wider und kann dort als Ausgangspunkt eingefügt werden."
+
+msgid "plugins.generic.geoMetadata.privacy.mapNotice"
+msgstr "Kartenkacheln werden von Drittanbieter-Servern geladen. Einzelheiten finden Sie in der Datenschutzerklärung des Journals."
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.osm"
+msgstr "<p>Diese Website nutzt Kartendienste der OpenStreetMap Foundation (OSMF), St John's Innovation Centre, Cowley Road, Cambridge, CB4 0WS, Vereinigtes Königreich. Ihr Browser verbindet sich mit Servern der OSMF im Vereinigten Königreich und in anderen Ländern. Der Betreiber dieser Seite hat keinen Einfluss auf diese Verbindungen oder die Verarbeitung Ihrer Daten durch die OSMF; Einzelheiten entnehmen Sie bitte der <a href=\"https://wiki.osmfoundation.org/wiki/Privacy_Policy\">Datenschutzerklärung der OSMF</a>.</p>"
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.esri"
+msgstr "<p>Zusätzlich werden Kartenkacheln von Esri-Servern geladen (Hintergrundebene World Imagery). Ihr Browser verbindet sich mit von Esri betriebenen Servern; Einzelheiten entnehmen Sie bitte dem <a href=\"https://www.esri.com/en-us/privacy/overview\">Esri-Datenschutzhinweis</a>.</p>"
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.geocoder"
+msgstr "<p>Wenn Leser*innen in das Suchfeld einer Karte eingeben, wird der Suchtext an den Nominatim-Geocoding-Dienst der OpenStreetMap Foundation (OSMF) gesendet. Details siehe <a href=\"https://operations.osmfoundation.org/policies/nominatim/\">Nominatim-Nutzungsrichtlinie</a>.</p>"
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.legitimateInterest"
+msgstr "<p>Diese Dienste werden ausschließlich zum Zweck des berechtigten Interesses (Art. 6 Abs. 1 lit. f DSGVO) eingebunden, den Leser*innen interaktive Karten der räumlichen Abdeckung der Artikel anzuzeigen.</p>"
 
 msgid "plugins.generic.geoMetadata.name"
 msgstr "geoMetadata Plugin"
@@ -92,11 +266,17 @@ msgstr "Sammeln und Bereitstellen von räumlichen Metadaten für verbesserte Art
 msgid "plugins.generic.geoMetadata.issue.title"
 msgstr "Zeiten & Orte"
 
+msgid "plugins.generic.geoMetadata.issue.temporalCoverage"
+msgstr "Diese Ausgabe enthält Artikel, die den Zeitraum von {$from} bis {$to} abdecken."
+
+msgid "plugins.generic.geoMetadata.issue.temporalCoverage.singleYear"
+msgstr "Diese Ausgabe enthält Artikel, die das Jahr {$year} abdecken."
+
 msgid "plugins.generic.geoMetadata.journal.pageTitle"
 msgstr "Zeiten & Orte aller Artikel"
 
 msgid "plugins.generic.geoMetadata.journal.title"
-msgstr "Zeiten & Orte aller Artikel in"
+msgstr "Zeiten & Orte aller Artikel in {$journal}"
 
 msgid "plugins.generic.geoMetadata.journal.breadcrump"
 msgstr "Karte"
@@ -107,23 +287,155 @@ msgstr "Karte"
 msgid "plugins.generic.geoMetadata.journal.text"
 msgstr "Klicken Sie auf eine beliebige Geometrie, um Informationen über den Artikel zu sehen und dem Link zur Artikelseite zu folgen."
 
+msgid "plugins.generic.geoMetadata.journal.temporalCoverage"
+msgstr "Dieses Journal enthält Artikel, die den Zeitraum von {$from} bis {$to} abdecken."
+
+msgid "plugins.generic.geoMetadata.journal.temporalCoverage.singleYear"
+msgstr "Dieses Journal enthält Artikel, die das Jahr {$year} abdecken."
+
 msgid "plugins.generic.geoMetadata.map.articleLayerName"
 msgstr "Artikel"
 
 msgid "plugins.generic.geoMetadata.map.administrativeLayerName"
 msgstr "Verwaltungseinheiten"
 
+msgid "plugins.generic.geoMetadata.map.fullscreen.title"
+msgstr "Vollbild anzeigen"
+
+msgid "plugins.generic.geoMetadata.map.fullscreen.titleCancel"
+msgstr "Vollbild verlassen"
+
+msgid "plugins.generic.geoMetadata.map.overlay.geometry"
+msgstr "Geometrische Form(en)"
+
+msgid "plugins.generic.geoMetadata.map.overlay.administrativeUnit"
+msgstr "Verwaltungseinheit"
+
+msgid "plugins.generic.geoMetadata.map.zoom.in"
+msgstr "Hineinzoomen"
+
+msgid "plugins.generic.geoMetadata.map.zoom.out"
+msgstr "Herauszoomen"
+
+msgid "plugins.generic.geoMetadata.map.geocoder.placeholder"
+msgstr "Suchen"
+
+msgid "plugins.generic.geoMetadata.map.geocoder.errorMessage"
+msgstr "Nichts gefunden."
+
+msgid "plugins.generic.geoMetadata.map.geocoder.buttonTitle"
+msgstr "Auf der Karte suchen"
+
+msgid "plugins.generic.geoMetadata.map.draw.actionCancelTitle"
+msgstr "Zeichnen abbrechen"
+
+msgid "plugins.generic.geoMetadata.map.draw.actionCancel"
+msgstr "Abbrechen"
+
+msgid "plugins.generic.geoMetadata.map.draw.finishTitle"
+msgstr "Zeichnen abschließen"
+
+msgid "plugins.generic.geoMetadata.map.draw.finish"
+msgstr "Fertig"
+
+msgid "plugins.generic.geoMetadata.map.draw.undoTitle"
+msgstr "Letzten gezeichneten Punkt löschen"
+
+msgid "plugins.generic.geoMetadata.map.draw.undo"
+msgstr "Letzter Punkt"
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline"
+msgstr "Linienzug zeichnen"
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon"
+msgstr "Polygon zeichnen"
+
+msgid "plugins.generic.geoMetadata.map.draw.rectangle"
+msgstr "Rechteck zeichnen"
+
+msgid "plugins.generic.geoMetadata.map.draw.marker"
+msgstr "Marker setzen"
+
+msgid "plugins.generic.geoMetadata.map.draw.marker.tooltipStart"
+msgstr "Klicken Sie auf die Karte, um einen Marker zu setzen."
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon.tooltipStart"
+msgstr "Klicken Sie, um mit dem Zeichnen der Form zu beginnen."
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon.tooltipCont"
+msgstr "Klicken Sie, um das Zeichnen der Form fortzusetzen."
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon.tooltipEnd"
+msgstr "Klicken Sie auf den ersten Punkt, um die Form zu schließen."
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline.tooltipStart"
+msgstr "Klicken Sie, um mit dem Zeichnen der Linie zu beginnen."
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline.tooltipCont"
+msgstr "Klicken Sie, um das Zeichnen der Linie fortzusetzen."
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline.tooltipEnd"
+msgstr "Klicken Sie den letzten Punkt an, um die Linie abzuschließen."
+
+msgid "plugins.generic.geoMetadata.map.draw.rectangle.tooltipStart"
+msgstr "Klicken und ziehen, um ein Rechteck zu zeichnen."
+
+msgid "plugins.generic.geoMetadata.map.draw.simpleshape.tooltipEnd"
+msgstr "Maustaste loslassen, um das Zeichnen abzuschließen."
+
+msgid "plugins.generic.geoMetadata.map.edit.saveTitle"
+msgstr "Änderungen speichern"
+
+msgid "plugins.generic.geoMetadata.map.edit.save"
+msgstr "Speichern"
+
+msgid "plugins.generic.geoMetadata.map.edit.cancelTitle"
+msgstr "Bearbeitung abbrechen, alle Änderungen verwerfen"
+
+msgid "plugins.generic.geoMetadata.map.edit.cancel"
+msgstr "Abbrechen"
+
+msgid "plugins.generic.geoMetadata.map.edit.clearAllTitle"
+msgstr "Alle Ebenen entfernen"
+
+msgid "plugins.generic.geoMetadata.map.edit.clearAll"
+msgstr "Alle entfernen"
+
+msgid "plugins.generic.geoMetadata.map.edit.edit"
+msgstr "Ebenen bearbeiten"
+
+msgid "plugins.generic.geoMetadata.map.edit.editDisabled"
+msgstr "Keine Ebenen zum Bearbeiten"
+
+msgid "plugins.generic.geoMetadata.map.edit.remove"
+msgstr "Ebenen löschen"
+
+msgid "plugins.generic.geoMetadata.map.edit.removeDisabled"
+msgstr "Keine Ebenen zum Löschen"
+
+msgid "plugins.generic.geoMetadata.map.edit.handlerText"
+msgstr "Ziehen Sie Griffe oder Marker, um Objekte zu bearbeiten."
+
+msgid "plugins.generic.geoMetadata.map.edit.handlerSubtext"
+msgstr "Klicken Sie auf Abbrechen, um die Änderungen rückgängig zu machen."
+
+msgid "plugins.generic.geoMetadata.map.edit.removeHandlerText"
+msgstr "Klicken Sie auf ein Objekt, um es zu entfernen."
+
 msgid "plugins.generic.geoMetadata.submission.coverageDisabledHover"
 msgstr "Dieses Feld wurde deaktiviert. Die Informationen werden automatisch auf der Grundlage der unten eingegebenen Geodaten ausgefüllt."
 
+msgid "plugins.generic.geoMetadata.submission.spatialProperties.antimeridianNote"
+msgstr "Objekte, die den Antimeridian (180° Meridian) überqueren, werden beim Speichern in zwei Teile geteilt. Die Karte zeigt die Vorschau möglicherweise gespiegelt an, bis der Datensatz gespeichert und neu geladen wird."
+
 msgid "plugins.generic.geoMetadata.license.submission"
-msgstr "Die zeitlichen und räumlichen Metadaten werden unter der folgenden Lizenz veröffentlicht:"
+msgstr "Die zeitlichen und räumlichen Metadaten werden unter der folgenden Lizenz veröffentlicht: {$license}"
 
 msgid "plugins.generic.geoMetadata.license.download"
-msgstr "Geodaten-Lizenz:"
+msgstr "Geodaten-Lizenz: {$license}"
 
 msgid "plugins.generic.geoMetadata.license.frontend"
-msgstr "Die zeitlichen und räumlichen Metadaten sind unter der folgenden Lizenz veröffentlicht:"
+msgstr "Die zeitlichen und räumlichen Metadaten sind unter der folgenden Lizenz veröffentlicht: {$license}"
 
 msgid "plugins.generic.geoMetadata.publication.tab.raw"
 msgstr "Rohdaten"

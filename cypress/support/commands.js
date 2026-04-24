@@ -392,15 +392,38 @@ Cypress.Commands.add('createSubmission', (data, context) => {
         cy.get('div[id^="component-grid-users-chapter-chaptergrid-"] a.pkp_linkaction_editChapter:contains("' + Cypress.$.escapeSelector(chapter.title) + '")');
     });
 
-    // geospatial metadata
+    // geospatial metadata. The temporal input is now a plain-text field that
+    // commits on blur (see js/submission.js initPlainTemporalInput); the old
+    // daterangepicker + .applyBtn click is gone.
     if ('timePeriod' in data && data.timePeriod !== null) {
-        cy.get('input[name=datetimes]').type(data.timePeriod);
-        cy.wait(1000);
-        cy.get('.applyBtn').click();
+        cy.get('input[name=datetimes]').clear().type(data.timePeriod).blur();
+        cy.wait(500);
     }
 
     // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
-    if ('spatial' in data) {
+    // data.directInject bypasses the map + tagit UI with literal JSON for
+    // deterministic assertions; data.spatial draws via pixel clicks; neither
+    // => default polyline.
+    if ('directInject' in data) {
+        cy.window().then((win) => {
+            const $ = win.jQuery || win.$;
+            const set = (fieldName, value) => {
+                const selector = 'textarea[name="' + fieldName + '"]';
+                const $el = $(selector);
+                expect($el.length, 'textarea ' + fieldName + ' exists').to.equal(1);
+                const serialized = (typeof value === 'string') ? value : JSON.stringify(value);
+                $el.val(serialized);
+                $el[0].dispatchEvent(new Event('input',  { bubbles: true }));
+                $el[0].dispatchEvent(new Event('change', { bubbles: true }));
+            };
+            set('geoMetadata::spatialProperties',  data.directInject.spatial);
+            set('geoMetadata::administrativeUnit', data.directInject.adminUnit);
+            const names = (Array.isArray(data.directInject.adminUnit)
+                ? data.directInject.adminUnit
+                : []).map((u) => u.name).join(', ');
+            $('input[id^=coverage], input[id^=metadata-coverage]').val(names).trigger('input');
+        });
+    } else if ('spatial' in data) {
         if (data.spatial !== null) {
             cy.toolbarButton(data.spatial.type).click();
             for (let index = 0; index < data.spatial.coords.length; index++) {
@@ -410,17 +433,23 @@ Cypress.Commands.add('createSubmission', (data, context) => {
             }
         }
     } else {
-        // default to line geometry in Germany
+        // default polyline. Leaflet.Draw only registers a new vertex when the
+        // click is far enough from the previous one; 5 px wasn't enough —
+        // verified via headless/probe-polyline.mjs. 40 px reliably produces
+        // two vertices, and dblclick finishes the line.
         cy.toolbarButton('polyline').click();
-        cy.get('#mapdiv') // too small differences dont work, min 5 pixels
+        cy.get('#mapdiv')
             .click(448, 110)
-            .click(453, 115)
-            .click(453, 115);
+            .click(488, 150)
+            .dblclick(488, 150);
     }
 
-    cy.wait(2000);
+    // Wait for the draw → gazetteer → iso-code pipeline to finish serialising
+    // into the hidden textareas. TODO: replace with a wait for the in-progress
+    // gazetteer status indicator once that lands (see CLAUDE.md / issue tracker).
+    cy.wait(6000);
 
-    if ('adminUnit' in data) {
+    if ('adminUnit' in data && !('directInject' in data)) {
         cy.get('#administrativeUnitInput > .tagit-new > .ui-widget-content').type(data.adminUnit);
         cy.wait(100);
     }
@@ -429,7 +458,7 @@ Cypress.Commands.add('createSubmission', (data, context) => {
 
     // === Submission Step 4 ===
     cy.waitJQuery();
-    cy.get('form[id=submitStep4Form]').find('button').contains('Finish Submission').click();
+    cy.get('form[id=submitStep4Form]', { timeout: 15000 }).find('button').contains('Finish Submission').click();
     cy.get('button.pkpModalConfirmButton').click();
     cy.waitJQuery();
     cy.get('h2:contains("Submission complete")');
@@ -561,9 +590,10 @@ Cypress.Commands.add('consoleLog', message => {
     cy.task('consoleLog', message);
 });
 
-// leaflet map interaction, see https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
+// Leaflet.Draw toolbar buttons are icon-only anchors; match by class since
+// the old :contains("name") selector never matched (no visible text).
 Cypress.Commands.add('toolbarButton', name => {
-    cy.get(`.leaflet-draw a:contains("${name}")`)
+    cy.get(`.leaflet-draw a.leaflet-draw-draw-${name}`)
 });
 
 // https://github.com/geoman-io/leaflet-geoman (MIT license)

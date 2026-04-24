@@ -11,6 +11,8 @@
     style="height: 0px; width: 0px; visibility: hidden;" value='article-{$article->getId()}'>
 <input type="text" class="geoMetadata_data spatial" name="{$smarty.const.GEOMETADATA_DB_FIELD_SPATIAL}"
     style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.GEOMETADATA_DB_FIELD_SPATIAL}|escape:'html'}'>
+<input type="text" class="geoMetadata_data temporal" name="{$smarty.const.GEOMETADATA_DB_FIELD_TIME_PERIODS}"
+    style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.GEOMETADATA_DB_FIELD_TIME_PERIODS}|escape:'html'}'>
 <input type="text" class="geoMetadata_data popup" name="mapPopup"
     style="height: 0px; width: 0px; visibility: hidden;" value='
 		<{$heading} class="title">

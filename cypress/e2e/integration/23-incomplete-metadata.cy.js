@@ -19,7 +19,25 @@ describe('geoMetadata Submission with incomplete Metadata', function () {
       subtitle: 'No no no',
       abstract: 'The city of Vancouver is timeless.',
       issue: '1',
-      timePeriod: null
+      timePeriod: null,
+      // directInject: features present so the download sidebar + map render;
+      // no admin unit and no temporal data match the test's expectations.
+      directInject: {
+        spatial: {
+          type: 'FeatureCollection',
+          features: [{
+            type: 'Feature',
+            properties: { provenance: { description: 'geometric shape created by user (drawing)', id: 11 } },
+            geometry: { type: 'Point', coordinates: [-123.11, 49.26] }
+          }],
+          administrativeUnits: {},
+          temporalProperties: {
+            timePeriods: [],
+            provenance: { description: 'not available', id: 'not available' }
+          }
+        },
+        adminUnit: 'no data'
+      }
     };
 
     cy.createSubmissionAndPublish(submission);

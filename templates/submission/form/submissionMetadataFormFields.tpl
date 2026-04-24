@@ -16,35 +16,47 @@
 <input type="text" id="geoMetadata_coverageDisabledHover" name="coverageDisabledHover"
         style="height: 0px; width: 0px; visibility: hidden;"
         value="{translate key="plugins.generic.geoMetadata.submission.coverageDisabledHover"}">
+
+{include file=$geoMetadata_mapJsGlobalsTpl}
         
 <div style="clear:both;">
     {fbvFormArea id="spatioTemporalFields"}
 
-    {*temporal*}
+    {if $geoMetadata_submission_enableTemporal}
     {fbvFormSection title="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal" for="timePeriodsWithDatepicker" inline=true}
     <p align="justify" class="description">{translate
         key="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.description.submission"}
     </p>
-    <input type="text" id="timePeriodsWithDatepicker" name="datetimes" style="width: 100%; height: 32px; z-index: 0;" />
+    <input type="text" id="timePeriodsWithDatepicker" name="datetimes"
+        placeholder="{translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.placeholder"}"
+        style="width: 100%; height: 32px;" />
     <textarea id="timePeriods" name="{$smarty.const.GEOMETADATA_DB_FIELD_TIME_PERIODS}"
         class="hiddenDataField" style="height: 0;">{${$smarty.const.GEOMETADATA_DB_FIELD_TIME_PERIODS}}</textarea>
     {/fbvFormSection}
+    {/if}
 
-    {*spatial*}
+    {if $geoMetadata_submission_enableSpatial}
     {fbvFormSection title="plugins.generic.geoMetadata.geospatialmetadata.properties.spatial" for="spatialProperties" inline=true}
     <p align="justify" class="description">{translate
         key="plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.description.submission"}
     </p>
     <div id="mapdiv" style="width: 100%; height: 400px; z-index: 0;"></div>
+    <p align="justify" class="description geoMetadata_antimeridian_note">{translate
+        key="plugins.generic.geoMetadata.submission.spatialProperties.antimeridianNote"}
+    </p>
+    <p align="justify" class="description geoMetadata_privacyNotice">{translate
+        key="plugins.generic.geoMetadata.privacy.mapNotice"}
+    </p>
     <textarea id="spatialProperties" name="{$smarty.const.GEOMETADATA_DB_FIELD_SPATIAL}"
         class="hiddenDataField" style="height: 0;">{${$smarty.const.GEOMETADATA_DB_FIELD_SPATIAL}}</textarea>
 
     <p align="justify" class="description">{translate
-        key="plugins.generic.geoMetadata.license.submission"} {$geoMetadata_metadataLicense}
+        key="plugins.generic.geoMetadata.license.submission" license=$geoMetadata_metadataLicense}
     </p>
     {/fbvFormSection}
+    {/if}
 
-    {*administrativeUnit*}
+    {if $geoMetadata_submission_enableAdminUnit}
     {fbvFormSection title="plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit" for="administrativeUnitInput"
     inline=true}
     <p align="justify" class="description geoMetadata_warning" id="geoMetadata_gazetteer_unavailable" style="display:none;">{translate
@@ -55,20 +67,15 @@
     </p>
     <ul id="administrativeUnitInput">
     </ul>
+    <p class="description geoMetadata_warning geoMetadata-manual-admin-unit-notice" style="display:none;">{translate
+        key="plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit.manualOverrideNotice"}
+    </p>
     <textarea id="administrativeUnit" name="{$smarty.const.GEOMETADATA_DB_FIELD_ADMINUNIT}"
         class="hiddenDataField" style="height: 0;">{${$smarty.const.GEOMETADATA_DB_FIELD_ADMINUNIT}}</textarea>
     {/fbvFormSection}
+    {/if}
     {/fbvFormArea}
 </div>
-
-{*z-index must be changed for the daterangepicker*}
-<style>
-    .daterangepicker {
-        direction: ltr;
-        text-align: left;
-        z-index: 1;
-    }
-</style>
 
 {*main js script, needs to be loaded last*}
 <script src="{$geoMetadata_submissionJS}" type="text/javascript"></script>

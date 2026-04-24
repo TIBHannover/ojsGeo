@@ -9,32 +9,24 @@
  * the main template is here extended using the hook 'Templates::Article::Main'.
  *}
 
-<script type="text/javascript">
-const geoMetadata_mapLayerStyle = {
-    weight: 5,
-    color: '#1E6292',
-    dashArray: '',
-    fillOpacity: 0.6
-};
-
-const geoMetadata_articleLayerName = '{translate key="plugins.generic.geoMetadata.map.articleLayerName"}';
-const geoMetadata_adminLayerName = '{translate key="plugins.generic.geoMetadata.map.administrativeLayerName"}';
-</script>
+{include file=$geoMetadata_mapJsGlobalsTpl}
 
 <div style="clear:both;">
     <section id="geoMetadata_article_geospatialmetadata" class="item geospatialmetadata">
         <h2 class="label">{translate key="plugins.generic.geoMetadata.article.metadata.long"}</h2>
 
-        {*temporal*}
+        {if $geoMetadata_showArticleTemporal}
+        {capture assign="geoMetadata_temporalFrom"}<span id="geoMetadata_span_start" class="geoMetadata_timestamp"></span>{/capture}
+        {capture assign="geoMetadata_temporalTo"}<span id="geoMetadata_span_end" class="geoMetadata_timestamp"></span>{/capture}
         <p id="geoMetadata_article_temporal" class="description">
-            {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.from"} <span id="geoMetadata_span_start"  class="geoMetadata_timestamp"></span>
-            {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.to"}   <span id="geoMetadata_span_end" class="geoMetadata_timestamp"></span>.&nbsp;<span class="fa fa-question-circle tooltip">
+            {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.coverage" from=$geoMetadata_temporalFrom to=$geoMetadata_temporalTo}&nbsp;<span class="fa fa-question-circle tooltip">
                 <span class="tooltiptext">{translate
                 key="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.description.article"}</span>
             </span>
         </p>
+        {/if}
 
-        {*spatial*} {*administrativeUnit*}
+        {if $geoMetadata_showArticleMap}
         <p id="geoMetadata_article_spatial" class="description">
             {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.spatial"}&nbsp;<span class="fa fa-question-circle tooltip">
                 <span class="tooltiptext">{translate
@@ -42,16 +34,23 @@ const geoMetadata_adminLayerName = '{translate key="plugins.generic.geoMetadata.
         </p>
 
         <div id="mapdiv" style="width: 100%; height: 300px; z-index: 1;"></div>
+        <p class="geoMetadata_privacyNotice description">
+            {translate key="plugins.generic.geoMetadata.privacy.mapNotice"}
+        </p>
+        {/if}
 
+        {if $geoMetadata_showArticleAdminUnit}
+        {capture assign="geoMetadata_administrativeUnits"}<span id="geoMetadata_span_admnistrativeUnit" class="geoMetadata_coverage"></span>{/capture}
         <p id="geoMetadata_article_administrativeUnit" class="description">
-            {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.administrativeUnit"} <span id="geoMetadata_span_admnistrativeUnit" class="geoMetadata_coverage"></span>&nbsp;<span class="fa fa-question-circle tooltip">
+            {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.administrativeUnit" units=$geoMetadata_administrativeUnits}&nbsp;<span class="fa fa-question-circle tooltip">
             <span class="tooltiptext">{translate
                 key="plugins.generic.geoMetadata.geospatialmetadata.properties.administrativeUnit.description.article"}</span>
             </span>
         </p>
+        {/if}
 
         <p class="geoMetadata_license">
-            {translate key="plugins.generic.geoMetadata.license.frontend"} {$geoMetadata_metadataLicense}
+            {translate key="plugins.generic.geoMetadata.license.frontend" license=$geoMetadata_metadataLicense}
         </p>
 
         {* name is used for the submitted form and the name in the PHP backend, id is used for JavaScript *}

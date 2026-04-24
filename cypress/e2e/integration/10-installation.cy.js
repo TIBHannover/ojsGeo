@@ -40,10 +40,11 @@ describe('geoMetadata Installation', function () {
       'roles': ['Journal editor']
     }
 
-    cy.login('admin', 'admin');
-    cy.get('a:contains("admin"):visible').click();
-    cy.get('a:contains("Dashboard")').click({ force: true });
-    cy.get('a:contains("Users & Roles")').click();
+    // Log in at the journal level so the user menu's Dashboard link stays inside the journal context —
+    // a site-level login (cy.login without context) sometimes drops the session when following Dashboard,
+    // landing on /login?source=... instead of the dashboard's Users & Roles sidebar.
+    cy.login('admin', 'admin', Cypress.env('contextPath'));
+    cy.visit('index.php/' + Cypress.env('contextPath') + '/management/settings/access');
     cy.createUser(editor);
   });
 

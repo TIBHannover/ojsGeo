@@ -17,10 +17,12 @@
 <input type="text" id="geoMetadata_coverageDisabledHover" name="coverageDisabledHover"
         style="height: 0px; width: 0px; visibility: hidden;"
         value="{translate key="plugins.generic.geoMetadata.submission.coverageDisabledHover"}">
-    
+
+{include file=$geoMetadata_mapJsGlobalsTpl}
+
 <tab id="timeLocation" label="{translate key="plugins.generic.geoMetadata.publication.label"}">
 
-    {*temporal*}
+    {if $geoMetadata_workflow_enableTemporal}
     <div class="pkpFormGroup__locale pkpFormGroup__locale--isVisible geoMetadata_formGroupMargin">
         <div class="pkpFormField">
             <div class="pkpFormField__heading">
@@ -33,13 +35,17 @@
             </div>
             <div class="pkpFormField__control">
                 <div class="pkpFormField__control_top">
-                    <input id="geoMetadata-temporal" name="datetimes" aria-describedby="geoMetadata-temporal-description" aria-invalid="0" type="text" class="pkpFormField__input pkpFormField--text__input" />
+                    <input id="geoMetadata-temporal" name="datetimes"
+                        aria-describedby="geoMetadata-temporal-description"
+                        placeholder="{translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.placeholder"}"
+                        type="text" class="pkpFormField__input pkpFormField--text__input" />
                 </div>
             </div>
         </div>
     </div>
+    {/if}
 
-    {*spatial*}
+    {if $geoMetadata_workflow_enableSpatial}
     <div class="pkpFormGroup__locale pkpFormGroup__locale--isVisible geoMetadata_formGroupMargin">
         <div class="pkpFormField">
             <div class="pkpFormField__heading">
@@ -50,12 +56,16 @@
             <div id="geoMetadata-spatial-description" class="pkpFormField__description">
                 {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.description.submission"}
             </div>
-            
+
             <div id="mapdiv" aria-describedby="geoMetadata-spatial-description" style="width: 100%; height: 400px; z-index: 0;"></div>
+            <div class="pkpFormField__description geoMetadata_antimeridian_note">
+                {translate key="plugins.generic.geoMetadata.submission.spatialProperties.antimeridianNote"}
+            </div>
         </div>
     </div>
+    {/if}
 
-    {*administrativeUnit*}
+    {if $geoMetadata_workflow_enableAdminUnit}
     <div class="pkpFormGroup__locale pkpFormGroup__locale--isVisible geoMetadata_formGroupMargin">
         <div class="pkpFormField">
             <div class="pkpFormField__heading">
@@ -74,18 +84,13 @@
                     <ul id="administrativeUnitInput" aria-describedby="geoMetadata-adminunit-description" aria-invalid="0" class="pkpFormField__input pkpFormField--text__input">
                     </ul>
                 </div>
+                <div class="pkpFormField__description geoMetadata_warning geoMetadata-manual-admin-unit-notice" style="display:none;">
+                    {translate key="plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit.manualOverrideNotice"}
+                </div>
             </div>
         </div>
     </div>
-
-    {*z-index must be changed for the daterangepicker*}
-    <style>
-        .daterangepicker {
-            direction: ltr;
-            text-align: left;
-            z-index: 1;
-        }
-    </style>
+    {/if}
 
     <div class="pkpFormField__heading geoMetadata_formGroupMargin">
         <label class="pkpFormFieldLabel">

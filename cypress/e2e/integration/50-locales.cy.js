@@ -22,24 +22,28 @@ describe('geoMetadata Locales', function () {
     cy.logout();
   });
 
+  // Switch UI locale via the setLocale URL endpoint — more deterministic
+  // than driving the user-menu dropdown (which can race the session cookie
+  // write against the next cy.visit). Plugin-side translation rendering is
+  // the same either way.
+  const switchLocale = (locale) => {
+    cy.visit('/index.php/index/user/setLocale/' + locale);
+  };
+
   beforeEach(() => {
     cy.login('aauthor');
-    cy.get('a:contains("aauthor")').click();
-    cy.get('a:contains("Dashboard"), a:contains("Panel de control"), a:contains("Tableau de bord")').click();
   });
 
   afterEach(() => {
-    cy.get('a:contains("aauthor")').click();
-    cy.get('a:contains("Dashboard"), a:contains("Panel de control"), a:contains("Tableau de bord")').click();
-
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("English")').click();
+    switchLocale('en_US');
     cy.logout();
   });
 
   it('Has the German map headline in submission and the frontend if language is enabled for the UI', function () {
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("Deutsch")').click();
+    switchLocale('de_DE');
+    // Go straight to the author's submission dashboard — the user-menu
+    // Dashboard link is itself translated, so route by URL.
+    cy.visit('/' + Cypress.env('contextPath') + '/submissions');
 
     // submission page
     cy.get('h1').should('contain', 'Einreichungen');
@@ -59,8 +63,8 @@ describe('geoMetadata Locales', function () {
   });
 
   it('Has the Spanish map headline in submission and the frontend if language is enabled for the UI', function () {
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("Español")').click();
+    switchLocale('es_ES');
+    cy.visit('/' + Cypress.env('contextPath') + '/submissions');
 
     // submission page
     cy.get('h1').should('contain', 'Envíos');
@@ -80,8 +84,8 @@ describe('geoMetadata Locales', function () {
   });
 
   it('Has the French map headline in submission and the frontend if language is enabled for the UI', function () {
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("Français")').click();
+    switchLocale('fr_FR');
+    cy.visit('/' + Cypress.env('contextPath') + '/submissions');
 
     // submission page
     cy.get('h1').should('contain', 'Soumissions');
@@ -92,7 +96,7 @@ describe('geoMetadata Locales', function () {
     cy.wait(2000);
     cy.get('button.submitFormButton').click();
     cy.wait(2000);
-    cy.contains('#submitStep3Form', /Lieu\(x\) ou la\(les\) zone\(s\)/);
+    cy.contains('#submitStep3Form', /Lieu\(x\) ou zone\(s\)/);
 
     // home page
     cy.visit('/');
