@@ -39,3 +39,21 @@ js/lib/leaflet-draw/
 js/lib/moment/
 
 geoMetadata.zip
+
+.claude/
+
+js/lib/leaflet.fullscreen/
+
+js/lib/jquery/
+
+# Generated outputs of headless/take-geometadata-screenshots.mjs.
+# screenshots/report.md is tracked so the descriptive prose lives in git;
+# the PNG/PDF/log/html artefacts are regenerated on demand.
+screenshots/*.png
+screenshots/*.pdf
+screenshots/*.log
+screenshots/*.html
+
+js/lib/vis-timeline/
+
+out/

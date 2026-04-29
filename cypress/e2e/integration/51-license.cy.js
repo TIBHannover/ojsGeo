@@ -2,39 +2,35 @@
  * @file cypress/tests/integration/html_head.cy.js
  *
  * Copyright (c) 2025 KOMET project, OPTIMETA project, Daniel Nüst, Tom Niers
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  */
 
 describe('geoMetadata Licensing Information', function () {
 
   it('Has licensing information on the journal map page', function () {
-    cy.visit('/');
-    cy.get('nav[class="pkp_site_nav_menu"] a:contains("Map")').click();
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/map');
     cy.contains('.page', /license: CC-0/);
   });
 
   it('Has licensing information on the issue page', function () {
-    cy.visit('/');
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Current")').click();
     cy.contains('.page', /license: CC-0/);
   });
 
   it('Has licensing information on the article page', function () {
-    cy.visit('/');
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
-    cy.get('a:contains("Hanover is nice")').last().click();
+    cy.openArticleByTitle('Hanover is nice');
 
     cy.contains('.page', /Geodata License: CC-0/);
-    cy.contains('.page', /following License: CC-0/);
+    cy.contains('.page', /following license: CC-0/);
   });
 
   it('Shows license disclaimer during submission', function () {
     cy.logout();
-    cy.login('aauthor');
-
-    cy.get('a:contains("aauthor")').click();
-    cy.get('a:contains("Dashboard")').click({ force: true });
+    cy.openSubmissionsAs('aauthor');
 
     // submission page
     cy.get('h1').should('contain', 'Submission');
@@ -49,11 +45,11 @@ describe('geoMetadata Licensing Information', function () {
     cy.contains('#submitStep3Form', /license: CC-0/);
   });
 
-  it.only('Has no licensing information on an article without geospatial metadta', function () {
-    cy.visit('/');
+  it('Has no licensing information on an article without geospatial metadata', function () {
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/');
     cy.get('nav[class="pkp_site_nav_menu"] a:contains("Archive")').click();
     cy.get('a:contains("Vol. 1 No. 2 (2022)")').click();
-    cy.get('a:contains("Vancouver has nothing")').last().click();
+    cy.openArticleByTitle('Vancouver has nothing');
 
     cy.get('.geoMetadata_license').should('not.be.visible');
     //cy.get('.pkp_structure_content').should('not.contain', 'Geodata License: CC-0');

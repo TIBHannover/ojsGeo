@@ -2,7 +2,7 @@
  * @file cypress/tests/support/e2e.js
  *
  * Copyright (c) 2025 KOMET project, OPTIMETA project, Daniel Nüst, Tom Niers
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  * 
  * This example support/e2e.js is processed and
  * loaded automatically before your test files.
@@ -18,6 +18,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import './geonames-stubs'
 
 import '@foreachbe/cypress-tinymce'
 

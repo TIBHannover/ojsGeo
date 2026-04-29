@@ -14,8 +14,6 @@ $cwd = getcwd() . '/js/lib'; // IMPORTANT!
 
 # list of download URLs and files that need to be kept
 $keep_files = [
-    $cwd . '/daterangepicker/daterangepicker.css',
-    $cwd . '/daterangepicker/daterangepicker.js',
     $cwd . '/leaflet/dist/leaflet.css',
     $cwd . '/leaflet/dist/leaflet.js',
     $cwd . '/leaflet/dist/leaflet.js.map',
@@ -25,8 +23,8 @@ $keep_files = [
     $cwd . '/leaflet/dist/images/layers-2x.png',
     $cwd . '/leaflet/dist/images/layers.png',
     $cwd . '/leaflet-control-geocoder/dist/Control.Geocoder.css',
-    $cwd . '/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
-    $cwd . '/leaflet-control-geocoder/dist/Control.Geocoder.min.js.map',
+    $cwd . '/leaflet-control-geocoder/dist/Control.Geocoder.js',
+    $cwd . '/leaflet-control-geocoder/dist/Control.Geocoder.js.map',
     $cwd . '/leaflet-draw/dist/leaflet.draw.css',
     $cwd . '/leaflet-draw/dist/leaflet.draw.js',
     $cwd . '/leaflet-draw/dist/images/layers-2x.png',
@@ -37,7 +35,9 @@ $keep_files = [
     $cwd . '/leaflet-draw/dist/images/marker-icon.png',
     $cwd . '/leaflet-draw/dist/images/spritesheet-2x.png',
     $cwd . '/leaflet-draw/dist/images/spritesheet.svg',
-    $cwd . '/moment/moment.js',
+    $cwd . '/leaflet.fullscreen/Control.FullScreen.css',
+    $cwd . '/leaflet.fullscreen/Control.FullScreen.js',
+    $cwd . '/leaflet.fullscreen/icon-fullscreen.svg',
     $cwd . '/leaflet-color-markers/img/marker-icon-2x-red.png',
     $cwd . '/leaflet-color-markers/img/marker-icon-2x-blue.png',
     $cwd . '/leaflet-color-markers/img/marker-shadow.png',

@@ -3,7 +3,7 @@
  * @file classes/components/forms/PublicationForm.php
  * 
  * Copyright (c) 2025 KOMET project, OPTIMETA project, Daniel Nüst, Tom Niers
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *  
  * @class PublicationForm
  *
@@ -56,12 +56,16 @@ class PublicationForm extends FormComponent
             'value' => $publication->getData(GEOMETADATA_DB_FIELD_SPATIAL)
         ]));
 
+        $adminUnit = $publication->getData(GEOMETADATA_DB_FIELD_ADMINUNIT);
+        if ($adminUnit === null || $adminUnit === '') {
+            $adminUnit = '[]';
+        }
         $this->addField(new FieldTextarea(
             GEOMETADATA_DB_FIELD_ADMINUNIT, [
             'label' => __('plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit'),
             'description' => '',
             'isMultilingual' => false,
-            'value' => $publication->getData(GEOMETADATA_DB_FIELD_ADMINUNIT)
+            'value' => $adminUnit
         ]));
     }
 }

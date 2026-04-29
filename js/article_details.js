@@ -7,58 +7,91 @@
  * @brief Display spatio-temporal metadata in the article view.
  */
 
-// create map 
-var map = L.map('mapdiv');
+// Map is skipped entirely when the admin has disabled the article map block;
+// #mapdiv is then absent from the DOM and L.map() would throw.
+var geoMetadata_mapEnabled = !!document.getElementById('mapdiv');
+var map, drawnItems, administrativeUnitsMap;
 
-var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-    maxZoom: 18
-}).addTo(map);
+// Build admin-unit overlay layers from a {north, south, east, west} bbox,
+// emitting two rectangles when east < west (antimeridian-crossing; see issue #60).
+function bboxToLeafletLayers(bbox, styleOpts) {
+    var layers = L.featureGroup();
+    var bounds;
+    if (bbox.east >= bbox.west) {
+        L.polygon([[bbox.north, bbox.west], [bbox.south, bbox.west], [bbox.south, bbox.east], [bbox.north, bbox.east]], styleOpts).addTo(layers);
+        bounds = L.latLngBounds([bbox.south, bbox.west], [bbox.north, bbox.east]);
+    } else {
+        L.polygon([[bbox.north, bbox.west], [bbox.south, bbox.west], [bbox.south, 180], [bbox.north, 180]], styleOpts).addTo(layers);
+        L.polygon([[bbox.north, -180], [bbox.south, -180], [bbox.south, bbox.east], [bbox.north, bbox.east]], styleOpts).addTo(layers);
+        bounds = L.latLngBounds([bbox.south, bbox.west], [bbox.north, bbox.east + 360]);
+    }
+    return { layers: layers, bounds: bounds };
+}
 
-var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-    maxZoom: 18
-});
+if (geoMetadata_mapEnabled) {
+    map = L.map('mapdiv', { zoomControl: false, worldCopyJump: true });
 
-var baseLayers = {
-    "OpenStreetMap": osmlayer,
-    "Esri World Imagery": Esri_WorldImagery
-};
+    L.control.zoom({
+        zoomInTitle:  geoMetadata_zoomInTitle,
+        zoomOutTitle: geoMetadata_zoomOutTitle
+    }).addTo(map);
 
-// add scale to the map 
-L.control.scale({ position: 'bottomright' }).addTo(map);
+    var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(map);
 
-// FeatureGroup for the items drawn or inserted by the search
-var drawnItems = new L.FeatureGroup();
-map.addLayer(drawnItems);
+    var baseLayers = {
+        "OpenStreetMap": osmlayer
+    };
+    if (geoMetadata_showEsriBaseLayer) {
+        baseLayers["Esri World Imagery"] = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 18
+        });
+    }
 
-// FeatureGroup for the administrativeUnits 
-var administrativeUnitsMap = new L.FeatureGroup();
-map.addLayer(administrativeUnitsMap);
+    L.control.scale({ position: 'bottomright' }).addTo(map);
 
-var overlayMaps = {
-    [geoMetadata_articleLayerName]: drawnItems,
-    [geoMetadata_adminLayerName]: administrativeUnitsMap
-};
+    L.control.fullscreen({
+        position: 'topleft',
+        title: geoMetadata_fullscreenTitle,
+        titleCancel: geoMetadata_fullscreenTitleCancel
+    }).addTo(map);
 
-// add layerControl to the map to the map 
-L.control.layers(baseLayers, overlayMaps).addTo(map);
+    drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
 
-// add a search to the map 
-var geocoder = L.Control.geocoder({
-    defaultMarkGeocode: false
-})
-    .on('markgeocode', function (e) {
-        var bbox = e.geocode.bbox;
-        var poly = L.polygon([
-            bbox.getSouthEast(),
-            bbox.getNorthEast(),
-            bbox.getNorthWest(),
-            bbox.getSouthWest()
-        ])/*.addTo(map);*/
-        map.fitBounds(poly.getBounds());
-    })
-    .addTo(map);
+    administrativeUnitsMap = new L.FeatureGroup();
+    map.addLayer(administrativeUnitsMap);
+
+    var overlayMaps = {
+        [geoMetadata_articleLayerName]: drawnItems,
+        [geoMetadata_adminLayerName]: administrativeUnitsMap
+    };
+
+    L.control.layers(baseLayers, overlayMaps).addTo(map);
+
+    if (geoMetadata_showGeocoder) {
+        L.Control.geocoder({
+            defaultMarkGeocode: false,
+            placeholder:  geoMetadata_geocoderPlaceholder,
+            errorMessage: geoMetadata_geocoderError,
+            iconLabel:    geoMetadata_geocoderButtonTitle
+        })
+            .on('markgeocode', function (e) {
+                var bbox = e.geocode.bbox;
+                var poly = L.polygon([
+                    bbox.getSouthEast(),
+                    bbox.getNorthEast(),
+                    bbox.getNorthWest(),
+                    bbox.getSouthWest()
+                ]);
+                map.fitBounds(poly.getBounds());
+            })
+            .addTo(map);
+    }
+}
 
 $(function () {
     // load spatial properties from article_details.tpl 
@@ -68,15 +101,23 @@ $(function () {
     // load temporal properties from article_details.tpl 
     var temporalProperties = document.getElementById("geoMetadata_temporal").value;
 
-    // load temporal properties from article_details.tpl 
+    // load temporal properties from article_details.tpl
     var administrativeUnit = document.getElementById("geoMetadata_administrativeUnit").value;
 
+    function isAdminUnitEmpty(raw) {
+        if (!raw) return true;
+        try {
+            var a = JSON.parse(raw);
+            return !Array.isArray(a) || a.length === 0;
+        } catch (e) { return true; }
+    }
+
     /*
-    If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted 
-    and no geospatial metadata are displayed also the download of the geojson is not provided, because there is no data for the geojson. 
-    Otherwise, the display of the elements is initiated. 
+    If neither temporal nor spatial properties nor administrativeUnit information are available, the corresponding elements in the article_details.tpl are deleted
+    and no geospatial metadata are displayed also the download of the geojson is not provided, because there is no data for the geojson.
+    Otherwise, the display of the elements is initiated.
     */
-    if (spatialPropertiesParsed.features.length === 0 && temporalProperties === "no data" && administrativeUnit === "no data") {
+    if (spatialPropertiesParsed.features.length === 0 && !temporalProperties && isAdminUnitEmpty(administrativeUnit)) {
         $("#geoMetadata_article_geospatialmetadata").hide();
     }
 
@@ -90,10 +131,10 @@ $(function () {
         $("#geoMetadata_article_spatial_download").hide();
         $("#mapdiv").hide();
     }
-    else {
+    else if (geoMetadata_mapEnabled) {
         /*
-        Depending on the object type, the geoJSON object is structured slightly differently, 
-        so that the coordinates are at different locations and must be queried differently. 
+        Depending on the object type, the geoJSON object is structured slightly differently,
+        so that the coordinates are at different locations and must be queried differently.
         */
         if (spatialPropertiesParsed.features[0].geometry.type === 'Polygon') {
             lngFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[0][0][0];
@@ -108,7 +149,10 @@ $(function () {
             latFirstCoordinateGeojson = spatialPropertiesParsed.features[0].geometry.coordinates[1];
         }
 
-        let layer = L.geoJSON(spatialPropertiesParsed);
+        spatialPropertiesParsed.features = geoMetadata_prepareFeaturesForDisplay(spatialPropertiesParsed.features);
+        let layer = L.geoJSON(spatialPropertiesParsed, {
+            pointToLayer: (feature, latlng) => L.marker(latlng, { icon: L.icon(geoMetadata_iconStyleConfig) })
+        });
         layer.setStyle(geoMetadata_mapLayerStyle);
         drawnItems.addLayer(layer);
         map.fitBounds(drawnItems.getBounds());
@@ -119,7 +163,7 @@ $(function () {
     The administrative unit is requested from the OJS database. 
     The available elements are displayed. If there is a corresponding bbox available, the bbox for the lowest level is displayed in the map
     */
-    if (administrativeUnit === "no data") {
+    if (isAdminUnitEmpty(administrativeUnit)) {
         $("#geoMetadata_article_administrativeUnit").hide();
     }
     else {
@@ -133,8 +177,10 @@ $(function () {
 
         $("#geoMetadata_span_admnistrativeUnit").html(administrativeUnitsNameList.join(', '));
 
-        let spatialPropertiesParsed = JSON.parse(spatialProperties);
-        displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesParsed);
+        if (geoMetadata_mapEnabled) {
+            let spatialPropertiesParsed = JSON.parse(spatialProperties);
+            displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(spatialPropertiesParsed);
+        }
     }
 
     /*
@@ -142,15 +188,23 @@ $(function () {
     If no temporal properties are available, the corresponding elements in the article_details.tpl are deleted 
     and no temporal metadata are displayed. Otherwise the map is created and the temporal properties are displayed. 
     */
-    if (temporalProperties === "no data") {
+    if (!temporalProperties) {
         $("#geoMetadata_article_temporal").hide();
     }
     else {
-        let start = temporalProperties.split('{')[1].split('..')[0];
-        let end = temporalProperties.split('{')[1].split('..')[1].split('}')[0];
+        let ranges = window.geoMetadataTemporal.parseTimePeriods(temporalProperties);
+        if (ranges.length === 0) {
+            $("#geoMetadata_article_temporal").hide();
+        } else {
+            $("#geoMetadata_span_start").text(ranges[0].start);
+            $("#geoMetadata_span_end").text(ranges[0].end);
+        }
+    }
 
-        $("#geoMetadata_span_start").html(start);
-        $("#geoMetadata_span_end").html(end);
+    if (geoMetadata_mapEnabled) {
+        setTimeout(function () {
+            L.control.geoMetadataResetView({ position: 'topleft', title: geoMetadata_resetViewTitle }).addTo(map);
+        }, 0);
     }
 });
 
@@ -180,33 +234,13 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
         }
     }
 
-    // creation of the corresponding leaflet layer 
+    // creation of the corresponding leaflet layer
     if (bboxAdministrativeUnitLowestCommonDenominator !== undefined) {
-        var layer = L.polygon([
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.east],
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.east],
-        ]);
+        var helper = bboxToLeafletLayers(bboxAdministrativeUnitLowestCommonDenominator, geoMetadata_adminUnitOverlayStyle);
 
-        layer.setStyle({
-            color: 'black',
-            fillOpacity: 0.15
-        })
-
-        // To ensure that only the lowest layer is displayed, the previous layers are deleted 
         administrativeUnitsMap.clearLayers();
-
-        administrativeUnitsMap.addLayer(layer);
-
-        // the map is fitted to the given layer 
-        map.fitBounds(administrativeUnitsMap.getBounds(), {
-            padding: [20, 20] 
-        });
-
-        if (geojson.administrativeUnits == {}) {
-            administrativeUnitsMap.clearLayers();
-        }
+        helper.layers.eachLayer(function (l) { administrativeUnitsMap.addLayer(l); });
+        map.fitBounds(helper.bounds, { padding: [20, 20] });
     }
     else {
         administrativeUnitsMap.clearLayers();

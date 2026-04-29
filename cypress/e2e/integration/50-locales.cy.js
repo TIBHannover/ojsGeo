@@ -2,13 +2,13 @@
  * @file cypress/tests/integration/html_head.cy.js
  *
  * Copyright (c) 2025 KOMET project, OPTIMETA project, Daniel Nüst, Tom Niers
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  */
 
 describe('geoMetadata Locales', function () {
 
   before(() => {
-    cy.login('admin', 'admin', Cypress.env('contextPath'));
+    cy.login('admin', 'admin', Cypress.env('contexts').primary.path);
 
     cy.get('nav[class="app__nav"] a:contains("Website")').click();
     cy.get('#setup-button').click();
@@ -22,24 +22,28 @@ describe('geoMetadata Locales', function () {
     cy.logout();
   });
 
+  // Switch UI locale via the setLocale URL endpoint — more deterministic
+  // than driving the user-menu dropdown (which can race the session cookie
+  // write against the next cy.visit). Plugin-side translation rendering is
+  // the same either way.
+  const switchLocale = (locale) => {
+    cy.visit('/index.php/index/user/setLocale/' + locale);
+  };
+
   beforeEach(() => {
     cy.login('aauthor');
-    cy.get('a:contains("aauthor")').click();
-    cy.get('a:contains("Dashboard"), a:contains("Panel de control"), a:contains("Tableau de bord")').click();
   });
 
   afterEach(() => {
-    cy.get('a:contains("aauthor")').click();
-    cy.get('a:contains("Dashboard"), a:contains("Panel de control"), a:contains("Tableau de bord")').click();
-
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("English")').click();
+    switchLocale('en_US');
     cy.logout();
   });
 
   it('Has the German map headline in submission and the frontend if language is enabled for the UI', function () {
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("Deutsch")').click();
+    switchLocale('de_DE');
+    // Go straight to the author's submission dashboard — the user-menu
+    // Dashboard link is itself translated, so route by URL.
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/submissions');
 
     // submission page
     cy.get('h1').should('contain', 'Einreichungen');
@@ -53,14 +57,14 @@ describe('geoMetadata Locales', function () {
     cy.contains('#submitStep3Form', /Ort\(e\) oder Gebiet\(e\)/);
 
     // home page
-    cy.visit('/');
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/');
     cy.get('#navigationPrimary > :nth-child(1) > a').click();
     cy.contains('.pkp_structure_main', /Zeiten \& Orte/);
   });
 
   it('Has the Spanish map headline in submission and the frontend if language is enabled for the UI', function () {
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("Español")').click();
+    switchLocale('es_ES');
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/submissions');
 
     // submission page
     cy.get('h1').should('contain', 'Envíos');
@@ -74,14 +78,14 @@ describe('geoMetadata Locales', function () {
     cy.contains('#submitStep3Form', /Ubicación\(es\) o área\(s\)/);
 
     // home page
-    cy.visit('/');
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/');
     cy.get('#navigationPrimary > :nth-child(1) > a').click();
     cy.contains('.pkp_structure_main', /Tiempos y ubicaciones/);
   });
 
   it('Has the French map headline in submission and the frontend if language is enabled for the UI', function () {
-    cy.get('.pkpDropdown > .pkpButton').click();
-    cy.get('a:contains("Français")').click();
+    switchLocale('fr_FR');
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/submissions');
 
     // submission page
     cy.get('h1').should('contain', 'Soumissions');
@@ -92,10 +96,10 @@ describe('geoMetadata Locales', function () {
     cy.wait(2000);
     cy.get('button.submitFormButton').click();
     cy.wait(2000);
-    cy.contains('#submitStep3Form', /Lieu\(x\) ou la\(les\) zone\(s\)/);
+    cy.contains('#submitStep3Form', /Lieu\(x\) ou zone\(s\)/);
 
     // home page
-    cy.visit('/');
+    cy.visit('/' + Cypress.env('contexts').primary.path + '/');
     cy.get('#navigationPrimary > :nth-child(1) > a').click();
     cy.contains('.pkp_structure_main', /Heures et lieux de publication/);
   });

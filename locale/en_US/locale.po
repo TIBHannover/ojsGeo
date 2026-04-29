@@ -27,22 +27,25 @@ msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal"
 msgstr "Temporal Properties"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.description.submission"
-msgstr "Define the temporal properties of the articles content by specifying the begin and end dates. The input is possible via the text field as well as via the calendar view. Click the input field below this text to open the calendar. Press \"Apply\" to save the calender setting. Press \"Clear\" to remove the current data. Textual input must be confirmed by clicking \"Apply\" (not Enter!) and match the following format: begin and end are seperated by a hyphen surrounded by spaces; dates are given as \"YYYY-MM-DD\", whereby \"YYYY\" stands for years, \"MM\" for months (with a leading zero), and \"DD\" for days (with a leading zero). Moreover text input like "XXXX" and "XXXX-DD" is also accepted and will be formatted to "XXXX-01-01" or "XXXX-DD-01"."  
+msgstr "Enter the start and end of the article's time period separated by \"..\", e.g. \"2020..2023\", \"2020-06..2023-12\", or \"2020-06-15..2023-09-20\". Each side may independently use year, year-month, or year-month-day precision. Negative integers denote years before year 1 (e.g. \"-10000..-5000\"). If the article only considers a specific point in time, please enter the same value as begin and end, e.g. \"2026..2026\" or \"2000-01-01..2000-01-01\". Leave the field empty if the article has no temporal reference."
+
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.placeholder"
+msgstr "e.g. 2020..2023"
+
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.error"
+msgstr "Invalid time period. Use two sides separated by \"..\", each in YYYY, YYYY-MM, or YYYY-MM-DD format (or a negative integer for BCE years)."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.description.article"
 msgstr "Temporal properties of the article's content specified with a day resolution."
 
-msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.from"
-msgstr "This article covers a time period from "
-
-msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.to"
-msgstr "to"
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.temporal.coverage"
+msgstr "This article covers a time period from {$from} to {$to}."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial"
 msgstr "Location(s) or Area(s)"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.administrativeUnit"
-msgstr "The administrative units enclosing the article's places are: "
+msgstr "The administrative units enclosing the article's places are: {$units}"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.description.submission"
 msgstr "Define the location and areas that further describe the article's content by one or more geometric shape(s). You can choose in the <strong>editing controls for geometry creation</strong> on the left to choose between polyline, polygon, rectangle and point. Use the icons below to <strong>edit or delete</strong> the geometric shape(s) created. Zoom in and out using the \"–\" and \"+\" in the upper left corner. In the upper right corner you can change the <strong>background maps</strong>. You can choose between a street map (\"OpenStreetMap\" layer) and aerial imagery (\"Esri World Imagery\" layer). You can also set whether the geometric shape(s) and the administrative unit should be displayed. You will find a more detailed description of the administrative unit in the next paragraph of this form. There is a <strong>search</strong> function below the layer control for the map. You can search for locations and by hitting \"Enter\" you will be offered different locations that match your input. Clicking on a suggestion will accept it and a matching rectangule describing the boundaries of the respective location will be added to the map. This rectangle can also be deleted/edited by clicking on the trash-/edit icons in the menu on the left side of the map. You can choose a coarser level of detail to <strong>protect sensitive locations</strong>."
@@ -54,10 +57,34 @@ msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.adminis
 msgstr "Administrative Unit"
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.gazetteer_unavailable"
-msgstr "The gazetteer service is not available. Please enter administrative units manually, e.g., <code>\"Earth Europe Germany\"</code>, by typing the unit names and confirming each unit by clicking \"Enter\"."
+msgstr "The gazetteer service is not available. Please enter administrative units manually, e.g., <code>\"Earth Europe Germany\"</code>, by typing the unit names and confirming each unit by clicking \"Enter\". Refresh the page to try again."
+
+msgid "plugins.generic.geoMetadata.gazetteer.unavailable.title"
+msgstr "The gazetteer service is unavailable."
+
+msgid "plugins.generic.geoMetadata.gazetteer.unavailable.fallback"
+msgstr "Please enter administrative units manually, e.g., <code>\"Earth Europe Germany\"</code>, by typing the unit names and confirming each unit by clicking \"Enter\". Refresh the page to try again."
+
+msgid "plugins.generic.geoMetadata.gazetteer.unavailable.reason.noBaseUrl"
+msgstr "No GeoNames Base URL is configured for the plugin."
+
+msgid "plugins.generic.geoMetadata.gazetteer.unavailable.reason.noUsername"
+msgstr "No GeoNames username is configured for the plugin."
+
+msgid "plugins.generic.geoMetadata.gazetteer.unavailable.reason.invalidCredentials"
+msgstr "The configured GeoNames Base URL or username is not valid."
+
+msgid "plugins.generic.geoMetadata.gazetteer.unavailable.reason.quotaExceeded"
+msgstr "The configured GeoNames account has exceeded its daily request quota."
+
+msgid "plugins.generic.geoMetadata.gazetteer.unavailable.reason.externalError"
+msgstr "GeoNames responded with an error."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit.description.submission"
 msgstr "Administrative units will be proposed based on your input on the map if a gazetteer service is available. Each time you manually update the inputs in this field, the coverage information will be recalculated and updated. You can delete administrative unit(s) using the red \"x\". If you hover over the administrative unit(s) the superior hierarchy of administrative unit(s) is displayed when available. You can also add additional administrative units. You are only able to insert an additional administrative unit if it fits with the stipulated hierarchy of administrative unit(s) and the shape(s) already in the map. Once you begin to enter the necessary information, some suggestions will be made that you can accept by clicking. You can also input your own administrative unit by hitting \"Enter\". The administrative unit (in black) which is the lowest common denominator for all geometric shape(s) is shown in the map. The administrative unit is not editable or deletable in the map, only here via the input field."
+
+msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.spatial.administrativeUnit.manualOverrideNotice"
+msgstr "One or more administrative unit tags were entered manually and will no longer be updated automatically from map edits. Remove the manual tag(s) if you want the next map edit to drive the value again."
 
 msgid "plugins.generic.geoMetadata.geospatialmetadata.properties.administrativeUnit.description.article"
 msgstr "Here the administrative units are listed, which are superior to the location(s) the article is dealing with, with the highest level on the left and the lowest on the right."
@@ -81,7 +108,301 @@ msgid "plugins.generic.geoMetadata.settings.baseurlGeonames"
 msgstr "Base URL of GeoNames, use to switch between 'http' and 'https'."
 
 msgid "plugins.generic.geoMetadata.settings.baseurlGeonames.description"
-msgstr "Depending on your setup, select a suitable GeoNames Base URL. This is probably one of the following: <code>http://api.geonames.org</code>, <code>https://www.geonames.org</code>, or <code>https://secure.geonames.org</code>. If you are running the plugin locally, you should use <code>http://api.geonames.org</code>, the secure and CORS valid GeoNames endpoint is <code>https://secure.geonames.org</code>. Further instructions can be found at <a href=\"https://www.geonames.org/export/web-services.html">https://www.geonames.org/export/web-services.html</a>."
+msgstr "Depending on your setup, select a suitable GeoNames Base URL. This is probably one of the following: <code>http://api.geonames.org</code>, <code>https://www.geonames.org</code>, or <code>https://secure.geonames.org</code>. If you are running the plugin locally, you should use <code>http://api.geonames.org</code>, the secure and CORS valid GeoNames endpoint is <code>https://secure.geonames.org</code>. Further instructions can be found at <a href=\"https://www.geonames.org/export/web-services.html\">https://www.geonames.org/export/web-services.html</a>."
+
+msgid "plugins.generic.geoMetadata.settings.section.articlePage"
+msgstr "Article page"
+
+msgid "plugins.generic.geoMetadata.settings.section.articlePage.intro"
+msgstr "Toggle what the plugin adds to the article reader page."
+
+msgid "plugins.generic.geoMetadata.settings.section.accounts"
+msgstr "Accounts"
+
+msgid "plugins.generic.geoMetadata.settings.section.accounts.intro"
+msgstr "Credentials for external services the plugin calls."
+
+msgid "plugins.generic.geoMetadata.settings.showDownloadSidebar"
+msgstr "Show GeoJSON download in the article sidebar."
+
+msgid "plugins.generic.geoMetadata.settings.showDownloadSidebar.description"
+msgstr "When enabled, the article page sidebar includes a section offering the article's geospatial metadata as a downloadable GeoJSON file, along with a link to information about the GeoJSON format and the metadata license."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleMap"
+msgstr "Show the interactive map on the article page."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleMap.description"
+msgstr "When enabled, the article page includes an interactive Leaflet map that visualises the article's geometry and administrative unit bounding box. Disable to render only the textual metadata (temporal and administrative unit) without the map widget."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleTemporal"
+msgstr "Show the temporal coverage on the article page."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleTemporal.description"
+msgstr "When enabled, the article page displays the ISO 8601 time period covered by the article's content. Disable to omit this block even when temporal metadata is set."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleAdminUnit"
+msgstr "Show the administrative units on the article page."
+
+msgid "plugins.generic.geoMetadata.settings.showArticleAdminUnit.description"
+msgstr "When enabled, the article page lists the administrative units (country, region, …) enclosing the article's places, in hierarchical order. Disable to omit this block."
+
+msgid "plugins.generic.geoMetadata.settings.section.issueAndJournal"
+msgstr "Issue and journal pages"
+
+msgid "plugins.generic.geoMetadata.settings.section.issueAndJournal.intro"
+msgstr "Toggle the aggregated map views that the plugin adds to issue tables of contents and to the journal-wide map page."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueMap"
+msgstr "Show an aggregated map on each issue's table of contents."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueMap.description"
+msgstr "When enabled, an issue's table of contents renders an interactive map combining the spatial metadata of every article in the issue. When disabled, the issue map is not rendered even when articles carry spatial data. Requires the Templates::Issue::TOC::Main hook added via issue_toc.tpl (see README)."
+
+msgid "plugins.generic.geoMetadata.settings.showJournalMap"
+msgstr "Provide the journal-wide map page at /map."
+
+msgid "plugins.generic.geoMetadata.settings.showJournalMap.description"
+msgstr "When enabled, the plugin registers a public /map route on the journal that renders an interactive map of every published article's spatial metadata. When disabled, the route returns 404 and any menu link pointing to it will break."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueTimeline"
+msgstr "Show an aggregated timeline on each issue's table of contents."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueTimeline.description"
+msgstr "When enabled, an issue's table of contents renders an interactive timeline of every article's time periods directly below the issue map. When disabled, no timeline strip is shown even when articles carry temporal data."
+
+msgid "plugins.generic.geoMetadata.settings.showJournalTimeline"
+msgstr "Show an aggregated timeline on the journal-wide map page."
+
+msgid "plugins.generic.geoMetadata.settings.showJournalTimeline.description"
+msgstr "When enabled, the journal-wide /map page renders an interactive timeline of every published article's time periods directly below the map. When disabled, no timeline strip is shown even when articles carry temporal data. The /map URL stays available as long as either the journal map or this timeline is enabled."
+
+msgid "plugins.generic.geoMetadata.settings.timelineCollapsedByDefault"
+msgstr "Start the timeline collapsed."
+
+msgid "plugins.generic.geoMetadata.settings.timelineCollapsedByDefault.description"
+msgstr "When enabled, the timeline strip is hidden on first page load and the reader has to click \"Show timeline\" to expand it. Useful for journals where the timeline is supplementary; readers who want a compact page see only the map by default."
+
+msgid "plugins.generic.geoMetadata.settings.timelineShowInstructions"
+msgstr "Show usage hint below the timeline heading."
+
+msgid "plugins.generic.geoMetadata.settings.timelineShowInstructions.description"
+msgstr "When enabled, a single muted line of text below the timeline heading explains how to interact with the strip (drag to pan, hover, click, double-click clusters). Disable to keep the page tighter once your readers are familiar with the control."
+
+msgid "plugins.generic.geoMetadata.settings.timelineHeight"
+msgstr "Timeline strip height (in pixels)."
+
+msgid "plugins.generic.geoMetadata.settings.timelineHeight.description"
+msgstr "Vertical height of the timeline canvas in pixels. Default 200. Increase to give a dense archive (many overlapping items) more room to stack; decrease for journals with only a handful of articles. Reasonable range: 120–500."
+
+msgid "plugins.generic.geoMetadata.settings.timelineClusterMaxItems"
+msgstr "Cluster items when more than this many overlap."
+
+msgid "plugins.generic.geoMetadata.settings.timelineClusterMaxItems.description"
+msgstr "When the timeline is zoomed out and items would overlap, vis-timeline can group them into a single \"{count} articles\" badge. Default 1 means cluster as soon as any two items would overlap. Higher numbers (e.g. 3 or 5) cluster less aggressively, leaving more individual items selectable but accepting denser visual noise."
+
+msgid "plugins.generic.geoMetadata.settings.section.mapAppearance"
+msgstr "Map appearance"
+
+msgid "plugins.generic.geoMetadata.settings.section.mapAppearance.intro"
+msgstr "How reader-facing maps look and what the submission form's map shows by default."
+
+msgid "plugins.generic.geoMetadata.settings.subsection.submissionMapDefault"
+msgstr "Default map view for submission"
+
+msgid "plugins.generic.geoMetadata.settings.subsection.submissionMapDefault.description"
+msgstr "Pan and zoom the map below to the area most articles in this journal describe. The submission form's map will open at this view."
+
+msgid "plugins.generic.geoMetadata.settings.subsection.featureColours"
+msgstr "Feature colours"
+
+msgid "plugins.generic.geoMetadata.settings.subsection.featureColours.description"
+msgstr "Colours used to render article geometry and administrative-unit overlays on reader-facing maps."
+
+msgid "plugins.generic.geoMetadata.settings.mapFeatureColor"
+msgstr "Geometry colour"
+
+msgid "plugins.generic.geoMetadata.settings.mapFeatureColor.description"
+msgstr "Stroke and fill colour for article geometry (points, lines, polygons) shown on the article, issue, and journal maps. Also used for the items on the issue and journal timelines."
+
+msgid "plugins.generic.geoMetadata.settings.markerHueRotation"
+msgstr "Point-marker hue rotation"
+
+msgid "plugins.generic.geoMetadata.settings.markerHueRotation.description"
+msgstr "Point geometries use a raster marker image; slide to rotate its hue until the preview matches the geometry colour above."
+
+msgid "plugins.generic.geoMetadata.settings.mapFeatureColorHighlight"
+msgstr "Geometry highlight colour"
+
+msgid "plugins.generic.geoMetadata.settings.mapFeatureColorHighlight.description"
+msgstr "Colour used on the issue map when the reader hovers over an article's entry or geometry. Also used for hovered or selected items on the issue and journal timelines."
+
+msgid "plugins.generic.geoMetadata.settings.markerHueRotationHighlight"
+msgstr "Point-marker highlight hue rotation"
+
+msgid "plugins.generic.geoMetadata.settings.markerHueRotationHighlight.description"
+msgstr "Hue rotation applied to the marker image on hover; slide until the preview matches the highlight colour above."
+
+msgid "plugins.generic.geoMetadata.settings.enableSyncedHighlight"
+msgstr "Synchronise hover highlighting between the issue map and the article entries."
+
+msgid "plugins.generic.geoMetadata.settings.enableSyncedHighlight.description"
+msgstr "When enabled, hovering over an article's geometry on the issue map highlights its entry in the table of contents, and hovering the map icon next to each title highlights the corresponding geometries. The list-to-map direction requires the map icon below to stay enabled. Uses the highlight colour configured above."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueMapIcon"
+msgstr "Show a map icon next to each article title on the issue page."
+
+msgid "plugins.generic.geoMetadata.settings.showIssueMapIcon.description"
+msgstr "When enabled, each article with spatial data shows a small map icon next to its title in the issue table of contents. Hovering the icon highlights the article's geometries on the map; clicking it scrolls the map into view and opens the article's popup. Articles without spatial data show no icon."
+
+msgid "plugins.generic.geoMetadata.settings.overlapPicker"
+msgstr "Step through overlapping articles on click."
+
+msgid "plugins.generic.geoMetadata.settings.overlapPicker.description"
+msgstr "When two or more articles share the same map area, clicking lets readers cycle through each article's information. When disabled, only one article's popup opens — whichever geometry was rendered on top."
+
+msgid "plugins.generic.geoMetadata.issue.mapIcon.aria"
+msgstr "Show on map"
+
+msgid "plugins.generic.geoMetadata.issue.mapIcon.sr"
+msgstr "Show {$title} on map"
+
+msgid "plugins.generic.geoMetadata.settings.adminUnitOverlayColor"
+msgstr "Administrative-unit overlay colour"
+
+msgid "plugins.generic.geoMetadata.settings.adminUnitOverlayColor.description"
+msgstr "Stroke and fill colour for the bounding box drawn around an article's administrative unit."
+
+msgid "plugins.generic.geoMetadata.settings.adminUnitOverlayFillOpacity"
+msgstr "Administrative-unit overlay opacity"
+
+msgid "plugins.generic.geoMetadata.settings.adminUnitOverlayFillOpacity.description"
+msgstr "Fill opacity (0 = transparent, 1 = opaque) for the administrative-unit overlay."
+
+msgid "plugins.generic.geoMetadata.settings.section.submission"
+msgstr "Submission form (author)"
+
+msgid "plugins.generic.geoMetadata.settings.section.submission.intro"
+msgstr "Toggle which spatio-temporal fields appear in the author's submission form. Disabling a field here does not remove it from the editorial publication tab — that is controlled separately."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableSpatial"
+msgstr "Offer spatial (map) input in the submission form."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableSpatial.description"
+msgstr "When enabled, the submission form includes an interactive map where the author draws the article's geometry. Disable to collect geospatial metadata only during the editorial workflow."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableTemporal"
+msgstr "Offer temporal (date range) input in the submission form."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableTemporal.description"
+msgstr "When enabled, the submission form includes a date range picker for the article's temporal coverage. Disable to collect temporal metadata only during the editorial workflow."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableAdminUnit"
+msgstr "Offer administrative-unit (GeoNames) input in the submission form."
+
+msgid "plugins.generic.geoMetadata.settings.submission_enableAdminUnit.description"
+msgstr "When enabled, the submission form offers a GeoNames-backed administrative-unit autocomplete. Requires a configured GeoNames account; without one, the widget falls back to free-text entry. Disable to collect administrative-unit metadata only during the editorial workflow."
+
+msgid "plugins.generic.geoMetadata.settings.section.workflow"
+msgstr "Publication workflow (editor)"
+
+msgid "plugins.generic.geoMetadata.settings.section.workflow.intro"
+msgstr "Toggle which spatio-temporal fields appear on the publication tab for editors and copyeditors. Disabling a field here does not remove it from the author's submission form — that is controlled separately."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableSpatial"
+msgstr "Offer spatial (map) editing in the publication tab."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableSpatial.description"
+msgstr "When enabled, the publication tab in the editorial workflow includes an interactive map to edit the article's geometry. Disable if authors are solely responsible for geospatial metadata."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableTemporal"
+msgstr "Offer temporal (date range) editing in the publication tab."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableTemporal.description"
+msgstr "When enabled, the publication tab includes a date range picker for the article's temporal coverage. Disable if authors are solely responsible for temporal metadata."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableAdminUnit"
+msgstr "Offer administrative-unit (GeoNames) editing in the publication tab."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_enableAdminUnit.description"
+msgstr "When enabled, the publication tab offers a GeoNames-backed administrative-unit autocomplete for editors and copyeditors. Disable if authors are solely responsible for administrative-unit metadata."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_protectRawFields"
+msgstr "Protect raw data fields from accidental edits."
+
+msgid "plugins.generic.geoMetadata.settings.workflow_protectRawFields.description"
+msgstr "When enabled, the raw data textareas on the publication tab start read-only and require an \"Enable editing\" button to unlock. Disable to always keep the textareas editable."
+
+msgid "plugins.generic.geoMetadata.settings.section.discovery"
+msgstr "Discovery meta tags (HTML head)"
+
+msgid "plugins.generic.geoMetadata.settings.section.discovery.intro"
+msgstr "Control which metadata families the plugin injects into the HTML <head> of article pages. These tags do not appear visually but are consumed by harvesters, search engines, and machine-readability tooling."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaDublinCore"
+msgstr "Emit Dublin Core meta tags."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaDublinCore.description"
+msgstr "When enabled, injects the Dublin Core schema declaration and DC.SpatialCoverage, DC.box, and DC.temporal meta tags. Widely consumed by OAI-PMH harvesters and scholarly indexes."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoNames"
+msgstr "Emit geo.placename and geo.region meta tags."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoNames.description"
+msgstr "When enabled, injects the informal geo.placename (lowest admin unit name) and geo.region (ISO 3166 country + subdivision) tags. Name- and code-based; used by some SEO and mapping tooling."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoCoords"
+msgstr "Emit ICBM and geo.position meta tags."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaGeoCoords.description"
+msgstr "When enabled, injects the ICBM and geo.position meta tags with a 5-decimal centroid (~1.1 m precision), accompanied by an HTML comment describing how the centroid was derived. Disable if you do not want precise coordinates exposed in the head — name-based discovery (geo.placename / geo.region) remains available through the other toggle."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaISO19139"
+msgstr "Emit ISO 19139 EX_GeographicBoundingBox meta tag."
+
+msgid "plugins.generic.geoMetadata.settings.emitMetaISO19139.description"
+msgstr "When enabled, injects the article's admin-unit bounding box as an inline ISO 19139 XML fragment in the head. Niche; disable for stricter HTML head hygiene (the tag embeds gmd:/gco: namespaces that are not declared in HTML)."
+
+msgid "plugins.generic.geoMetadata.settings.emitSchemaOrg"
+msgstr "Emit schema.org JSON-LD."
+
+msgid "plugins.generic.geoMetadata.settings.emitSchemaOrg.description"
+msgstr "When enabled, injects a schema.org/ScholarlyArticle JSON-LD block carrying the article's spatialCoverage and temporalCoverage. Geometry follows ESIPFed's science-on-schema.org conventions (GeoCoordinates / GeoShape line / polygon / box, lat-lon order). Coexists with another plugin's article-level JSON-LD via shared @id (article URL)."
+
+msgid "plugins.generic.geoMetadata.settings.section.services"
+msgstr "Third-party services"
+
+msgid "plugins.generic.geoMetadata.settings.section.services.intro"
+msgstr "Third-party map services used by the plugin and the corresponding privacy information shown to readers."
+
+msgid "plugins.generic.geoMetadata.settings.showEsriBaseLayer"
+msgstr "Offer the Esri World Imagery base layer on reader-facing maps"
+
+msgid "plugins.generic.geoMetadata.settings.showEsriBaseLayer.description"
+msgstr "When enabled, every map in the plugin (article, issue, journal map, and submission form) offers OpenStreetMap and Esri World Imagery as base layers. When disabled, only OpenStreetMap is loaded, so no tile requests are sent to Esri."
+
+msgid "plugins.generic.geoMetadata.settings.enableGeocoderSearch"
+msgstr "Offer the geocoder search box on reader-facing maps."
+
+msgid "plugins.generic.geoMetadata.settings.enableGeocoderSearch.description"
+msgstr "When enabled, every map in the plugin includes a search box that lets readers jump to named locations. Queries are sent to the Nominatim service operated by the OpenStreetMap Foundation. When disabled, no search requests are sent."
+
+msgid "plugins.generic.geoMetadata.settings.privacy.info"
+msgstr "Maps load tiles from third-party servers, which receive readers' IP addresses. A short notice is shown below every map. We also recommend adding a paragraph to your journal's privacy policy — the text below reflects the currently enabled base layers and can be pasted there as a starting point."
+
+msgid "plugins.generic.geoMetadata.privacy.mapNotice"
+msgstr "Map tiles are loaded from third-party servers. See the journal's privacy policy for details."
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.osm"
+msgstr "<p>This website uses map services provided by the OpenStreetMap Foundation (OSMF), St John's Innovation Centre, Cowley Road, Cambridge, CB4 0WS, United Kingdom. Your browser will connect to servers operated by the OSMF located in the United Kingdom and other countries. The operator of this site has no control over those connections or the processing of your data by the OSMF; see the <a href=\"https://wiki.osmfoundation.org/wiki/Privacy_Policy\">OSMF privacy policy</a> for details.</p>"
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.esri"
+msgstr "<p>Map tiles are additionally loaded from Esri's servers (World Imagery base layer). Your browser will connect to servers operated by Esri; see the <a href=\"https://www.esri.com/en-us/privacy/overview\">Esri privacy notice</a> for details.</p>"
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.geocoder"
+msgstr "<p>When the reader types into the search box on a map, the query text is sent to the Nominatim geocoding service operated by the OpenStreetMap Foundation (OSMF). See the <a href=\"https://operations.osmfoundation.org/policies/nominatim/\">Nominatim usage policy</a> for details.</p>"
+
+msgid "plugins.generic.geoMetadata.privacy.snippet.legitimateInterest"
+msgstr "<p>These services are integrated exclusively for the legitimate interest (Art. 6(1)(f) GDPR) of displaying interactive maps of the articles' spatial coverage to readers.</p>"
 
 msgid "plugins.generic.geoMetadata.name"
 msgstr "geoMetadata Plugin"
@@ -92,11 +413,29 @@ msgstr "Collect and provide geospatial metadata for enhanced discovery of articl
 msgid "plugins.generic.geoMetadata.issue.title"
 msgstr "Times & Locations"
 
+msgid "plugins.generic.geoMetadata.issue.temporalCoverage"
+msgstr "This issue contains articles covering the time period from {$from} to {$to}."
+
+msgid "plugins.generic.geoMetadata.issue.temporalCoverage.singleYear"
+msgstr "This issue contains articles covering the year {$year}."
+
+msgid "plugins.generic.geoMetadata.timeline.heading"
+msgstr "Timeline"
+
+msgid "plugins.generic.geoMetadata.timeline.collapse.hide"
+msgstr "Hide timeline"
+
+msgid "plugins.generic.geoMetadata.timeline.collapse.show"
+msgstr "Show timeline"
+
+msgid "plugins.generic.geoMetadata.timeline.instructions"
+msgstr "Drag to pan along the timeline; hover an item to see the full article title; click an item to open the article; double-click an aggregated box to zoom in to the articles within."
+
 msgid "plugins.generic.geoMetadata.journal.pageTitle"
 msgstr "Times & Locations of all articles"
 
 msgid "plugins.generic.geoMetadata.journal.title"
-msgstr "Times & Locations of all articles in"
+msgstr "Times & Locations of all articles in {$journal}"
 
 msgid "plugins.generic.geoMetadata.journal.breadcrump"
 msgstr "Map"
@@ -107,29 +446,188 @@ msgstr "Map"
 msgid "plugins.generic.geoMetadata.journal.text"
 msgstr "Click on any geometry to see information about the article and follow the link to the article page."
 
+msgid "plugins.generic.geoMetadata.journal.temporalCoverage"
+msgstr "This journal contains articles covering the time period from {$from} to {$to}."
+
+msgid "plugins.generic.geoMetadata.journal.temporalCoverage.singleYear"
+msgstr "This journal contains articles covering the year {$year}."
+
 msgid "plugins.generic.geoMetadata.map.articleLayerName"
 msgstr "Articles"
 
 msgid "plugins.generic.geoMetadata.map.administrativeLayerName"
 msgstr "Administrative Units"
 
+msgid "plugins.generic.geoMetadata.map.fullscreen.title"
+msgstr "View fullscreen"
+
+msgid "plugins.generic.geoMetadata.map.fullscreen.titleCancel"
+msgstr "Exit fullscreen"
+
+msgid "plugins.generic.geoMetadata.map.overlay.geometry"
+msgstr "Geometric shape(s)"
+
+msgid "plugins.generic.geoMetadata.map.overlay.administrativeUnit"
+msgstr "Administrative unit"
+
+msgid "plugins.generic.geoMetadata.map.zoom.in"
+msgstr "Zoom in"
+
+msgid "plugins.generic.geoMetadata.map.zoom.out"
+msgstr "Zoom out"
+
+msgid "plugins.generic.geoMetadata.map.resetView.title"
+msgstr "Reset view"
+
+msgid "plugins.generic.geoMetadata.map.overlap.prevTitle"
+msgstr "Previous article"
+
+msgid "plugins.generic.geoMetadata.map.overlap.nextTitle"
+msgstr "Next article"
+
+msgid "plugins.generic.geoMetadata.map.overlap.counter"
+msgstr "{$i} of {$n} articles"
+
+msgid "plugins.generic.geoMetadata.map.geocoder.placeholder"
+msgstr "Search"
+
+msgid "plugins.generic.geoMetadata.map.geocoder.errorMessage"
+msgstr "Nothing found."
+
+msgid "plugins.generic.geoMetadata.map.geocoder.buttonTitle"
+msgstr "Search on the map"
+
+msgid "plugins.generic.geoMetadata.map.draw.actionCancelTitle"
+msgstr "Cancel drawing"
+
+msgid "plugins.generic.geoMetadata.map.draw.actionCancel"
+msgstr "Cancel"
+
+msgid "plugins.generic.geoMetadata.map.draw.finishTitle"
+msgstr "Finish drawing"
+
+msgid "plugins.generic.geoMetadata.map.draw.finish"
+msgstr "Finish"
+
+msgid "plugins.generic.geoMetadata.map.draw.undoTitle"
+msgstr "Delete last point drawn"
+
+msgid "plugins.generic.geoMetadata.map.draw.undo"
+msgstr "Delete last point"
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline"
+msgstr "Draw a polyline"
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon"
+msgstr "Draw a polygon"
+
+msgid "plugins.generic.geoMetadata.map.draw.rectangle"
+msgstr "Draw a rectangle"
+
+msgid "plugins.generic.geoMetadata.map.draw.marker"
+msgstr "Draw a marker"
+
+msgid "plugins.generic.geoMetadata.map.draw.marker.tooltipStart"
+msgstr "Click map to place marker."
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon.tooltipStart"
+msgstr "Click to start drawing shape."
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon.tooltipCont"
+msgstr "Click to continue drawing shape."
+
+msgid "plugins.generic.geoMetadata.map.draw.polygon.tooltipEnd"
+msgstr "Click first point to close this shape."
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline.tooltipStart"
+msgstr "Click to start drawing line."
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline.tooltipCont"
+msgstr "Click to continue drawing line."
+
+msgid "plugins.generic.geoMetadata.map.draw.polyline.tooltipEnd"
+msgstr "Click last point to finish line."
+
+msgid "plugins.generic.geoMetadata.map.draw.rectangle.tooltipStart"
+msgstr "Click and drag to draw rectangle."
+
+msgid "plugins.generic.geoMetadata.map.draw.simpleshape.tooltipEnd"
+msgstr "Release mouse to finish drawing."
+
+msgid "plugins.generic.geoMetadata.map.edit.saveTitle"
+msgstr "Save changes"
+
+msgid "plugins.generic.geoMetadata.map.edit.save"
+msgstr "Save"
+
+msgid "plugins.generic.geoMetadata.map.edit.cancelTitle"
+msgstr "Cancel editing, discards all changes"
+
+msgid "plugins.generic.geoMetadata.map.edit.cancel"
+msgstr "Cancel"
+
+msgid "plugins.generic.geoMetadata.map.edit.clearAllTitle"
+msgstr "Clear all layers"
+
+msgid "plugins.generic.geoMetadata.map.edit.clearAll"
+msgstr "Clear All"
+
+msgid "plugins.generic.geoMetadata.map.edit.edit"
+msgstr "Edit layers"
+
+msgid "plugins.generic.geoMetadata.map.edit.editDisabled"
+msgstr "No layers to edit"
+
+msgid "plugins.generic.geoMetadata.map.edit.remove"
+msgstr "Delete layers"
+
+msgid "plugins.generic.geoMetadata.map.edit.removeDisabled"
+msgstr "No layers to delete"
+
+msgid "plugins.generic.geoMetadata.map.edit.handlerText"
+msgstr "Drag handles or markers to edit features."
+
+msgid "plugins.generic.geoMetadata.map.edit.handlerSubtext"
+msgstr "Click cancel to undo changes."
+
+msgid "plugins.generic.geoMetadata.map.edit.removeHandlerText"
+msgstr "Click on a feature to remove."
+
 msgid "plugins.generic.geoMetadata.submission.coverageDisabledHover"
 msgstr "This field has been disabled. Information will be filled in automatically based on the location information entered below."
 
+msgid "plugins.generic.geoMetadata.submission.spatialProperties.antimeridianNote"
+msgstr "Features crossing the antimeridian (180° meridian) are split into two parts on save. The map may display the preview flipped until the record is saved and reloaded."
+
+msgid "plugins.generic.geoMetadata.submission.administrativeUnit.validation.hierarchyAndGeometry"
+msgstr "Your input \"{$input}\" with the superior administrative units {$units} is not valid: it does not match the existing hierarchy of administrative units nor the geometries on the map. Change the tag, the existing administrative units, or the geometries on the map."
+
+msgid "plugins.generic.geoMetadata.submission.administrativeUnit.validation.hierarchyOnly"
+msgstr "Your input \"{$input}\" with the superior administrative units {$units} is not valid: it does not match the existing hierarchy of administrative units. Change the tag or the existing administrative units."
+
+msgid "plugins.generic.geoMetadata.submission.administrativeUnit.validation.geometryOnly"
+msgstr "Your input \"{$input}\" with the superior administrative units {$units} is not valid: it does not match the geometries on the map. Change the tag or the geometries on the map."
+
 msgid "plugins.generic.geoMetadata.license.submission"
-msgstr "Note that the temporal and spatial metadata will be published under the following license:"
+msgstr "Note that the temporal and spatial metadata will be published under the following license: {$license}"
 
 msgid "plugins.generic.geoMetadata.license.download"
-msgstr "Geodata License:"
+msgstr "Geodata License: {$license}"
 
 msgid "plugins.generic.geoMetadata.license.frontend"
-msgstr "Temporal and spatial metadata are published under the following license:"
+msgstr "Temporal and spatial metadata are published under the following license: {$license}"
 
 msgid "plugins.generic.geoMetadata.publication.tab.raw"
 msgstr "Raw data"
 
 msgid "plugins.generic.geoMetadata.publication.tab.raw.description"
-msgstr "Edit raw data with care! Changes made to the raw data do <strong>not</strong> trigger changes in the above form fields and map."
+msgstr "Edit raw data with care! Changes made to the raw data do <strong>not</strong> trigger changes in the above form fields and map. Save edits and reload this page to update the information above."
+
+msgid "plugins.generic.geoMetadata.publication.tab.raw.description.locked"
+msgstr "The fields below are read-only to prevent accidental edits. Click <em>Enable editing</em> to unlock them. Edit raw data with care! Changes made to the raw data do <strong>not</strong> trigger changes in the above form fields and map. Save edits and reload this page to update the information above."
+
+msgid "plugins.generic.geoMetadata.publication.tab.raw.enable"
+msgstr "Enable editing"
 
 msgid "plugins.generic.geoMetadata.publication.success"
-msgstr "Metadata update succesful."
+msgstr "Metadata update successful."

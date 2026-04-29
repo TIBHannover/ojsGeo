@@ -1,0 +1,20 @@
+{
+  "geonames": [
+    {
+      "name": "New Zealand",
+      "geonameId": 2186224,
+      "bbox": {
+        "north": -29.231115,
+        "south": -52.619442,
+        "east": -175.830215,
+        "west": 165.869141,
+        "accuracyLevel": 10
+      },
+      "countryCode": "NZ",
+      "countryName": "New Zealand",
+      "adminCode1": "00",
+      "fcl": "A",
+      "fcode": "PCLI"
+    }
+  ]
+}

@@ -16,14 +16,52 @@ var baseurlGeonames = document.getElementById("geoMetadata_baseurlGeonames").val
 var map = null;
 var drawnItems = null;
 var administrativeUnitsMap = null;
-var gazetterDisabled = false; 
+var gazetterDisabled = false;
+
+// Substitute {$key} placeholders in a translated template with values from params.
+// Unknown keys are left as-is so misalignment between locale and call site is visible.
+function geoMetadataFormat(template, params) {
+    return template.replace(/\{\$(\w+)\}/g, function (match, key) {
+        return params[key] !== undefined ? params[key] : match;
+    });
+}
+
+// The administrativeUnit hidden field is always parseable JSON; empty is '[]'.
+function parseAdministrativeUnit(raw) {
+    if (!raw) return [];
+    try {
+        var arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+    } catch (e) {
+        return [];
+    }
+}
+function isAdministrativeUnitEmpty(raw) {
+    return parseAdministrativeUnit(raw).length === 0;
+}
+
+// Build admin-unit overlay layers from a {north, south, east, west} bbox,
+// emitting two rectangles when east < west (antimeridian-crossing; see issue #60).
+function bboxToLeafletLayers(bbox, styleOpts) {
+    var layers = L.featureGroup();
+    var bounds;
+    if (bbox.east >= bbox.west) {
+        L.polygon([[bbox.south, bbox.east], [bbox.north, bbox.east], [bbox.north, bbox.west], [bbox.south, bbox.west]], styleOpts).addTo(layers);
+        bounds = L.latLngBounds([bbox.south, bbox.west], [bbox.north, bbox.east]);
+    } else {
+        L.polygon([[bbox.south, 180], [bbox.north, 180], [bbox.north, bbox.west], [bbox.south, bbox.west]], styleOpts).addTo(layers);
+        L.polygon([[bbox.south, bbox.east], [bbox.north, bbox.east], [bbox.north, -180], [bbox.south, -180]], styleOpts).addTo(layers);
+        bounds = L.latLngBounds([bbox.south, bbox.west], [bbox.north, bbox.east + 360]);
+    }
+    return { layers: layers, bounds: bounds };
+}
 
 $(function () {
     checkGeonames();
     initMap();
     createInitialGeojson();
     initAdminunits();
-    initDaterangepicker();
+    initPlainTemporalInput();
 
     // Disable the input field for Coverage Information, if it is present
     let coverageInput = $('input[id^=coverage], input[id^=metadata-coverage]');
@@ -31,61 +69,105 @@ $(function () {
         coverageInput.attr('disabled', 'disabled');
         coverageInput.attr('title', document.getElementById("geoMetadata_coverageDisabledHover").value);
     }
+
+    if (map) {
+        setTimeout(function () {
+            L.control.geoMetadataResetView({ position: 'topleft', title: geoMetadata_resetViewTitle }).addTo(map);
+        }, 0);
+    }
 });
 
-function disableGazzetter() {
+function disableGazetteer(reason) {
     baseurlGeonames = null;
-    gazetterDisabled = true; 
+    gazetterDisabled = true;
+    var reasonText = (geoMetadata_gazetteerUnavailable.reasons[reason]) || geoMetadata_gazetteerUnavailable.reasons.externalError;
+    $("#geoMetadata_gazetteer_unavailable .geoMetadata_gazetteer_unavailable_reason").text(' ' + reasonText);
     $("#geoMetadata_gazetteer_unavailable").show();
+}
+
+// GeoNames inlines errors as {status: {value, message}} in an otherwise-200 response.
+// value === 19 is the published code for "daily quota exceeded".
+function mapGeonamesStatusToReason(status) {
+    if (status && status.value === 19) return 'quotaExceeded';
+    return 'externalError';
+}
+
+// Shared post-success / post-error handlers so every GeoNames endpoint uses
+// the same disableGazetteer cascade. The success branch checks for the
+// inline-error envelope GeoNames returns on quota/auth failures, the error
+// branch fires on network / 5xx / abort.
+function _handleGeonamesEnvelope(result) {
+    if (gazetterDisabled) return;
+    if (result && result.status !== undefined) {
+        console.log(logPrefix + "GeoNames returned an error envelope: " + JSON.stringify(result.status));
+        disableGazetteer(mapGeonamesStatusToReason(result.status));
+    }
+}
+function _handleGeonamesAjaxError(xhr, statusText) {
+    if (gazetterDisabled) return;
+    console.log(logPrefix + "GeoNames request failed (" + statusText + "): HTTP " + (xhr && xhr.status));
+    disableGazetteer('externalError');
 }
 
 function checkGeonames() {
     if (baseurlGeonames === "") {
         console.log(logPrefix + "No Base URL configured for GeoNames. Please configure the Base URL for GeoNames in the OJS plugin settings.");
-        disableGazzetter();
+        disableGazetteer('noBaseUrl');
+        return;
     }
 
     if (usernameGeonames === "") {
         console.log(logPrefix + "No username configured for GeoNames. Visit https://www.geonames.org/login, register and enter the username in the OJS plugin settings.");
-        disableGazzetter();
+        disableGazetteer('noUsername');
+        return;
     }
-    else {
-        var testRequest = ajaxRequestGeonamesPlaceName("Münster");
-        if (testRequest === null) {
-            console.log(logPrefix + "The configured GeoNames username or Base URL is not valid. Please check that both is set up correctly in the OJS plugin settings.");
-            disableGazzetter();
-        }
-        else if (testRequest.status !== undefined) {
-            if (testRequest.status.value === 19) {
-                console.log(logPrefix + "The limit of credits for your GeoNames account has been exceeded. Please use an other GeoNames account or wait until you got new credits!");
-                disableGazzetter();
-            }
-        }
+
+    // ajaxRequestGeonamesPlaceName surfaces an error envelope itself; here we only need
+    // to handle the outright-failed case (returns null = network/auth failure).
+    var testRequest = ajaxRequestGeonamesPlaceName("Münster");
+    if (testRequest === null && !gazetterDisabled) {
+        console.log(logPrefix + "The configured GeoNames username or Base URL is not valid. Please check that both is set up correctly in the OJS plugin settings.");
+        disableGazetteer('invalidCredentials');
     }
 }
 
 function initMap() {
-    //var mapView =  document.getElementById("geoMetadata_mapView").value; // TODO make configurable
-    var mapView = "0, 0, 1".split(",");
-    map = L.map('mapdiv').setView([mapView[0], mapView[1]], mapView[2]);
+    if (!document.getElementById('mapdiv')) return;
+    map = L.map('mapdiv', { zoomControl: false, worldCopyJump: true }).setView(
+        [geoMetadata_submissionMapDefaultLat, geoMetadata_submissionMapDefaultLng],
+        geoMetadata_submissionMapDefaultZoom
+    );
+
+    // translated zoom control (issue #151) — default zoomControl disabled above so we can set tooltips
+    L.control.zoom({
+        zoomInTitle:  geoMetadata_zoomInTitle,
+        zoomOutTitle: geoMetadata_zoomOutTitle
+    }).addTo(map);
 
     var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
         maxZoom: 18
     }).addTo(map);
 
-    var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-        maxZoom: 18
-    });
-
     var baseLayers = {
-        "OpenStreetMap": osmlayer,
-        "Esri World Imagery": Esri_WorldImagery
+        "OpenStreetMap": osmlayer
     };
+    if (geoMetadata_showEsriBaseLayer) {
+        baseLayers["Esri World Imagery"] = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 18
+        });
+    }
 
     // add scale to the map
     L.control.scale({ position: 'bottomright' }).addTo(map);
+
+    // add fullscreen control
+    L.control.fullscreen({
+        position: 'topleft',
+        title: geoMetadata_fullscreenTitle,
+        titleCancel: geoMetadata_fullscreenTitleCancel
+    }).addTo(map);
 
     // FeatureGroup for the items drawn or inserted by the search
     drawnItems = new L.FeatureGroup();
@@ -96,12 +178,15 @@ function initMap() {
     map.addLayer(administrativeUnitsMap);
 
     var overlayMaps = {
-        "administrative unit": administrativeUnitsMap,
-        "geometric shape(s)": drawnItems
+        [geoMetadata_overlayAdminUnit]: administrativeUnitsMap,
+        [geoMetadata_overlayGeometry]: drawnItems
     };
 
     // add layerControl to the map to the map
     L.control.layers(baseLayers, overlayMaps).addTo(map);
+
+    // translate Leaflet.Draw toolbar (issue #111) — deep-merge our strings into the library's locale table
+    $.extend(true, L.drawLocal, geoMetadata_drawLocal);
 
     // edit which geometrical forms are drawable
     var drawControl = new L.Control.Draw({
@@ -197,30 +282,35 @@ function initMap() {
      * When the user searches for a location, a bounding box with the corresponding administrative unit is automatically suggested.
      * This can be edited or deleted and further elements can be added.
      */
-    L.Control.geocoder({
-        defaultMarkGeocode: false
-    })
-        .on('markgeocode', function (e) {
-            var bbox = e.geocode.bbox;
-            var layer = L.polygon([
-                bbox.getSouthEast(),
-                bbox.getNorthEast(),
-                bbox.getNorthWest(),
-                bbox.getSouthWest()
-            ]);
-
-            // this way information about the origin of the geometric shape is stored
-            layer.provenance = {
-                "description": "geometric shape created by user (accepting the suggestion of the leaflet-control-geocoder)",
-                "id": 13
-            };
-
-            drawnItems.addLayer(layer);
-
-            storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
-            highlightHTMLElement("mapdiv");
+    if (geoMetadata_showGeocoder) {
+        L.Control.geocoder({
+            defaultMarkGeocode: false,
+            placeholder:  geoMetadata_geocoderPlaceholder,
+            errorMessage: geoMetadata_geocoderError,
+            iconLabel:    geoMetadata_geocoderButtonTitle
         })
-        .addTo(map);
+            .on('markgeocode', function (e) {
+                var bbox = e.geocode.bbox;
+                var layer = L.polygon([
+                    bbox.getSouthEast(),
+                    bbox.getNorthEast(),
+                    bbox.getNorthWest(),
+                    bbox.getSouthWest()
+                ]);
+
+                // this way information about the origin of the geometric shape is stored
+                layer.provenance = {
+                    "description": "geometric shape created by user (accepting the suggestion of the leaflet-control-geocoder)",
+                    "id": 13
+                };
+
+                drawnItems.addLayer(layer);
+
+                storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems);
+                highlightHTMLElement("mapdiv");
+            })
+            .addTo(map);
+    }
 }
 
 /**
@@ -228,11 +318,12 @@ function initMap() {
  * Either there is a geoJSON which gets loaded from the db and correspondingly displayed, otherwise there is an empty one created.
  */
 function createInitialGeojson() {
+    if ($('textarea[name="geoMetadata::spatialProperties"]').length === 0) return;
     //load spatial properties which got already stored in database from submissionMetadataFormFields.tpl
     let spatialProperties = $('textarea[name="geoMetadata::spatialProperties"]').val();
 
     var geojson;
-    if (spatialProperties === 'no data' || spatialProperties === null || spatialProperties === undefined) {
+    if (!spatialProperties) {
         geojson = {
             "type": "FeatureCollection",
             "features": [],
@@ -251,6 +342,7 @@ function createInitialGeojson() {
         var spatialPropertiesParsed = JSON.parse(spatialProperties);
 
         if (spatialPropertiesParsed.features.length !== 0) {
+            spatialPropertiesParsed.features = geoMetadata_prepareFeaturesForDisplay(spatialPropertiesParsed.features);
             var geojsonLayer = L.geoJson(spatialPropertiesParsed);
             geojsonLayer.eachLayer(
                 function (l) {
@@ -273,6 +365,7 @@ function createInitialGeojson() {
  * tag-it.js is available with the default theme plugin
  */
 function initAdminunits() {
+    if (!document.getElementById('administrativeUnitInput')) return;
     $("#administrativeUnitInput").tagit({
         allowSpaces: true,
         readOnly: false
@@ -359,8 +452,8 @@ function initAdminunits() {
             var administrativeUnit = [];
 
             // It is checked if the input is done by the user or through the API. If it is done through the API, it must already be stored in the array administrativeUnit
-            if (administrativeUnitRaw !== '' && administrativeUnitRaw !== null && administrativeUnitRaw !== undefined && administrativeUnitRaw !== 'no data' && input !== '') {
-                var administrativeUnit = JSON.parse(administrativeUnitRaw);
+            if (!isAdministrativeUnitEmpty(administrativeUnitRaw) && input !== '') {
+                var administrativeUnit = parseAdministrativeUnit(administrativeUnitRaw);
 
                 for (var i = 0; i < administrativeUnit.length; i++) {
                     if (input === administrativeUnit[i].name) {
@@ -399,6 +492,7 @@ function initAdminunits() {
                     // store the administrativeUnitSuborder, so the parent hierarchical structure of administrative units in the administrative Unit
                     var administrativeUnitSuborder = getAdministrativeUnitSuborderForAdministrativeUnit(administrativeUnitAuthorInput.geonameId);
                     administrativeUnitAuthorInput.administrativeUnitSuborder = administrativeUnitSuborder;
+                    attachIsoCodesToAdministrativeUnit(administrativeUnitAuthorInput);
                     administrativeUnit.push(administrativeUnitAuthorInput);
 
                     // check if the input tag is valid: does it fit in the current hierarchy of administrative units with the lowest common denominator
@@ -420,27 +514,29 @@ function initAdminunits() {
                             }
                         }
 
+                        var validationParams = {
+                            input: input,
+                            units: JSON.stringify(administrativeUnitSuborder)
+                        };
                         if (inputTagIsValid === false && proofIfAllFeaturesAreInPolygon(geojson, administrativeUnitAuthorInput.bbox) === false) {
-                            alert('Your input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) +
-                                ' is not valid! Your input tag does not match the hierarchy of administrative units already selected nor the geometries displayed on the map. Change input tag and/or already selected administrative units and/or geometries shown on map.');
+                            alert(geoMetadataFormat(geoMetadata_adminUnitValidation.hierarchyAndGeometry, validationParams));
                             return 'notValidTag';
                         }
                         if (inputTagIsValid === false) {
-                            alert('Your input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) +
-                                ' is not valid! Your input tag does not match the hierarchy of administrative units already selected. Change input tag and/or already selected administrative units.');
+                            alert(geoMetadataFormat(geoMetadata_adminUnitValidation.hierarchyOnly, validationParams));
                             return 'notValidTag';
                         }
                         if (proofIfAllFeaturesAreInPolygon(geojson, administrativeUnitAuthorInput.bbox) === false) {
-                            alert('Your input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) +
-                                ' is not valid! Your input tag does not match the geometries displayed on the map. Change input tag and/or geometries shown on map.');
+                            alert(geoMetadataFormat(geoMetadata_adminUnitValidation.geometryOnly, validationParams));
                             return 'notValidTag';
                         }
                     }
                     else {
-                        // In case no administrative unit is currently available, it must still be checked if the new input matches the geometric shapes in the map
                         if (proofIfAllFeaturesAreInPolygon(geojson, administrativeUnitAuthorInput.bbox) === false) {
-                            alert('Your input ' + JSON.stringify(input) + ' with the superior administrative units ' + JSON.stringify(administrativeUnitSuborder) +
-                                ' is not valid! Your input tag does not match the geometries displayed on the map. Change input tag and/or geometries shown on map.');
+                            alert(geoMetadataFormat(geoMetadata_adminUnitValidation.geometryOnly, {
+                                input: input,
+                                units: JSON.stringify(administrativeUnitSuborder)
+                            }));
                             return 'notValidTag';
                         }
                     }
@@ -473,7 +569,8 @@ function initAdminunits() {
             return input;
         },
         afterTagAdded: function () {
-            notValidTag(); 
+            notValidTag();
+            updateManualAdminUnitNotice();
         }
     });
 
@@ -490,26 +587,43 @@ function initAdminunits() {
             var administrativeUnitGeoJSON;
             var geojson = JSON.parse($('textarea[name="geoMetadata::spatialProperties"]').val());
 
-            if (administrativeUnitRaw === 'no data') {
+            if (isAdministrativeUnitEmpty(administrativeUnitRaw)) {
                 administrativeUnitGeoJSON = {};
             }
             else {
-                var administrativeUnit = JSON.parse(administrativeUnitRaw);
+                var administrativeUnit = parseAdministrativeUnit(administrativeUnitRaw);
 
                 // the corresponding element is removed
+                var removedWasAutoDerived = false;
                 for (var i = 0; i < administrativeUnit.length; i++) {
                     if (currentTag === administrativeUnit[i].name) {
+                        if (administrativeUnit[i].provenance && administrativeUnit[i].provenance.id === 23) {
+                            removedWasAutoDerived = true;
+                        }
                         // needs to be deleted twice, because im some cases otherwise the element does not get deleted
                         administrativeUnit.splice(i, 1);
                         administrativeUnit.splice(i, 1);
                     }
                 }
 
+                // Removing an auto-derived tag is user curation — promote remaining
+                // auto-derived siblings so they survive the next Leaflet event.
+                if (removedWasAutoDerived) {
+                    for (var i = 0; i < administrativeUnit.length; i++) {
+                        if (administrativeUnit[i].provenance && administrativeUnit[i].provenance.id === 23) {
+                            administrativeUnit[i].provenance = {
+                                description: 'administrative unit retained by user after removing an auto-derived sibling tag',
+                                id: 21
+                            };
+                        }
+                    }
+                }
+
                 administrativeUnitGeoJSON = administrativeUnit;
 
-                // If there is no more element this is indicated by 'no data', otherwise the geoJSON gets updated, if available
+                // Empty list is indicated by '[]'; otherwise the geoJSON gets updated.
                 if (administrativeUnit.length === 0) {
-                    updateVueElement('textarea[name="geoMetadata::administrativeUnit"]', 'no data');
+                    updateVueElement('textarea[name="geoMetadata::administrativeUnit"]', '[]');
                     administrativeUnitGeoJSON = {};
                 }
                 else {
@@ -522,6 +636,7 @@ function initAdminunits() {
             updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(geojson));
 
             displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdministrativeUnitsGivenInAGeojson(geojson);
+            updateManualAdminUnitNotice();
         }
     });
 
@@ -530,14 +645,13 @@ function initAdminunits() {
      * the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly.
      */
     let administrativeUnit = $('textarea[name="geoMetadata::administrativeUnit"]').val();
-    if (administrativeUnit !== 'no data' && administrativeUnit !== '') {
-        var administrativeUnitParsed = JSON.parse(administrativeUnit);
-
+    var administrativeUnitParsed = parseAdministrativeUnit(administrativeUnit);
+    for (var i = 0; i < administrativeUnitParsed.length; i++) {
         // A corresponding tag is created for each entry in the database.
-        for (var i = 0; i < administrativeUnitParsed.length; i++) {
-            $("#administrativeUnitInput").tagit("createTag", administrativeUnitParsed[i].name);
-        }
+        $("#administrativeUnitInput").tagit("createTag", administrativeUnitParsed[i].name);
     }
+
+    updateManualAdminUnitNotice();
 };
 
 
@@ -569,26 +683,11 @@ function displayBboxOfAdministrativeUnitWithLowestCommonDenominatorOfASetOfAdmin
 
     // creation of the corresponding leaflet layer
     if (bboxAdministrativeUnitLowestCommonDenominator !== undefined) {
-        // TODO handle crossing dateline
+        var helper = bboxToLeafletLayers(bboxAdministrativeUnitLowestCommonDenominator, geoMetadata_adminUnitOverlayStyle);
 
-        var layer = L.polygon([
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.east],
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.east],
-            [bboxAdministrativeUnitLowestCommonDenominator.north, bboxAdministrativeUnitLowestCommonDenominator.west],
-            [bboxAdministrativeUnitLowestCommonDenominator.south, bboxAdministrativeUnitLowestCommonDenominator.west],
-        ]);
-
-        layer.setStyle({
-            color: 'black',
-            fillOpacity: 0.15
-        })
-
-        // to ensure that only the lowest layer is displayed, the previous layers are deleted
         administrativeUnitsMap.clearLayers();
-
-        administrativeUnitsMap.addLayer(layer);
-
-        map.fitBounds(administrativeUnitsMap.getBounds());
+        helper.layers.eachLayer(function (l) { administrativeUnitsMap.addLayer(l); });
+        map.fitBounds(helper.bounds);
 
         highlightHTMLElement("mapdiv");
 
@@ -761,7 +860,7 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
 
         // marker
         if (leafletLayers[key] instanceof L.Marker) {
-            pureLayers.push(['Point', [leafletLayers[key]._latlng.lng, leafletLayers[key]._latlng.lat], provenance]);
+            pureLayers.push(['Point', [geoMetadata_normalizeLng(leafletLayers[key]._latlng.lng), leafletLayers[key]._latlng.lat], provenance]);
         }
 
         // polygon + rectangle (rectangle is a subclass of polygon but the name is the same in geoJSON)
@@ -769,14 +868,14 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
             var coordinates = [];
 
             Object.keys(leafletLayers[key]._latlngs[0]).forEach(function (key2) {
-                coordinates.push([leafletLayers[key]._latlngs[0][key2].lng, leafletLayers[key]._latlngs[0][key2].lat]);
+                coordinates.push([geoMetadata_normalizeLng(leafletLayers[key]._latlngs[0][key2].lng), leafletLayers[key]._latlngs[0][key2].lat]);
             });
 
             /*
             the first and last object coordinates in a polygon must be the same, thats why the first element
             needs to be pushed again at the end because leaflet is not creating both
             */
-            coordinates.push([leafletLayers[key]._latlngs[0][0].lng, leafletLayers[key]._latlngs[0][0].lat]);
+            coordinates.push([geoMetadata_normalizeLng(leafletLayers[key]._latlngs[0][0].lng), leafletLayers[key]._latlngs[0][0].lat]);
             pureLayers.push(['Polygon', coordinates, provenance]);
         }
 
@@ -785,7 +884,7 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
             var coordinates = [];
 
             Object.keys(leafletLayers[key]._latlngs).forEach(function (key3) {
-                coordinates.push([leafletLayers[key]._latlngs[key3].lng, leafletLayers[key]._latlngs[key3].lat]);
+                coordinates.push([geoMetadata_normalizeLng(leafletLayers[key]._latlngs[key3].lng), leafletLayers[key]._latlngs[key3].lat]);
             });
 
             pureLayers.push(['LineString', coordinates, provenance]);
@@ -793,7 +892,6 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
     });
     var geojson = createFeaturesForGeoJSON(pureLayers);
 
-    // if there are no geoJSON Features/ no spatial data available, there is 'no data' stored in database, otherwise the stringified geoJSON
     if (geojson.features.length === 0) {
         geojson.features = [];
     }
@@ -804,7 +902,7 @@ function updateGeojsonWithLeafletOutput(drawnItems) {
     */
     let timePeriods = $('textarea[name="geoMetadata::timePeriods"]').val();
 
-    if (timePeriods === 'no data') {
+    if (!timePeriods) {
         geojson.temporalProperties.timePeriods = [];
         geojson.temporalProperties.provenance.description = 'not available';
         geojson.temporalProperties.provenance.id = 'not available';
@@ -839,9 +937,8 @@ function ajaxRequestGeonamesPlaceName(placeName) {
                 style: "full",
                 maxRows: 12,
             },
-            success: function (result) {
-                resultGeonames = result;
-            }
+            success: function (result) { resultGeonames = result; _handleGeonamesEnvelope(result); },
+            error: _handleGeonamesAjaxError
         });
     }
 
@@ -862,9 +959,8 @@ function ajaxRequestGeonamesCoordinates(lng, lat) {
         $.ajax({
             url: urlGeonames,
             async: false,
-            success: function (result) {
-                resultGeonames = result;
-            }
+            success: function (result) { resultGeonames = result; _handleGeonamesEnvelope(result); },
+            error: _handleGeonamesAjaxError
         });
     }
 
@@ -890,9 +986,8 @@ function ajaxRequestGeonamesGeonameIdHierarchicalStructure(id) {
                 style: "full",
                 maxRows: 12,
             },
-            success: function (result) {
-                resultGeonames = result;
-            }
+            success: function (result) { resultGeonames = result; _handleGeonamesEnvelope(result); },
+            error: _handleGeonamesAjaxError
         });
     }
 
@@ -936,12 +1031,88 @@ function ajaxRequestGeonamesGeonamesIdBbox(id) {
                 maxRows: 12,
             },
             success: function (result) {
-                resultGeonames = result.bbox;
-            }
+                _handleGeonamesEnvelope(result);
+                resultGeonames = result && result.bbox;
+            },
+            error: _handleGeonamesAjaxError
         });
     }
 
     return resultGeonames;
+}
+
+/**
+ * Return the first ISO 3166-1 alpha-2 country code found in a GeoNames
+ * hierarchyJSON response, or null.
+ */
+function extractIsoCountryCodeFromHierarchy(hierarchyResponse) {
+    if (!hierarchyResponse || !hierarchyResponse.geonames) return null;
+    for (var i = 0; i < hierarchyResponse.geonames.length; i++) {
+        if (hierarchyResponse.geonames[i].countryCode) {
+            return hierarchyResponse.geonames[i].countryCode;
+        }
+    }
+    return null;
+}
+
+/**
+ * Fetch the ISO 3166-2 subdivision code for a lat/lng from GeoNames'
+ * countrySubdivisionJSON; returns the subdivision part only (e.g. "CA") or
+ * null on failure.
+ */
+function ajaxRequestGeonamesIso3166Subdivision(lat, lng) {
+    if (!baseurlGeonames || lat == null || lng == null) return null;
+    var result = null;
+    $.ajax({
+        url: baseurlGeonames.concat("/countrySubdivisionJSON"),
+        async: false,
+        data: {
+            lat: lat,
+            lng: lng,
+            level: 1,
+            type: "ISO3166-2",
+            username: usernameGeonames,
+            formatted: true
+        },
+        success: function (resp) {
+            _handleGeonamesEnvelope(resp);
+            if (resp && resp.codes) {
+                for (var i = 0; i < resp.codes.length; i++) {
+                    if (resp.codes[i].type === "ISO3166-2" && typeof resp.codes[i].code === "string") {
+                        var dash = resp.codes[i].code.indexOf("-");
+                        // preserve multi-part codes like "GB-ENG"; strip only the first segment
+                        result = dash >= 0 ? resp.codes[i].code.substring(dash + 1) : resp.codes[i].code;
+                    }
+                }
+            }
+        },
+        error: _handleGeonamesAjaxError
+    });
+    return result;
+}
+
+/**
+ * Attach `isoCountryCode` and `isoSubdivisionCode` to an administrative-unit
+ * object in place (no-op on failure; codes are optional).
+ */
+function attachIsoCodesToAdministrativeUnit(unit) {
+    if (!unit || !unit.geonameId || unit.geonameId === 'not available') return;
+
+    var hierarchy = ajaxRequestGeonamesGeonameIdHierarchicalStructure(unit.geonameId);
+    var country = extractIsoCountryCodeFromHierarchy(hierarchy);
+    if (country) unit.isoCountryCode = country;
+
+    var lat = null, lng = null;
+    if (unit.bbox && typeof unit.bbox === 'object'
+        && unit.bbox.north != null && unit.bbox.south != null
+        && unit.bbox.east  != null && unit.bbox.west  != null) {
+        lat = (unit.bbox.north + unit.bbox.south) / 2;
+        lng = (unit.bbox.east  + unit.bbox.west)  / 2;
+    }
+    if (lat != null && lng != null) {
+        var sub = ajaxRequestGeonamesIso3166Subdivision(lat, lng);
+        if (sub) unit.isoSubdivisionCode = sub;
+    }
 }
 
 /**
@@ -1105,8 +1276,23 @@ function updateAdministrativeUnits(adminUnits) {
 function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
     var geojson = updateGeojsonWithLeafletOutput(drawnItems);
 
+    var authorTypedUnits = snapshotAuthorTypedAdminUnits();
+
+    // Full manual override: when only author-curated (21/22) entries remain,
+    // skip GeoNames derivation; clearing every curated tag re-enables it.
+    if (authorTypedUnits.length > 0 && !hasAutoDerivedAdminUnits()) {
+        geojson.administrativeUnits = authorTypedUnits;
+        updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(geojson));
+        updateManualAdminUnitNotice();
+        return;
+    }
+
+    // Reset hidden state up front so preprocessTag never reads stale hierarchy
+    // while an author is typing a tag between a Leaflet event and its re-lookup.
+    geojson.administrativeUnits = {};
+    updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(geojson));
     $("#administrativeUnitInput").tagit("removeAll");
-    updateVueElement('textarea[name="geoMetadata::administrativeUnit"]', 'no data');
+    updateVueElement('textarea[name="geoMetadata::administrativeUnit"]', '[]');
 
     if (geojson.features.length !== 0) {
         var administrativeUnitsForAllFeatures = [];
@@ -1144,6 +1330,8 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
                 }
 
                 administrativeUnitForAllFeatures[i].administrativeUnitSuborder = administrativeUnitSuborder;
+                // ISO 3166-1 + ISO 3166-2 for meta tag #88 (geo.region)
+                attachIsoCodesToAdministrativeUnit(administrativeUnitForAllFeatures[i]);
                 administrativeUnitForAllFeatures[i].provenance = {
                     'description': 'administrative unit created by user (accepting the suggestion of the geonames API , which was created on basis of a geometric shape input)',
                     'id': 23
@@ -1186,79 +1374,123 @@ function storeCreatedGeoJSONAndAdministrativeUnitInHiddenForms(drawnItems) {
         }
     }
     else {
-        // empty spatialProperties and administrativeUnit when "Clear All" is used 
+        // empty spatialProperties and administrativeUnit when "Clear All" is used
         geojson.features = [];
         geojson.administrativeUnits = {};
         updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(geojson));
-        updateVueElement('textarea[name="geoMetadata::administrativeUnit"]', null);
+        updateVueElement('textarea[name="geoMetadata::administrativeUnit"]', '[]');
+    }
+
+    reapplyAuthorTypedAdminUnits(authorTypedUnits);
+    updateManualAdminUnitNotice();
+}
+
+// True when any stored admin-unit entry has auto-derived provenance (id 23).
+function hasAutoDerivedAdminUnits() {
+    return parseAdministrativeUnit($('textarea[name="geoMetadata::administrativeUnit"]').val()).some(function (u) {
+        return u && u.provenance && u.provenance.id === 23;
+    });
+}
+
+// Returns admin-unit entries with author-typed provenance (ids 21, 22) from
+// the hidden textarea.
+function snapshotAuthorTypedAdminUnits() {
+    return parseAdministrativeUnit($('textarea[name="geoMetadata::administrativeUnit"]').val()).filter(function (u) {
+        return u && u.provenance && (u.provenance.id === 21 || u.provenance.id === 22);
+    });
+}
+
+// Merges author-typed entries back into the hidden state and re-creates
+// their tags in the widget. Author-curated entries win name collisions.
+function reapplyAuthorTypedAdminUnits(authorTypedUnits) {
+    if (!authorTypedUnits || authorTypedUnits.length === 0) return;
+
+    var current = parseAdministrativeUnit($('textarea[name="geoMetadata::administrativeUnit"]').val());
+
+    var authorNames = authorTypedUnits.map(function (u) { return u.name; });
+    current = current.filter(function (u) { return authorNames.indexOf(u.name) === -1; });
+
+    var merged = current.concat(authorTypedUnits);
+
+    updateAdministrativeUnits(merged);
+
+    var spRaw = $('textarea[name="geoMetadata::spatialProperties"]').val();
+    if (spRaw) {
+        try {
+            var sp = JSON.parse(spRaw);
+            sp.administrativeUnits = merged;
+            updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(sp));
+        } catch (e) { /* spatialProperties unparseable, skip */ }
+    }
+
+    var existingTagLabels = $("#administrativeUnitInput").tagit("assignedTags");
+    for (var i = 0; i < authorTypedUnits.length; i++) {
+        if (existingTagLabels.indexOf(authorTypedUnits[i].name) === -1) {
+            $("#administrativeUnitInput").tagit("createTag", authorTypedUnits[i].name);
+        }
     }
 }
 
+// Toggle the "manual edit prevents auto-update" hint on presence of any
+// author-typed tag.
+function updateManualAdminUnitNotice() {
+    var hasManual = snapshotAuthorTypedAdminUnits().length > 0;
+    $('.geoMetadata-manual-admin-unit-notice').toggle(hasManual);
+}
+
 /**
- * Function to enable the daterangepicker.
- * Furthermore data from db is loaded and displayed if available.
+ * Plain-text temporal input: user types a range directly in the stored
+ * format, e.g. "2020..2023", "2020-06-15..2023-09-20", "-10000..-5000".
+ * The visible input is mirrored verbatim into the hidden textarea wrapped
+ * in braces; empty input becomes the empty string. Validation is server-side
+ * via the submissionsubmitstep3form::Constructor hook in the main plugin class
+ * — on failure OJS re-renders the form with the user's input preserved.
  */
-function initDaterangepicker() {
-    // load temporal properties which got already stored in database from submissionMetadataFormFields.tpl
-    let timePeriods = $('textarea[name="geoMetadata::timePeriods"]').val();
+function initPlainTemporalInput() {
+    var $input = $('input[name="datetimes"]');
+    if ($input.length === 0) return;
 
-    /*
-    In case the user repeats the step "3. Enter Metadata" in the process "Submit to article" and comes back to this step to make changes again,
-    the already entered data is read from the database, added to the template and loaded here from the template and gets displayed accordingly.
-    Otherwise, the field is empty.
-    */
-    let locale = {
-        cancelLabel: 'Clear',
-        format: 'YYYY-MM-DD'
-    };
+    var $textarea = $('textarea[name="geoMetadata::timePeriods"]');
 
-    if (timePeriods !== 'no data' && timePeriods !== '') {
-        let start = timePeriods.split('{')[1].split('..')[0];
-        let end = timePeriods.split('{')[1].split('..')[1].split('}')[0];
-
-        $('input[name="datetimes"]').daterangepicker({
-            startDate: start,
-            endDate: end,
-            locale: locale, 
-            showDropdowns: true
-        });
-    } else {
-        $('input[name="datetimes"]').daterangepicker({
-            autoUpdateInput: false,
-            locale: locale,
-            showDropdowns: true
-        });
+    // Load: strip braces from stored value for display. Unbraced values
+    // (server-rejected input on re-render) are shown verbatim.
+    var stored = ($textarea.val() || '').trim();
+    if (stored) {
+        var m = /^\{(.+)\}$/.exec(stored);
+        $input.val(m ? m[1] : stored);
     }
 
-    $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+    function syncTemporal(raw) {
+        // "2020-01-01 - 2020-12-31" → "2020-01-01..2020-12-31": accepted as an
+        // alternate separator since that is what the removed daterangepicker
+        // used to render, and copy-paste from the old UI should keep working.
+        if (raw.indexOf('..') === -1) {
+            var m = raw.match(/^(.+?)\s+-\s+(.+)$/);
+            if (m) raw = m[1] + '..' + m[2];
+        }
+        var stored = (raw === '') ? '' : '{' + raw + '}';
+        updateVueElement('textarea[name="geoMetadata::timePeriods"]', stored);
 
-        // https://www.loc.gov/standards/datetime/ defines inclusive list of datest as {1800..1880,2000..2020}
-        var timePeriods = '{' + picker.startDate.format('YYYY-MM-DD') + '..' + picker.endDate.format('YYYY-MM-DD') + '}';
-        updateVueElement('textarea[name="geoMetadata::timePeriods"]', timePeriods);
+        var spatialRaw = $('textarea[name="geoMetadata::spatialProperties"]').val();
+        if (!spatialRaw) return;
+        try {
+            var geojson = JSON.parse(spatialRaw);
+            geojson.temporalProperties = geojson.temporalProperties || {};
+            if (raw === '') {
+                geojson.temporalProperties.timePeriods = [];
+                geojson.temporalProperties.provenance = { description: 'not available', id: 'not available' };
+            } else {
+                geojson.temporalProperties.timePeriods = [raw];
+                geojson.temporalProperties.provenance = { description: 'temporal properties created by user', id: 31 };
+            }
+            updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(geojson));
+        } catch (e) { /* spatial not yet initialized — ignore */ }
+    }
 
-        // the geojson is updated accordingly
-        var geojson = JSON.parse($('textarea[name="geoMetadata::spatialProperties"]').val());
-        geojson.temporalProperties.timePeriods = [
-            picker.startDate.format('YYYY-MM-DD') + '..' + picker.endDate.format('YYYY-MM-DD')
-        ];
-        geojson.temporalProperties.provenance.description = "temporal properties created by user";
-        geojson.temporalProperties.provenance.id = 31;
-        updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(geojson));
+    $input.on('change blur input', function () {
+        syncTemporal(($input.val() || '').trim());
     });
-
-    $('input[name="datetimes"]').on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
-        updateVueElement('textarea[name="geoMetadata::timePeriods"]', 'no data');
-
-        // the geojson is updated accordingly
-        var geojson = JSON.parse($('textarea[name="geoMetadata::spatialProperties"]').val());
-        geojson.temporalProperties.timePeriods = [];
-        geojson.temporalProperties.provenance.description = 'not available';
-        geojson.temporalProperties.provenance.id = 'not available';
-        updateVueElement('textarea[name="geoMetadata::spatialProperties"]', JSON.stringify(geojson));
-    });
-};
+}
 
 // https://api.jquery.com/val/#val
 $.valHooks.textarea = {

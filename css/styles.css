@@ -2,7 +2,7 @@
  * @file css/styles.css
  *
  * Copyright (c) 2025 KOMET project, OPTIMETA project, Daniel Nüst, Tom Niers
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *
  * @brief Main stylesheet for the plugin.
  */
@@ -88,10 +88,9 @@
 }
 
 .geoMetadata_title_hover {
-	border-left: 5px solid red;
+	border-left: 5px solid;
 	padding-left: 5px;
 	margin-left: -10px;
-	background-color: rgba(255, 0, 0, 0.15);
 }
 
 /*
@@ -107,6 +106,64 @@
 	background-color: rgba(255, 165, 0, 0.15);
 }
 
+/* issue #124: match the muted .label color in the OJS default theme (@text-light) */
+.geoMetadata_privacyNotice,
+.geoMetadata_antimeridian_note {
+	color: rgba(0, 0, 0, 0.54);
+	font-size: 0.85em;
+	margin-top: 0.25rem;
+}
+
+.geoMetadata_rawFields--locked textarea {
+	background-color: #f4f4f4;
+	color: #555;
+	cursor: not-allowed;
+}
+
+#geoMetadata_rawFields_enable {
+	margin-bottom: 0.5em;
+}
+
 .obj_galley_link {
 cursor: pointer;
+}
+
+/* Timeline section (issue #74) */
+.geoMetadata_timelineSection {
+	margin: 0.25em 0;
+}
+.geoMetadata_timelineSection h2,
+.geoMetadata_timelineSection h3 {
+	margin: 0.1em 0;
+}
+.geoMetadata_timelineCollapse {
+	margin: 0 0 0.15em 0;
+}
+.geoMetadata_timelineCollapseLink {
+	text-decoration: none;
+	cursor: pointer;
+}
+.geoMetadata_timelineCollapseIcon {
+	display: inline-block;
+	width: 1em;
+	margin-right: 0.2em;
+	font-size: 0.85em;
+}
+.geoMetadata_timelineBody .geoMetadata_privacyNotice {
+	margin: 0 0 0.25em 0;
+}
+.geoMetadata_timelineCanvas {
+	width: 100%;
+	min-height: 120px;
+	margin: 0;
+}
+.gm-timeline-item {
+	cursor: pointer;
+}
+/* Tighten the existing map block on /map and the issue TOC so timeline+map sit close together (issue #74). */
+#mapdiv {
+	margin-top: 0.25em;
+}
+.geoMetadata_privacyNotice {
+	margin-top: 0.25em !important;
 }

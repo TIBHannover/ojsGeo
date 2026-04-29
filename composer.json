@@ -8,14 +8,16 @@
         "geo"
     ],
     "require": {
-        "php": ">=7.3",
-        "npm-asset/daterangepicker": "3.1",
+        "php": ">=7.4",
+        "brick/geo": "^0.7.2",
+        "npm-asset/vis-timeline": "^8.5",
         "npm-asset/leaflet-control-geocoder": "3.1.0",
         "npm-asset/leaflet": "1.9.4",
         "npm-asset/leaflet-draw": "1.0.4",
+        "npm-asset/leaflet.fullscreen": "^3.0",
         "npm-asset/leaflet-color-markers": "^0.1.0",
-        "npm-asset/moment": "2.30.1",
-        "oomphinc/composer-installers-extender": "^2.0"
+        "oomphinc/composer-installers-extender": "^2.0",
+        "spatie/schema-org": "^3.13"
     },
     "autoload": {
         "psr-4": {

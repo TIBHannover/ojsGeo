@@ -20,8 +20,14 @@ class JournalMapHandler extends Handler
 
         $templateMgr = TemplateManager::getManager($request);
 
+        // Propagate plugin-wide template parameters first so the per-handler assigns below
+        // take precedence over any clashing keys (notably pluginStylesheetURL — the plugin
+        // default has no trailing slash, the page template here expects one).
+        $templateMgr->assign($plugin->templateParameters);
         $templateMgr->assign('geoMetadata_journalJS', $request->getBaseUrl() . '/' . $plugin->getPluginPath() . '/js/journal.js');
         $templateMgr->assign('pluginStylesheetURL', $request->getBaseUrl() . '/' . $plugin->getPluginPath() . '/css/');
+        $templateMgr->assign('geoMetadata_showEsriBaseLayer', $plugin->isFeatureEnabled('geoMetadata_showEsriBaseLayer'));
+        $templateMgr->assign('geoMetadata_showGeocoder', $plugin->isFeatureEnabled('geoMetadata_enableGeocoderSearch'));
         
         $context = $request->getContext();
         if (!$context) return false;
@@ -39,12 +45,24 @@ class JournalMapHandler extends Handler
         $userGroupDao = DAORegistry::getDAO('UserGroupDAO');
 		$userGroups = $userGroupDao->getByContextId($context->getId())->toArray();	
 
+        // Keep one entry per submission (the latest version). When an article
+        // has multiple published versions, the publications service returns
+        // each one — without this dedupe the journal map paints overlapping
+        // copies of the same article and the timeline would reject duplicate
+        // ids.
+        $latestBySubmission = [];
         foreach ($publications as $publication) {
-            $id = $publication->getData('id');
-
-            if($publication->getData('status') != STATUS_PUBLISHED) {
-                continue;
+            if ($publication->getData('status') != STATUS_PUBLISHED) continue;
+            $sid = $publication->getData('submissionId');
+            $version = (int) $publication->getData('version');
+            if (!isset($latestBySubmission[$sid])
+                || $version > (int) $latestBySubmission[$sid]->getData('version')) {
+                $latestBySubmission[$sid] = $publication;
             }
+        }
+
+        foreach ($latestBySubmission as $publication) {
+            $id = $publication->getData('id');
 
             $issue = "";
             if ($publication->getData('issueId')) {
@@ -52,7 +70,7 @@ class JournalMapHandler extends Handler
                 $issue = $issueDao->getById($publication->getData('issueId'));
                 $issue = $issue->getIssueIdentification();
             }
-            
+
             $publicationsGeodata[$id] = [
                 'publicationId' => $publication->getData('id'),
                 'submissionId' => $publication->getData('submissionId'),

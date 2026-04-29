@@ -8,9 +8,14 @@
  *}
 
 <input type="text" class="geoMetadata_data articleId" name="articleId"
-    style="height: 0px; width: 0px; visibility: hidden;" value='article-{$article->getId()}'>
+    style="height: 0px; width: 0px; visibility: hidden;"
+    value='article-{$article->getId()}'
+    data-title="{$article->getLocalizedTitle()|strip_unsafe_html|escape}"
+    data-sr-label="{translate key="plugins.generic.geoMetadata.issue.mapIcon.sr" title=$article->getLocalizedTitle()|strip_unsafe_html|escape}">
 <input type="text" class="geoMetadata_data spatial" name="{$smarty.const.GEOMETADATA_DB_FIELD_SPATIAL}"
     style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.GEOMETADATA_DB_FIELD_SPATIAL}|escape:'html'}'>
+<input type="text" class="geoMetadata_data temporal" name="{$smarty.const.GEOMETADATA_DB_FIELD_TIME_PERIODS}"
+    style="height: 0px; width: 0px; visibility: hidden;" value='{${$smarty.const.GEOMETADATA_DB_FIELD_TIME_PERIODS}|escape:'html'}'>
 <input type="text" class="geoMetadata_data popup" name="mapPopup"
     style="height: 0px; width: 0px; visibility: hidden;" value='
 		<{$heading} class="title">
@@ -29,7 +34,7 @@
 				{$article->getAuthorString()|escape}
 			</div>
 		{/if} 
-		{if $publication->getData(GEOMETADATA_DB_FIELD_TIME_PERIODS) != "no data" && $publication->getData(GEOMETADATA_DB_FIELD_TIME_PERIODS) != ""}
+		{if $publication->getData(GEOMETADATA_DB_FIELD_TIME_PERIODS) != ""}
 			<p></p>
 			<i class="fa fa-calendar pkpIcon--inline"></i>
 			<i>{$publication->getData(GEOMETADATA_DB_FIELD_TIME_PERIODS)|escape|replace:'..':' – '|replace:'{':''|replace:'}':''}</i>

@@ -12,13 +12,14 @@
     "cypress-failed-log": "^2.10.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-wait-until": "^1.7.2",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "mysql2": "^3.11.0"
   },
   "scripts": {
     "cy_open": "npx cypress open",
     "cy_run": "npx cypress run",
     "test_ci": "npx cypress run --headless --browser chrome",
-    "test_compose": "docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up"
+    "test_compose": "docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-16-php8.1-mod-250824.0309 docker-compose --file cypress/docker-compose-mysql.yml up"
   },
   "repository": {
     "type": "git",

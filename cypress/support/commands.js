@@ -2,7 +2,7 @@
  * @file cypress/tests/support/commands.js
  *
  * Copyright (c) 2025 KOMET project, OPTIMETA project, Daniel Nüst, Tom Niers
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  * 
  * Based on https://github.com/pkp/pkp-lib/blob/main/cypress/support/commands.js
  * 
@@ -60,8 +60,14 @@ Cypress.Commands.add('install', function () {
 });
 
 // from https://github.com/pkp/ojs/blob/stable-3_3_0/cypress/tests/data/20-CreateContext.spec.js
-Cypress.Commands.add('createContext', () => {
+Cypress.Commands.add('createContext', (contextKey = 'primary') => {
+    const ctx = Cypress.env('contexts')[contextKey];
+
     cy.login('admin', 'admin');
+    // When zero journals exist, site-level admin login lands on the contexts
+    // grid; when ≥1 exists it lands on that journal's dashboard. Visit
+    // explicitly so this works at any point in the suite.
+    cy.visit('index.php/index/admin/contexts');
 
     // Create a new context
     cy.get('div[id=contextGridContainer]').find('a').contains('Create').click();
@@ -69,16 +75,16 @@ Cypress.Commands.add('createContext', () => {
     // Fill in various details
     cy.wait(1000); // https://github.com/tinymce/tinymce/issues/4355
 
-    cy.get('input[name="name-en_US"]').type(Cypress.env('contextTitles')['en_US'], { delay: 0 });
-    cy.get('input[name=acronym-en_US]').type(Cypress.env('contextAcronyms')['en_US'], { delay: 0 });
+    cy.get('input[name="name-en_US"]').type(ctx.titles['en_US'], { delay: 0 });
+    cy.get('input[name=acronym-en_US]').type(ctx.acronyms['en_US'], { delay: 0 });
     cy.get('span').contains('Enable this journal').siblings('input').check();
     cy.get('input[name="supportedLocales"][value="en_US').check();
     cy.get('input[name="primaryLocale"][value="en_US').check();
 
-    cy.get('input[name=urlPath]').clear().type(Cypress.env('contextPath'), { delay: 0 });
+    cy.get('input[name=urlPath]').clear().type(ctx.path, { delay: 0 });
 
     // Context descriptions
-    cy.setTinyMceContent('context-description-control-en_US', Cypress.env('contextDescriptions')['en_US']);
+    cy.setTinyMceContent('context-description-control-en_US', ctx.descriptions['en_US']);
     cy.get('button').contains('Save').click();
 
     // Wait for it to finish up before moving on
@@ -92,6 +98,49 @@ Cypress.Commands.add('login', (username, password, context) => {
         method: 'POST',
         body: { username: username, password: password }
     });
+});
+
+// Click the article-title link on a journal/issue TOC for the given article
+// title, avoiding the issue-map icon link that shares the same text. Issue
+// #158 added an `<a class="geoMetadata_issue_maplink">` next to each article
+// whose click handler is hijacked by the multi-article popup picker — so a
+// naïve `cy.get('a:contains(title)').last().click()` ends up opening the map
+// popup instead of navigating to the article page.
+Cypress.Commands.add('openArticleByTitle', (title) => {
+    cy.get('a:contains("' + title + '"):not(.geoMetadata_issue_maplink)').first().click();
+});
+
+// OJS 3.3.0-16 (PHP-8.1 image) regression: Accept-and-Skip-Review forwards
+// the manuscript into the submission-files grid only — the Final Draft Files
+// / Copyedited grids on the Copyediting stage stay empty, so the
+// Send-to-Production decision modal has nothing to forward and its
+// `input[id^="select"]` checkbox would never appear. This helper opens the
+// Final Draft Files "Upload/Select Files" modal, ticks the all-stages
+// checkbox to surface the original submission file, selects it, and saves —
+// after which the Send-to-Production modal can pick it up.
+//
+// Caller must already be on the workflow page at stage Copyediting (stage 4).
+Cypress.Commands.add('promoteFileToFinalDraft', () => {
+    cy.get('[id^="component-grid-files-final-finaldraftfilesgrid-selectFiles-button"]').click();
+    cy.get('.pkp_modal_panel input[name="allStages"]').check();
+    cy.wait(1500); // grid reloads via AJAX with files from all stages
+    cy.get('.pkp_modal_panel input[name="selectedFiles[]"]').first().check();
+    cy.get('.pkp_modal_panel button.submitFormButton').click();
+    cy.wait(2000);
+});
+
+// Login + journey to the journal-context submissions dashboard, in one call.
+//
+// The naive pattern of `cy.login('eeditor') ; click user-menu ; click Dashboard`
+// breaks when the user has roles on more than one journal: site-level login
+// lands on /index/index where the user-menu "Dashboard" link points at
+// /index/user/profile (not a journal dashboard). Logging in at the journal
+// context routes straight to /<ctx>/submissions, which is what every spec
+// that drove the broken pattern actually wants.
+Cypress.Commands.add('openSubmissionsAs', (username, contextKey = 'primary') => {
+    const ctxPath = Cypress.env('contexts')[contextKey].path;
+    cy.login(username, undefined, ctxPath);
+    cy.visit('index.php/' + ctxPath + '/submissions');
 });
 
 Cypress.Commands.add('logout', function () {
@@ -122,12 +171,13 @@ Cypress.Commands.add('register', data => {
     cy.get('button').contains('Register').click();
 });
 
-Cypress.Commands.add('createIssues', (data, context) => {
-    // create and publish issue
-    cy.login('admin', 'admin');
-    cy.get('a:contains("admin"):visible').click();
-    cy.get('a:contains("Dashboard")').click({ force: true });
-    cy.get('.app__nav a').contains('Issues').click();
+Cypress.Commands.add('createIssues', (contextKey = 'primary') => {
+    const ctxPath = Cypress.env('contexts')[contextKey].path;
+    cy.login('admin', 'admin', ctxPath);
+    // Direct URL — the user-menu Dashboard click is ambiguous with multiple
+    // journals. /<context>/manageIssues is the OJS 3.3 issue-management page
+    // hosting the futureissuegrid + addIssue button.
+    cy.visit('index.php/' + ctxPath + '/manageIssues');
     cy.get('a[id^=component-grid-issues-futureissuegrid-addIssue-button-]').click();
     cy.wait(1000); // Avoid occasional failure due to form init taking time
     cy.get('input[name="volume"]').type('1', { delay: 0 });
@@ -152,20 +202,26 @@ Cypress.Commands.add('createIssues', (data, context) => {
     cy.get('button[id^=submitFormButton]').click();
 });
 
-Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
+Cypress.Commands.add('createSubmissionAndPublish', (data, contextKey = 'primary') => {
     cy.createSubmission(data);
 
     // === Jump through review and publication  ===
-    cy.login('eeditor');
-    cy.get('a:contains("eeditor"):visible').click();
-    cy.get('a:contains("Dashboard")').click({ force: true });
-    cy.get('a:contains("View")').first().click();
+    const ctxPath = Cypress.env('contexts')[contextKey].path;
+    // Context-level login + direct visit, mirroring the createIssues pattern.
+    // Site-level login redirects an editor with roles on multiple journals to
+    // /index/index, breaking the user-menu Dashboard click chain.
+    cy.login('eeditor', undefined, ctxPath);
+    cy.visit('index.php/' + ctxPath + '/submissions');
+    cy.get('a:contains("View"):visible').first().click();
     cy.get('a[id^="accept-button"]').click();
     cy.get('input[id^="skipEmail-skip"]').click();
     cy.get('form[id="promote"] button:contains("Next:")').click();
     cy.get('input[id^="select"]').click();
     cy.get('button:contains("Record Editorial Decision")').click();
     cy.wait(2000);
+
+    cy.promoteFileToFinalDraft();
+
     cy.get('a:contains("Send To Production")').click();
     cy.get('input[id="skipEmail-skip"]').click();
     cy.get('form[id="promote"] button:contains("Next:")').click();
@@ -184,7 +240,17 @@ Cypress.Commands.add('createSubmissionAndPublish', (data, context) => {
     cy.get('button:contains("Publish"), div[class="pkpFormPages"] button:contains("Schedule For Publication")').click();
 });
 
-Cypress.Commands.add('createSubmission', (data, context) => {
+Cypress.Commands.add('createSubmission', (data, contextKey = 'primary') => {
+    // Author-side login + journal-context navigation. Site-level login
+    // (cy.login('aauthor') with default 'index' context) lands on /index/index,
+    // where the user-menu "Dashboard" link points to /index/user/profile —
+    // not the journal's submissions dashboard. Logging in at the journal
+    // context routes straight to /<ctx>/submissions, which is what the
+    // "Make a New Submission" link below assumes.
+    const ctxPath = Cypress.env('contexts')[contextKey].path;
+    cy.login('aauthor', undefined, ctxPath);
+    cy.visit('index.php/' + ctxPath + '/submissions');
+
     // Initialize some data defaults before starting
     if (data.type == 'editedVolume' && !('files' in data)) {
         data.files = [];
@@ -246,7 +312,7 @@ Cypress.Commands.add('createSubmission', (data, context) => {
     // === Submission Step 2 ===
 
     // OPS uses the galley grid
-    if (Cypress.env('contextTitles').en_US == 'Public Knowledge Preprint Server') {
+    if (Cypress.env('contexts').primary.titles.en_US == 'Public Knowledge Preprint Server') {
         data.files.forEach(file => {
             cy.get('a:contains("Add galley")').click();
             cy.wait(2000); // Avoid occasional failure due to form init taking time
@@ -392,15 +458,38 @@ Cypress.Commands.add('createSubmission', (data, context) => {
         cy.get('div[id^="component-grid-users-chapter-chaptergrid-"] a.pkp_linkaction_editChapter:contains("' + Cypress.$.escapeSelector(chapter.title) + '")');
     });
 
-    // geospatial metadata
+    // geospatial metadata. The temporal input is now a plain-text field that
+    // commits on blur (see js/submission.js initPlainTemporalInput); the old
+    // daterangepicker + .applyBtn click is gone.
     if ('timePeriod' in data && data.timePeriod !== null) {
-        cy.get('input[name=datetimes]').type(data.timePeriod);
-        cy.wait(1000);
-        cy.get('.applyBtn').click();
+        cy.get('input[name=datetimes]').clear().type(data.timePeriod).blur();
+        cy.wait(500);
     }
 
     // https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
-    if ('spatial' in data) {
+    // data.directInject bypasses the map + tagit UI with literal JSON for
+    // deterministic assertions; data.spatial draws via pixel clicks; neither
+    // => default polyline.
+    if ('directInject' in data) {
+        cy.window().then((win) => {
+            const $ = win.jQuery || win.$;
+            const set = (fieldName, value) => {
+                const selector = 'textarea[name="' + fieldName + '"]';
+                const $el = $(selector);
+                expect($el.length, 'textarea ' + fieldName + ' exists').to.equal(1);
+                const serialized = (typeof value === 'string') ? value : JSON.stringify(value);
+                $el.val(serialized);
+                $el[0].dispatchEvent(new Event('input',  { bubbles: true }));
+                $el[0].dispatchEvent(new Event('change', { bubbles: true }));
+            };
+            set('geoMetadata::spatialProperties',  data.directInject.spatial);
+            set('geoMetadata::administrativeUnit', data.directInject.adminUnit);
+            const names = (Array.isArray(data.directInject.adminUnit)
+                ? data.directInject.adminUnit
+                : []).map((u) => u.name).join(', ');
+            $('input[id^=coverage], input[id^=metadata-coverage]').val(names).trigger('input');
+        });
+    } else if ('spatial' in data) {
         if (data.spatial !== null) {
             cy.toolbarButton(data.spatial.type).click();
             for (let index = 0; index < data.spatial.coords.length; index++) {
@@ -410,26 +499,38 @@ Cypress.Commands.add('createSubmission', (data, context) => {
             }
         }
     } else {
-        // default to line geometry in Germany
+        // default polyline. Leaflet.Draw only registers a new vertex when the
+        // click is far enough from the previous one; 5 px wasn't enough —
+        // verified via headless/probe-polyline.mjs. 40 px reliably produces
+        // two vertices, and dblclick finishes the line.
         cy.toolbarButton('polyline').click();
-        cy.get('#mapdiv') // too small differences dont work, min 5 pixels
+        cy.get('#mapdiv')
             .click(448, 110)
-            .click(453, 115)
-            .click(453, 115);
+            .click(488, 150)
+            .dblclick(488, 150);
     }
 
-    cy.wait(2000);
+    // Wait for the draw → gazetteer → iso-code pipeline to finish serialising
+    // into the hidden textareas. TODO: replace with a wait for the in-progress
+    // gazetteer status indicator once that lands (see CLAUDE.md / issue tracker).
+    cy.wait(6000);
 
-    if ('adminUnit' in data) {
-        cy.get('#administrativeUnitInput > .tagit-new > .ui-widget-content').type(data.adminUnit);
-        cy.wait(100);
+    if ('adminUnit' in data && !('directInject' in data)) {
+        // tagit only commits on Enter (or comma if configured); typing the
+        // whole string leaves it in the field and discards it on save. Split
+        // and Enter each tag separately.
+        const tags = String(data.adminUnit).split(',').map(s => s.trim()).filter(Boolean);
+        tags.forEach(tag => {
+            cy.get('#administrativeUnitInput > .tagit-new > .ui-widget-content').type(tag + '{enter}');
+            cy.wait(100);
+        });
     }
 
     cy.get('form[id=submitStep3Form]').find('button').contains('Save and continue').click();
 
     // === Submission Step 4 ===
     cy.waitJQuery();
-    cy.get('form[id=submitStep4Form]').find('button').contains('Finish Submission').click();
+    cy.get('form[id=submitStep4Form]', { timeout: 15000 }).find('button').contains('Finish Submission').click();
     cy.get('button.pkpModalConfirmButton').click();
     cy.waitJQuery();
     cy.get('h2:contains("Submission complete")');
@@ -561,9 +662,10 @@ Cypress.Commands.add('consoleLog', message => {
     cy.task('consoleLog', message);
 });
 
-// leaflet map interaction, see https://medium.com/geoman-blog/testing-maps-e2e-with-cypress-ba9e5d903b2b
+// Leaflet.Draw toolbar buttons are icon-only anchors; match by class since
+// the old :contains("name") selector never matched (no visible text).
 Cypress.Commands.add('toolbarButton', name => {
-    cy.get(`.leaflet-draw a:contains("${name}")`)
+    cy.get(`.leaflet-draw a.leaflet-draw-draw-${name}`)
 });
 
 // https://github.com/geoman-io/leaflet-geoman (MIT license)
@@ -572,6 +674,22 @@ Cypress.Commands.add('hasLayers', (count) => {
         const layerCount = Object.keys(map._layers).length;
         cy.wrap(layerCount).should('eq', count);
     });
+});
+
+// Insert a published submission directly via DB. Side-steps the ~3 min
+// editorial UI flow when a spec only needs the seeded data, not the path
+// through it. Implementation lives in cypress.config.js (cy.task).
+Cypress.Commands.add('publishSubmissionViaDb', (contextKey, opts) => {
+    const ctxPath = Cypress.env('contexts')[contextKey].path;
+    return cy.task('dbInsertPublishedSubmission', { contextPath: ctxPath, ...opts });
+});
+
+// Enroll an existing user into a role in another journal. The OJS UI for
+// enrolling (vs. creating) is fragile; DB is simpler. roleId values:
+// 16 = Manager, 17 = Section Editor, 65536 = Author, 4096 = Reviewer.
+Cypress.Commands.add('enrollUserInContext', (contextKey, username, roleId) => {
+    const ctxPath = Cypress.env('contexts')[contextKey].path;
+    return cy.task('dbEnrollUserInContext', { contextPath: ctxPath, username, roleId });
 });
 
 Cypress.Commands.add('mapHasFeatures', (count) => {

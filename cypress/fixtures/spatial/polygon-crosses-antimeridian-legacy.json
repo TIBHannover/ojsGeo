@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "provenance": {
+          "description": "geometric shape created by user (drawing)",
+          "id": 11
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [[165, -45], [-170, -45], [-170, -30], [165, -30], [165, -45]]
+        ]
+      }
+    }
+  ],
+  "administrativeUnits": [],
+  "temporalProperties": {
+    "timePeriods": [],
+    "provenance": {
+      "description": "not available",
+      "id": "not available"
+    }
+  }
+}
